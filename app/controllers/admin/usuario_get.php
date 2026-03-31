@@ -11,8 +11,6 @@ include_once(__DIR__ . '/../../../config/conexao.php');
     $stmt->execute();
     $resultado = $stmt->get_result();
 
-    $stmt->execute();
-    $resultado = $stmt->get_result();
 
     $tabela = [];
     if($resultado -> num_rows >0){

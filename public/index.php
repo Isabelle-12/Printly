@@ -2,6 +2,8 @@
 
 $routes = require __DIR__ . '/../config/routes.php';
 
+//pra rota q vc configurou funcionar, troque o nome que esta dentro dessas aspas simples antes do ";"
+//pelo nome que vc configurou
 $rota = $_GET['rota'] ?? 'admin-notificacoes';
 
 if (!isset($routes[$rota])) {

@@ -1,6 +1,5 @@
 <?php
 
-// Model para Pedidos - apenas leitura para notificações
 function getPedidosExpirados($conexao) {
     $query = 'SELECT p.id, p.projeto_id, p.maker_id, p.data_solicitacao, p.status, u.nome AS cliente, u.email
               FROM pedidos p

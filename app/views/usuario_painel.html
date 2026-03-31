@@ -15,10 +15,10 @@
 
 <nav class="navbar navbar-expand-lg navbar-dark bg-secondary">
     <div class="container">
-        <a class="navbar-brand" href="#">Printly</a>
+        <a class="navbar-brand" href="index.php?rota=usuario-painel">Printly</a>
         <div class="collapse navbar-collapse">
             <ul class="navbar-nav ms-auto">
-                <li class="nav-item"><a class="nav-link active" href="#">Meus Pedidos</a></li>
+                <li class="nav-item"><a class="nav-link active" href="index.php?rota=usuario-painel">Meus Pedidos</a></li>
             </ul>
         </div>
     </div>
@@ -26,9 +26,7 @@
 
 <div class="container mt-4">
 
-    <!-- Banner de anúncios globais (manutenções, alertas do sistema) -->
-    <!-- Fica hidden até o JS detectar anúncio ativo e remover d-none -->
-    <div id="banner-anuncio" class="d-none">
+    <div id="banner-anuncios" class="d-none">
         <div class="alert alert-warning alert-dismissible fade show mb-3" role="alert">
             <strong id="banner-titulo"></strong> &mdash; <span id="banner-mensagem"></span>
             <br><small class="text-muted">Período: <span id="banner-periodo"></span></small>
@@ -36,7 +34,6 @@
         </div>
     </div>
 
-    <!-- Restante do conteúdo da página do usuário -->
     <div class="card">
         <div class="card-header">
             <h5>Meus Pedidos</h5>
@@ -45,7 +42,6 @@
             <p class="text-muted">Conteúdo da página do usuário aqui.</p>
         </div>
     </div>
-    <!-- Restante do conteúdo da página do usuário -->
     <div class="card">
         <div class="card-header">
             <h5>Minhas notificações</h5>

@@ -1,4 +1,3 @@
-// ─── CRITÉRIO 1: Pedidos expirados ───────────────────────────────────────────
 
 async function carregarPedidosExpirados() {
     const container = document.getElementById('pedidos-atrasados');
@@ -49,38 +48,38 @@ async function notificarAtraso(pedidoId, emailDestino) {
     }
 }
 
-// ─── CRITÉRIO 2: Agendar manutenção ──────────────────────────────────────────
 
-document.getElementById('form-manutencao').addEventListener('submit', async function(event) {
-    event.preventDefault();
+// document.getElementById('form-manutencao').addEventListener('submit', async function(event) {
+//     event.preventDefault();
 
-    const titulo      = document.getElementById('titulo').value;
-    const mensagem    = document.getElementById('mensagem').value;
-    const data_inicio = document.getElementById('data_inicio').value;
-    const data_fim    = document.getElementById('data_fim').value;
+//         const titulo      = document.getElementById('titulo').value;
+//         const mensagem    = document.getElementById('mensagem').value;
+//         const data_inicio = document.getElementById('data_inicio').value;
+//         const data_fim    = document.getElementById('data_fim').value;
 
-    const resposta = await fetch('../app/controllers/admin/agendar_manutencao.php', {
-        method: 'POST',
-        body:   new URLSearchParams({
-            titulo:      titulo,
-            mensagem:    mensagem,
-            data_inicio: data_inicio,
-            data_fim:    data_fim
-        })
-    });
-    const retorno = await resposta.json();
+//         const resposta = await fetch('../app/controllers/admin/agendar_manutencao.php', {
+//             method: 'POST',
+//             body:   new URLSearchParams({
+//                 titulo:      titulo,
+//                 mensagem:    mensagem,
+//                 data_inicio: data_inicio,
+//                 data_fim:    data_fim
+//             })
+//         });
+//         const retorno = await resposta.json();
 
-    alert(retorno.mensagem);
+//         alert(retorno.mensagem);
 
-    if (retorno.status === 'ok') {
-        document.getElementById('form-manutencao').reset();
-    }
-});
+//     if (retorno.status === 'ok') {
+//         document.getElementById('form-manutencao').reset();
+//     }
+// });
 
-// ─── CRITÉRIO 3: Notificações enviadas + retratar ────────────────────────────
 
 async function carregarNotificacoesEnviadas() {
     const container = document.getElementById('notificacoes-enviadas');
+    if (!container) return;
+
     container.innerHTML = '<p class="text-muted">Carregando...</p>';
 
     const resposta = await fetch('../app/controllers/admin/listar_notificacoes_enviadas.php');
@@ -127,7 +126,6 @@ async function retratar(id) {
     }
 }
 
-// ─── CRITÉRIO 4: Anúncios globais (visível para todos os usuários) ────────────
 
 async function carregarAnunciosGlobais() {
     const container = document.getElementById('banner-anuncios');
@@ -145,9 +143,38 @@ async function carregarAnunciosGlobais() {
     }
 }
 
-// ─── Inicializa ao carregar a página ─────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', function() {
     carregarPedidosExpirados();
     carregarNotificacoesEnviadas();
+
+    const formManutencao = document.getElementById('form-manutencao');
+    if (formManutencao) {
+        formManutencao.addEventListener('submit', async function(event) {
+            event.preventDefault();
+
+            const titulo      = document.getElementById('titulo').value;
+            const mensagem    = document.getElementById('mensagem').value;
+            const data_inicio = document.getElementById('data_inicio').value;
+            const data_fim    = document.getElementById('data_fim').value;
+
+            const resposta = await fetch('../app/controllers/admin/agendar_manutencao.php', {
+                method: 'POST',
+                body:   new URLSearchParams({
+                    titulo:      titulo,
+                    mensagem:    mensagem,
+                    data_inicio: data_inicio,
+                    data_fim:    data_fim
+                })
+            });
+            const retorno = await resposta.json();
+
+            alert(retorno.mensagem);
+
+            if (retorno.status === 'ok') {
+                formManutencao.reset();
+            }
+        });
+    }
+
     carregarAnunciosGlobais();
 });

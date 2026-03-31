@@ -1,6 +1,5 @@
 <?php
 
-// Model para Notificações e Anúncios - acesso a dados
 function getAnunciosAtivos($conexao) {
     $query = 'SELECT * FROM anuncios_globais WHERE data_inicio <= NOW() AND data_fim >= NOW() ORDER BY data_inicio DESC';
     $result = $conexao->query($query);

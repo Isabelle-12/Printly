@@ -1,6 +1,5 @@
 <?php
-// Marca uma notificação como retratada.
-// Recebe via POST: id
+
 include_once '../../../config/conexao.php';
 
 $retorno = [

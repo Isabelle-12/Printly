@@ -1,6 +1,5 @@
 <?php
-// Aceita um pedido e define o prazo_pedido automaticamente.
-// Recebe via POST: pedido_id, dias_prazo (opcional, padrão 7)
+
 include_once '../../../config/conexao.php';
 
 $retorno = [

@@ -1,6 +1,5 @@
 <?php
-// Agenda um aviso global de manutenção programada.
-// Recebe via POST: titulo, mensagem, data_inicio, data_fim
+
 include_once '../../../config/conexao.php';
 
 $retorno = [

@@ -1,6 +1,5 @@
 <?php
-// Registra uma notificação de atraso para um pedido específico.
-// Recebe via POST: pedido_id, email_destino, mensagem
+
 include_once '../../../config/conexao.php';
 include_once '../../helpers/email.php';
 

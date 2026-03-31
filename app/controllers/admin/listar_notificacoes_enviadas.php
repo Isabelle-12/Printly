@@ -1,5 +1,4 @@
 <?php
-// Lista todas as notificações registradas, ordenadas das mais recentes.
 include_once '../../../config/conexao.php';
 
 $retorno = [

@@ -1,6 +1,5 @@
 <?php
-// Lista anúncios globais ativos no momento (manutenções programadas).
-// Usado por todos os perfis para exibir o banner de avisos do sistema.
+
 include_once '../../../config/conexao.php';
 
 $retorno = [

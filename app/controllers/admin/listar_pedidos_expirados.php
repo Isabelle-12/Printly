@@ -1,6 +1,5 @@
 <?php
-// Lista pedidos cujo prazo_pedido já passou e ainda não foram concluídos.
-// Retorna também o nome e email do maker responsável para a notificação.
+
 include_once '../../../config/conexao.php';
 
 $retorno = [

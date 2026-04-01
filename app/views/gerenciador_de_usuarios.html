@@ -18,7 +18,15 @@
 
     <nav class="navbar navbar-expand-lg navbar-dark bg-secondary">
         <div class="container">
-            <a class="navbar-brand" href="#">Printly - Painel Admin</a>
+            <a class="navbar-brand" href="index.php?rota=admin-notificacoes">Printly</a>
+            <div class="collapse navbar-collapse">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link active"
+                            href="index.php?rota=admin-notificacoes">Notificações</a></li>
+                    <li class="nav-item"><a class="nav-link" href="index.php?rota=usuario-painel">Painel</a></li>
+                    <li class="nav-item"><a class="nav-link" href="index.php?rota=admin-usuarios">Usuarios</a></li>
+                </ul>
+            </div>
         </div>
     </nav>
 
@@ -107,7 +115,7 @@
                     <button class="btn btn-outline-secondary btn-sm" onclick="carregarSolicitacoes()">Atualizar</button>
                 </div>
                 <table class="table table-striped table-hover mt-3">
-                    <thead class="table-warning">
+                    <thead class="table-dark">
                         <tr>
                             <th>Nome</th>
                             <th>Localização</th>

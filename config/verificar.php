@@ -11,6 +11,7 @@ if (!isset($_SESSION['email'])) {
 header("Content-Type: application/json; charset=UTF-8");
 echo json_encode([
     "logado" => true,
-    "email" => $_SESSION['email']
+    "email" => $_SESSION['email'],
+    "tipos" => $_SESSION['tipo']
 
 ]);

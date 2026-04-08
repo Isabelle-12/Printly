@@ -45,10 +45,10 @@ async function login(){
     console.log(tipagem);
 
     switch(tipagem) {
-        case "cliente": window.location.href = "/index.php?rota=usuario-painel"; 
+        case "CLIENTE": window.location.href = "/index.php?rota=usuario-painel"; 
         break;
         // case "maker":   window.location.href = "/index.php?rota=usuario-painel"; break;
-        case "admin":   window.location.href = "/index.php?rota=admin-notificacoes"; 
+        case "ADMIN":   window.location.href = "/index.php?rota=admin-notificacoes"; 
         break;
         default:        window.location.href = "/index.php?rota=home";
          break;

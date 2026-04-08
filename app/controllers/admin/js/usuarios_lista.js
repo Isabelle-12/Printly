@@ -162,29 +162,42 @@ function preencherTabelaSolicitacoes(lista) {
 
 // --- MODAIS DE VISUALIZAÇÃO ---
 
-function verPerfil(u) {
+function verPerfil(usuario) {
     document.getElementById("conteudoModal").innerHTML = `
-        <p><strong>Nome:</strong> ${u.nome}</p>
-        <p><strong>Email:</strong> ${u.email}</p>
-        <p><strong>Cidade:</strong> ${u.cidade || 'N/I'}</p>
-        <p><strong>Status:</strong> <span class="badge bg-info">${u.status}</span></p>
-        <p><strong>Perfil:</strong> ${u.tipo_perfil}</p>
+        <p><strong>Nome:</strong> ${usuario.nome}</p>
+        <p><strong>Email:</strong> ${usuario.email}</p>
+        <p><strong>Senha:</strong> ${usuario.senha}</p>
+        <p><strong>Telefone:</strong> ${usuario.telefone}</p>
+        <p><strong>CEP:</strong> ${usuario.cep}</p>
+        <p><strong>Cidade:</strong> ${usuario.cidade}</p>
+        <p><strong>Estado:</strong> ${usuario.estado}</p>
+        <p><strong>Endereço:</strong> ${usuario.endereco}</p>
+        <p><strong>Status:</strong> ${usuario.status}</p>
+        <p><strong>Data de Cadastro:</strong> ${usuario.data_cadastro}</p>
     `;
 }
 
-function verPerfilFabricante(f) {
+function verPerfilFabricante(fabricante) {
     document.getElementById("conteudoModal").innerHTML = `
-        <p><strong>Nome:</strong> ${f.nome}</p>
-        <p><strong>CNPJ:</strong> ${f.cnpj}</p>
-        <p><strong>Telefone:</strong> ${f.telefone_comercial}</p>
-        <p><strong>Endereço:</strong> ${f.endereco_empresa}</p>
+        <p><strong>Nome:</strong> ${fabricante.nome}</p>
+        <p><strong>Email:</strong> ${fabricante.email}</p>
+        <p><strong>CNPJ:</strong> ${fabricante.cnpj}</p>
+        <p><strong>Telefone Comercial:</strong> ${fabricante.telefone_comercial}</p>
+        <p><strong>Endereço da Empresa:</strong> ${fabricante.endereco_empresa}</p>
+        <p><strong>Data de Aprovação:</strong> ${fabricante.data_aprovacao}</p>
     `;
 }
-
-function verPerfilAdministrador(a) {
+function verPerfilAdministrador(administrador) {
     document.getElementById("conteudoModal").innerHTML = `
-        <p><strong>Nome:</strong> ${a.nome}</p>
-        <p><strong>Email:</strong> ${a.email}</p>
-        <p><strong>Perfil:</strong> ADMINISTRADOR</p>
+        <p><strong>Nome:</strong> ${administrador.nome}</p>
+        <p><strong>Email:</strong> ${administrador.email}</p>
+        <p><strong>Senha:</strong> ${administrador.senha}</p>
+        <p><strong>Telefone:</strong> ${administrador.telefone}</p>
+        <p><strong>CEP:</strong> ${administrador.cep}</p>
+        <p><strong>Cidade:</strong> ${administrador.cidade}</p>
+        <p><strong>Estado:</strong> ${administrador.estado}</p>
+        <p><strong>Endereço:</strong> ${administrador.endereco}</p>
+        <p><strong>Status:</strong> ${administrador.status}</p>
+        <p><strong>Data de Cadastro:</strong> ${administrador.data_cadastro}</p>
     `;
 }

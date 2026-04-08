@@ -21,9 +21,20 @@ async function verif() {
     console.log("Usuário logado:", dados.email);
 }
 
+  async function sair() {
+  await fetch("../config/logout.php");
+
+  alert('Saindo...');
+
+  window.location.href = "index.php?rota=home";
+
+
+}
+
 // nao sei se deixo no dom ja que nao está no header, mas deixarei
 window.addEventListener('DOMContentLoaded', () => {
     verif();
+    document.getElementById("sair").addEventListener("click", sair);
 
 });
 

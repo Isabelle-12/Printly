@@ -78,6 +78,11 @@ function editarUsuario(id) {
     window.location.href = "index.php?rota=editar-usuario&id=" + id;
 }
 
+function editarAdmin(id) {
+    window.location.href = "index.php?rota=editar-administrador&id=" + id;
+}
+
+
 async function validarFabricante(id, decisao) {
     const acao = decisao === 'aprovar' ? 'APROVAR' : 'REJEITAR';
     if (!confirm(`Deseja realmente ${acao} este cadastro de fabricante?`)) return;
@@ -140,7 +145,7 @@ function preencherTabelaAdministrador(lista) {
                 <td>${adm.email}</td>
                 <td>
                     <button class="btn btn-primary btn-sm" onclick='verPerfilAdministrador(${JSON.stringify(adm)})' data-bs-toggle="modal" data-bs-target="#modalPerfil">Ver</button>
-                    <button class="btn btn-warning btn-sm">Editar</button>
+                    <button class="btn btn-warning btn-sm" onclick="editarAdmin(${adm.id})">Editar</button>
                     <button class="btn btn-danger btn-sm" onclick="excluirUsuario(${adm.id})">Excluir</button>
                 </td>
             </tr>`;

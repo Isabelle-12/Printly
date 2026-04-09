@@ -1,5 +1,4 @@
 <?php
-// leitura da tabela de usuários (somente clientes, sem fabricantes)
 include_once(__DIR__ . '/../../../config/conexao.php');
 
 $retorno = [
@@ -8,32 +7,42 @@ $retorno = [
     'data'      => []
 ];
 
-// Seleciona apenas usuários do tipo CLIENTE que não têm registro como fabricante
-$stmt = $conexao->prepare("
-    SELECT u.*
-    FROM usuarios u
-    LEFT JOIN fabricantes f ON f.usuario_id = u.id
-    WHERE u.tipo_perfil = 'CLIENTE' AND f.id IS NULL
-    ORDER BY u.nome
-");
+
+$id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
+
+if ($id > 0) {
+
+    $stmt = $conexao->prepare("SELECT * FROM usuarios WHERE id = ?");
+    $stmt->bind_param("i", $id);
+} else {
+  
+    $stmt = $conexao->prepare("
+        SELECT u.*
+        FROM usuarios u
+        LEFT JOIN fabricantes f ON f.usuario_id = u.id
+        WHERE u.tipo_perfil = 'CLIENTE' AND f.id IS NULL
+        ORDER BY u.nome
+    ");
+}
 
 $stmt->execute();
 $resultado = $stmt->get_result();
 
 $tabela = [];
-if($resultado->num_rows > 0){
-    while($linha = $resultado->fetch_assoc()){
-        $tabela[] = $linha;
-    }
+while($linha = $resultado->fetch_assoc()){
+    $tabela[] = $linha;
+}
+
+if(count($tabela) > 0){
     $retorno = [
         'status'    => 'ok', 
-        'mensagem'  => 'Sucesso, usuários encontrados.', 
+        'mensagem'  => 'Sucesso.', 
         'data'      => $tabela
     ];
-}else{
+} else {
     $retorno = [
-        'status'    => 'vazio', 
-        'mensagem'  => 'Não há usuários cadastrados.', 
+        'status'    => 'erro', 
+        'mensagem'  => 'Nenhum registro encontrado.', 
         'data'      => []
     ];
 }

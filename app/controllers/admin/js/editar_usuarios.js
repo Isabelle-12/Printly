@@ -17,8 +17,10 @@ async function carregarUsuario() {
         window.location.href = "index.php?rota=admin-usuarios";
         return;
     }
+    
     try {
-        const retorno = await fetch("../app/controllers/admin/usuario_get.php?id=${id}");
+        
+        const retorno = await fetch(`../app/controllers/admin/usuario_get.php?id=${id}&t=${Date.now()}`);
         const resposta = await retorno.json(); 
 
         

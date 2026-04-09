@@ -8,5 +8,6 @@ return [
     'login'     => __DIR__ . '/../app/views/login.html',
     'home'     => __DIR__ . '/../app/views/home.html',
     'editar-usuario' => __DIR__ . '/../app/views/editar_usuarios.html',
-
+    'editar-administrador' => __DIR__ . '/../app/views/editar_administrador.html',
+    
 ];

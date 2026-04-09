@@ -1,7 +1,7 @@
 <?php
 
 include_once '../../../config/conexao.php';
-include_once '../../helpers/email.php';
+// include_once '../../helpers/email.php';
 
 $retorno = [
     "status"   => "",

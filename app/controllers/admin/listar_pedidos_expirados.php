@@ -8,7 +8,7 @@ $retorno = [
     "data"     => []
 ];
 
-$stmt = $conexao->prepare("SELECT p.id, p.status, p.prazo_pedido, p.data_solicitacao, p.material_escolhido, u.nome  AS maker_nome,  u.email AS maker_email FROM pedidos p JOIN usuarios u ON u.id = p.maker_id WHERE p.status NOT IN ('CONCLUIDO', 'NEGADO') AND p.prazo_pedido IS NOT NULL AND p.prazo_pedido < NOW()  ORDER BY p.prazo_pedido ASC");
+$stmt = $conexao->prepare("SELECT p.id,p.status, p.prazo_pedido,p.data_solicitacao,p.material_escolhido,c.nome  AS cliente_nome,c.email AS cliente_email,m.nome  AS maker_nome,m.email AS maker_email FROM pedidos p JOIN projetos pr ON pr.id = p.projeto_id JOIN usuarios c  ON c.id  = pr.cliente_id JOIN usuarios m  ON m.id  = p.maker_id WHERE p.status NOT IN ('CONCLUIDO', 'NEGADO') AND p.prazo_pedido IS NOT NULL AND p.prazo_pedido < NOW() ORDER BY p.prazo_pedido ASC");
 $stmt->execute();
 $resultado = $stmt->get_result();
 

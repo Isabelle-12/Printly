@@ -14,9 +14,12 @@ async function carregarPedidosExpirados() {
                 <div class="d-flex justify-content-between align-items-center border rounded p-2 mb-2">
                     <div>
                         <strong>Pedido #${p.id}</strong> &mdash; ${p.maker_nome}
-                        <br><small class="text-muted">${p.maker_email} &bull; Prazo: ${p.prazo_pedido} &bull; Status: ${p.status}</small>
-                    </div>
-                    <button class="btn btn-sm btn-primary" onclick="notificarAtraso(${p.id}, '${p.maker_email}')">
+                        <br><small class="text-muted"> Cliente: ${p.cliente_nome} (${p.cliente_email})
+                         &bull; Maker: ${p.maker_nome} (${p.maker_email})
+                         &bull; Prazo: ${p.prazo_pedido} &bull; Status: ${p.status}       
+                         </small>
+                    </div>  
+                    <button class="btn btn-sm btn-primary" onclick="notificarAtraso(${p.id}, '${p.cliente_email}', '${p.maker_email}')">
                         Notificar
                     </button>
                 </div>
@@ -28,23 +31,26 @@ async function carregarPedidosExpirados() {
     }
 }
 
-async function notificarAtraso(pedidoId, emailDestino) {
+async function notificarAtraso(pedidoId, emailCliente,emailMaker    ) {
     const mensagem = 'Seu pedido #' + pedidoId + ' está com prazo expirado. Entre em contato para mais detalhes.';
 
-    const resposta = await fetch('../app/controllers/admin/enviar_notificacao_atraso.php', {
+    const respostaC = await fetch('../app/controllers/admin/enviar_notificacao_atraso.php', {
         method: 'POST',
-        body:   new URLSearchParams({
-            pedido_id:     pedidoId,
-            email_destino: emailDestino,
-            mensagem:      mensagem
-        })
+        body: new URLSearchParams({ pedido_id: pedidoId, email_destino: emailCliente, mensagem: mensagem })
     });
-    const retorno = await resposta.json();
+    const retornoC = await respostaC.json();
 
-    alert(retorno.mensagem);
+    const respostaM = await fetch('../app/controllers/admin/enviar_notificacao_atraso.php', {
+        method: 'POST',
+        body: new URLSearchParams({ pedido_id: pedidoId, email_destino: emailMaker, mensagem: mensagem })
+    });
+    const retornoM = await respostaM.json();
 
-    if (retorno.status === 'ok') {
+    if (retornoC.status === 'ok' && retornoM.status === 'ok') {
+        alert('Notificações enviadas para cliente e fabricante.');
         carregarNotificacoesEnviadas();
+    } else {
+        alert(retornoC.status !== 'ok' ? retornoC.mensagem : retornoM.mensagem);
     }
 }
 
@@ -143,6 +149,64 @@ async function carregarAnunciosGlobais() {
     }
 }
 
+async function carregarMinhasNotificacoes() {
+    const container = document.getElementById('minhas-notificacoes');
+    if (!container) return;
+
+    container.innerHTML = '<p class="text-muted">Carregando...</p>';
+
+    const resposta = await fetch('../app/controllers/admin/carregar_notif.php');
+    const retorno  = await resposta.json();
+
+    if (retorno.status === 'ok' && retorno.data.length > 0) {
+        let itens = '';
+        for (let i = 0; i < retorno.data.length; i++) {
+            let n = retorno.data[i];
+            itens += `
+                <div class="alert alert-warning mb-2" role="alert">
+                    <strong>${n.titulo || n.tipo}</strong>
+                    <br><small class="text-muted">${n.data_envio}</small>
+                    <br>${n.mensagem}
+                </div>
+            `;
+        }
+        container.innerHTML = itens;
+    } else {
+        container.innerHTML = '<p class="text-success">Nenhuma notificação pendente.</p>';
+    }
+}
+
+  async function carregarPrazoAtual() {
+    const input = document.getElementById('input-dias-prazo');
+    if (!input) return;
+
+    const resposta = await fetch('../app/controllers/admin/config_prazo.php', {
+        method: 'POST',
+        body: new URLSearchParams({ apenas_consulta: 1 })
+    });
+    const retorno = await resposta.json();
+
+    if (retorno.status === 'ok') {
+        input.value = retorno.data.dias_prazo;
+    }
+
+}
+
+async function salvarPrazo() {
+    const dias = document.getElementById('input-dias-prazo').value;
+    const msg  = document.getElementById('msg-prazo');
+
+    const resposta = await fetch('../app/controllers/admin/config_prazo.php', {
+        method: 'POST',
+        body: new URLSearchParams({ dias_prazo: dias })
+    });
+    const retorno = await resposta.json();
+
+    msg.innerHTML = `<div class="alert ${retorno.status === 'ok' ? 'alert-success' : 'alert-danger'} py-1">${retorno.mensagem}</div>`;
+}
+
+
+// DOM CONTENT
 document.addEventListener('DOMContentLoaded', function() {
     carregarPedidosExpirados();
     carregarNotificacoesEnviadas();
@@ -177,4 +241,8 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     carregarAnunciosGlobais();
+    carregarMinhasNotificacoes();
+    document.getElementById('modalPrazo').addEventListener('show.bs.modal', function () {
+    carregarPrazoAtual();
+});
 });

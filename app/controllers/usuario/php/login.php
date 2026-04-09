@@ -29,7 +29,8 @@ if (isset($_POST['email']) && isset($_POST['senha'])) {
         }
         $_SESSION['email'] = $email; // cria sessão e guarda
         $_SESSION['tipo'] = $tabela[0]['tipo_perfil']; //ta recebendo o tipo logado la na table, 0 é pq é só um array q tem na lista q é oq loga
-      
+        $_SESSION['id']    = $tabela[0]['id'];
+
         
             $retorno = [
                 'status' => 'ok',

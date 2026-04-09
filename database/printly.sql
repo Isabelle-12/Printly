@@ -266,3 +266,12 @@ INSERT INTO impressoras (maker_id, modelo, volume_maximo_cm3, status) VALUES
 
 INSERT INTO materiais_maker (maker_id, tipo_material, preco_por_grama) VALUES
 ((SELECT id FROM usuarios WHERE email='bruno.maker@teste.com'), 'PLA Premium', 0.15);
+
+CREATE TABLE config_prazos (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    tipo_operacao VARCHAR(50) NOT NULL UNIQUE,
+    dias_prazo INT NOT NULL DEFAULT 7,
+    atualizado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
+INSERT INTO config_prazos (tipo_operacao, dias_prazo) VALUES ('PEDIDO_PADRAO', 7);

@@ -9,7 +9,6 @@ $retorno = [
 ];
 
 $pedido_id  = isset($_POST['pedido_id'])  ? (int)$_POST['pedido_id']  : 0;
-$dias_prazo = isset($_POST['dias_prazo']) ? (int)$_POST['dias_prazo'] : 7;
 
 if (!$pedido_id) {
     $retorno = [
@@ -21,8 +20,15 @@ if (!$pedido_id) {
     echo json_encode($retorno);
     exit;
 }
+$resultado_prazo = $conexao->query("SELECT dias_prazo FROM config_prazos WHERE tipo_operacao = 'PEDIDO_PADRAO'");
+$linha_prazo     = $resultado_prazo ? $resultado_prazo->fetch_assoc() : null;
 
-if ($dias_prazo <= 0) $dias_prazo = 7;
+if ($linha_prazo && $linha_prazo['dias_prazo'] > 0) {
+    $dias_prazo = (int)$linha_prazo['dias_prazo'];
+} else {
+    $dias_prazo = 7;
+}
+
 
 $stmt = $conexao->prepare("
     UPDATE pedidos

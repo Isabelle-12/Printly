@@ -18,8 +18,20 @@ document.addEventListener("DOMContentLoaded", () => {
             perfil: 'CLIENTE' // Definido fixo para este formulário
         };
 
-        if (!dados.nome || !dados.email || !dados.senha) {
+        if(!dados.nome || !dados.email || !dados.senha || !dados.telefone || !dados.documento || !dados.cep || !dados.cidade || !dados.estado || !dados.endereco){
             alert("Por favor, preencha os campos obrigatórios (Nome, E-mail e Senha).");
+            return;
+        }
+         
+         // Validação simples: apenas checa se existe o @
+        if (!dados.email.includes("@")) {
+            alert("Por favor, insira um e-mail válido com @");
+            return; // Para a execução aqui e não envia para o PHP
+        }
+
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(dados.email)) {
+            alert("O formato do e-mail está incorreto!");
             return;
         }
 

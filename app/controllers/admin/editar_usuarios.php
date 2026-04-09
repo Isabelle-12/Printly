@@ -12,13 +12,6 @@ $retorno = [
 ];
 
 
-if (!isset($_SESSION['tipo_perfil']) || $_SESSION['tipo_perfil'] !== 'ADMIN') {
-    $retorno['status'] = 'erro';
-    $retorno['mensagem'] = 'Acesso negado';
-    echo json_encode($retorno);
-    $conexao->close();
-    exit;
-}
 
 
 if (!isset($_POST['id'])) {

@@ -245,4 +245,8 @@ document.addEventListener('DOMContentLoaded', function() {
     document.getElementById('modalPrazo').addEventListener('show.bs.modal', function () {
     carregarPrazoAtual();
 });
+    document.getElementById('btn-salvar-prazo').addEventListener('click', function () {
+    salvarPrazo();
+});
+
 });

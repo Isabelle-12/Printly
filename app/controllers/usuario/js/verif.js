@@ -31,10 +31,10 @@
     await fetch('../config/logout.php');
         alert('Saindo...');
 
-        window.location.href = "index.php?rota=home";
+        window.location.href = "index.php?rota=login";
     }
 
-    
+
 
     }
 

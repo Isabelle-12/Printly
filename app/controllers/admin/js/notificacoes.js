@@ -240,15 +240,18 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    carregarAnunciosGlobais();
-    carregarMinhasNotificacoes();
-    document.getElementById('modalPrazo').addEventListener('show.bs.modal', function () {
-    carregarPrazoAtual();
-});
-    document.addEventListener('click', function (e) {
-    if (e.target && e.target.id === 'btn-salvar-prazo') {
-        salvarPrazo();
-    }
+    // DOMContentLoaded (só inicialização)
+    document.addEventListener('DOMContentLoaded', function() {
+        carregarAnunciosGlobais();
+        carregarMinhasNotificacoes();
+    });
+
+    // Delegação de evento (global, só uma vez)
+    document.addEventListener('click', (e) => {
+        const btn = e.target.closest('#btn-salvar-prazo');
+        if (btn) {
+            salvarPrazo();
+        }
+    });
 });
 
-});

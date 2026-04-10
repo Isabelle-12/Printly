@@ -241,6 +241,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
+<<<<<<< HEAD
     carregarAnunciosGlobais();
     carregarMinhasNotificacoes();
     const modalPrazo = document.getElementById('modalPrazo');
@@ -250,3 +251,20 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 });
+=======
+    // DOMContentLoaded (só inicialização)
+    document.addEventListener('DOMContentLoaded', function() {
+        carregarAnunciosGlobais();
+        carregarMinhasNotificacoes();
+    });
+
+    // Delegação de evento (global, só uma vez)
+    document.addEventListener('click', (e) => {
+        const btn = e.target.closest('#btn-salvar-prazo');
+        if (btn) {
+            salvarPrazo();
+        }
+    });
+});
+
+>>>>>>> c5d62ebd03d04b8abec444b3d203f7e657f63df2

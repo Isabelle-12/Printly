@@ -240,18 +240,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     }
-
-<<<<<<< HEAD
-    carregarAnunciosGlobais();
-    carregarMinhasNotificacoes();
-    const modalPrazo = document.getElementById('modalPrazo');
-    if (modalPrazo) {
-        modalPrazo.addEventListener('show.bs.modal', function () {
-            carregarPrazoAtual();
-        });
-    }
-});
-=======
+=
     // DOMContentLoaded (só inicialização)
     document.addEventListener('DOMContentLoaded', function() {
         carregarAnunciosGlobais();
@@ -267,4 +256,3 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 
->>>>>>> c5d62ebd03d04b8abec444b3d203f7e657f63df2

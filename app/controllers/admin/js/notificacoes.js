@@ -210,7 +210,10 @@ async function salvarPrazo() {
 // DOM CONTENT
 document.addEventListener('DOMContentLoaded', function() {
     carregarPedidosExpirados();
-    carregarNotificacoesEnviadas();
+    carregarNotificacoesEnviadas(); 
+    carregarAnunciosGlobais();
+    carregarMinhasNotificacoes();
+
 
     const formManutencao = document.getElementById('form-manutencao');
     if (formManutencao) {
@@ -242,11 +245,9 @@ document.addEventListener('DOMContentLoaded', function() {
     }
         });    
 
-    // DOMContentLoaded (só inicialização)
-    document.addEventListener('DOMContentLoaded', function() {
-        carregarAnunciosGlobais();
-        carregarMinhasNotificacoes();
-    });
+    // // DOMContentLoaded (só inicialização)
+    // document.addEventListener('DOMContentLoaded', function() {
+    // });
 
     // Delegação de evento (global, só uma vez)
     document.addEventListener('click', (e) => {

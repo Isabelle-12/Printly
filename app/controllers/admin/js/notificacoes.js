@@ -254,3 +254,11 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 });
+<<<<<<< HEAD
+=======
+    document.getElementById('btn-salvar-prazo').addEventListener('click', function () {
+    salvarPrazo();
+});
+
+});
+>>>>>>> d4d13da3f6cee36d007ef0219f13f8c0d1b753f1

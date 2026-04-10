@@ -1,5 +1,8 @@
 document.addEventListener("DOMContentLoaded", () => {
     const btnEnviar = document.getElementById("enviar");
+//     const btnTeste = document.getElementById("teste");
+//    btnTeste.addEventListener("click", teste);
+
 
     btnEnviar.addEventListener("click", async (e) => {
         e.preventDefault(); // Impede o recarregamento da página
@@ -59,4 +62,18 @@ document.addEventListener("DOMContentLoaded", () => {
             alert("Erro ao conectar com o servidor.");
         }
     });
+
+    // async function teste() {
+    //     const senha2 = document.getElementById("senha2").value;
+        
+    //     if (senha2.length <= 8 ||!/[!@#$%^&*(),.?":{}|<>_\-\\[\];'/+=~`]/.test(senha2)) {
+    //         alert("A senha deve ter pelo menos 8 caracteres e/ou caracteres especiais.");
+    //         apc = document.getElementById("apc");
+    //         apc.innerHTML = "A senha deve ter pelo menos 8 caracteres e/ou caracteres especiais.";
+    //     }
+    //     alert("foi");
+        
+
+    //   }     
+    // }
 });

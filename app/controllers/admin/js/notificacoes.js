@@ -243,20 +243,18 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     }
-<<<<<<< HEAD
-=
+
     // DOMContentLoaded (só inicialização)
     document.addEventListener('DOMContentLoaded', function() {
         carregarAnunciosGlobais();
         carregarMinhasNotificacoes();
     });
-=======
         });    
 
     // // DOMContentLoaded (só inicialização)
     // document.addEventListener('DOMContentLoaded', function() {
     // });
->>>>>>> 72bf185340ff7c924a3a4b486c3ac56c3f78925d
+
 
     // Delegação de evento (global, só uma vez)
     document.addEventListener('click', (e) => {

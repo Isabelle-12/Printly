@@ -11,16 +11,16 @@
 
     <style>
         :root {
-            --printly-primary: #273146;
-            --printly-primary-dark: #273146;
-            --printly-accent: #6366f1;
-            --printly-light: #eef2ff;
+            --printly-primary: #412746;
+            --printly-primary-dark: #7a3077;
+            --printly-accent: #7b1385;
+            --printly-light: #f0cef5;
             --printly-surface: #ffffff;
-            --printly-bg: #f5f7ff;
-            --printly-text: #1e1b4b;
-            --printly-muted: #6b7280;
-            --printly-border: #e0e7ff;
-            --printly-shadow: 0 2px 12px rgba(79, 70, 229, 0.08);
+            --printly-bg: #fff5fe;
+            --printly-text: #4b1b4b;
+            --printly-muted: #9e939e;
+            --printly-border: #c2b9c28c;
+            --printly-shadow: 0 2px 12px rgba(229, 70, 181, 0.08);
             --printly-radius: 12px;
         }
 
@@ -69,6 +69,21 @@
             color: #fff !important;
         }
 
+        #sair {
+            background: rgba(255,255,255,0.12);
+            color: rgba(255,255,255,0.82);
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 8px;
+            padding: 0.35rem 0.75rem;
+            font-size: 0.9rem;
+            transition: background 0.18s;
+        }
+
+        #sair:hover {
+            background: rgba(255,255,255,0.22);
+            color: #fff;
+        }
+
         /* ── Container ──────────────────────────────────── */
         .container {
             max-width: 1200px;
@@ -77,11 +92,11 @@
         /* ── Banner de anúncios ──────────────────────────── */
         #banner-anuncios .alert {
             border: none;
-            border-left: 4px solid #f59e0b;
-            background: #fffbeb;
+            border-left: 4px solid #f5900b;
+            background: #fdedd8;
             border-radius: var(--printly-radius);
             box-shadow: var(--printly-shadow);
-            color: #92400e;
+            color: #f5900b;
             padding: 1rem 1.25rem;
         }
 
@@ -208,7 +223,7 @@
                             <i class="bi bi-tools me-1"></i>Fabricante
                         </a>
                     </li>
-                     <li class="nav-item ms-2">
+                    <li class="nav-item ms-2">
                         <button class="btn btn-sm" type="button" id="sair">
                             <i class="bi bi-door-open"></i>
                         </button>

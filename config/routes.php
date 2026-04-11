@@ -12,6 +12,5 @@ return [
     'editar-administrador'  => __DIR__ . '/../app/views/editar_administrador.html',
     'editar-fabricante'     => __DIR__ . '/../app/views/editar_fabricante.html',
     'solicitar-maker'       => __DIR__ . '/../app/views/solicitar_maker.html',
-    'esqueci-senha'         => __DIR__ . '/../app/views/esqueci_senha.html',
-    'redefinir-senha'       => __DIR__ . '/../app/views/redefinir_senha.html',
+    'cadastro-administrador' => __DIR__ . '/../app/views/cadastro_administrador.html',
 ];

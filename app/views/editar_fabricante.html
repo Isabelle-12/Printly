@@ -5,80 +5,254 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Editar Fabricante - Printly</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=Syne:wght@600;700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --brand: #6c757d;
+            --brand-dark: #495057;
+            --accent: #40343f;
+            --surface: #ffffff;
+            --bg: #f8f9fa;
+            --border: #dee2e6;
+            --text: #292128;
+            --muted: #7d6c79;
+            --radius: 8px;
+            --shadow: 0 2px 12px rgba(0, 0, 0, 0.07);
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            background-color: var(--bg);
+            font-family: 'DM Sans', sans-serif;
+            color: var(--text);
+            min-height: 100vh;
+        }
+
+        .page-title {
+            font-family: 'Syne', sans-serif;
+            font-weight: 700;
+            font-size: 1.5rem;
+            color: var(--accent);
+            letter-spacing: -0.5px;
+        }
+
+        .page-subtitle {
+            font-size: 0.9rem;
+            color: var(--muted);
+        }
+
+        .card {
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            margin-bottom: 20px;
+        }
+
+        .card-header {
+            background-color: var(--surface);
+            border-bottom: 1px solid var(--border);
+            padding: 1rem 1.25rem;
+            border-radius: calc(var(--radius) - 1px) calc(var(--radius) - 1px) 0 0 !important;
+        }
+
+        .card-header h5 {
+            font-family: 'Syne', sans-serif;
+            font-weight: 600;
+            font-size: 1rem;
+            color: var(--accent);
+            margin: 0;
+        }
+
+        .section-label {
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--muted);
+            padding-bottom: 0.5rem;
+            margin-bottom: 1rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .form-label {
+            font-size: 0.825rem;
+            font-weight: 500;
+            color: var(--muted);
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            margin-bottom: 0.35rem;
+        }
+
+        .form-control,
+        .form-select {
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 0.55rem 0.85rem;
+            font-size: 0.95rem;
+            font-family: 'DM Sans', sans-serif;
+            color: var(--text);
+            background-color: #fdfdfd;
+            transition: border-color 0.15s, box-shadow 0.15s;
+        }
+
+        .form-control:focus,
+        .form-select:focus {
+            border-color: var(--brand);
+            box-shadow: 0 0 0 3px rgba(108, 117, 125, 0.15);
+            background-color: #fff;
+        }
+
+        .form-control::placeholder { color: #adb5bd; font-size: 0.9rem; }
+
+        .form-control[readonly] {
+            background-color: #f0eef0;
+            color: var(--muted);
+            cursor: not-allowed;
+        }
+
+        .btn-primary-custom {
+            background-color: var(--accent);
+            color: #fff;
+            border: none;
+            border-radius: var(--radius);
+            padding: 0.6rem 2rem;
+            font-family: 'Syne', sans-serif;
+            font-weight: 600;
+            font-size: 0.9rem;
+            letter-spacing: 0.03em;
+            cursor: pointer;
+            transition: background-color 0.15s, transform 0.1s;
+        }
+
+        .btn-primary-custom:hover {
+            background-color: #412746;
+            transform: translateY(-1px);
+            color: #fff;
+        }
+
+        .btn-secondary-custom {
+            background-color: transparent;
+            color: var(--muted);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 0.6rem 1.5rem;
+            font-family: 'DM Sans', sans-serif;
+            font-weight: 500;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: background-color 0.15s;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-secondary-custom:hover { background-color: #e9ecef; color: var(--text); }
+
+        .form-actions {
+            display: flex;
+            gap: 0.75rem;
+            justify-content: flex-end;
+            padding-top: 0.5rem;
+        }
+
+        @media (max-width: 576px) {
+            .form-actions { flex-direction: column-reverse; }
+            .btn-primary-custom,
+            .btn-secondary-custom { width: 100%; text-align: center; }
+        }
+    </style>
 </head>
 <body data-acesso="ADMIN">
 
 <div class="container mt-4 mb-5">
-    <h2>Editar Fabricante (Maker)</h2>
-    <p class="text-muted">Gerencie as informações de perfil e dados comerciais do fabricante.</p>
+
+    <div class="d-flex align-items-center gap-3 mb-1">
+        <h1 class="page-title mb-0">Editar Fabricante</h1>
+    </div>
+    <p class="page-subtitle mb-4">Gerencie as informações de perfil e dados comerciais do fabricante.</p>
 
     <form id="formEditarFabricante">
         <input type="hidden" id="id">
         <input type="hidden" id="usuario_id">
 
-        <div class="row">
-            <div class="col-md-6 mb-3">
-                <label for="nome" class="form-label">Nome Completo</label>
-                <input type="text" id="nome" class="form-control" required>
+        <!-- Dados Pessoais -->
+        <div class="card">
+            <div class="card-header">
+                <h5>Dados Pessoais</h5>
             </div>
-
-            <div class="col-md-6 mb-3">
-                <label for="email" class="form-label">Email</label>
-                <input type="email" id="email" class="form-control" required>
-            </div>
-        </div>
-
-        <div class="row">
-            <div class="col-md-6 mb-3">
-                <label for="tipo_perfil" class="form-label">Tipo de Perfil</label>
-                <select id="tipo_perfil" class="form-select">
-                    <option value="MAKER" selected>Fabricante</option>
-                    <option value="CLIENTE">Usuário</option>
-                    <option value="ADMIN">Administrador</option>
-                </select>
-                <small class="text-danger">Atenção: Mudar para 'Usuário' removerá os dados de fabricante.</small>
-            </div>
-
-        </div>
-
-        <hr>
-        <h5 class="mb-3">Dados Comerciais</h5>
-
-        <div class="row">
-            <div class="col-md-6 mb-3">
-                <label for="cnpj" class="form-label">CNPJ</label>
-                <input type="text" id="cnpj" class="form-control" placeholder="00.000.000/0000-00">
-            </div>
-
-            <div class="col-md-6 mb-3">
-                <label for="telefone_comercial" class="form-label">Telefone Comercial</label>
-                <input type="text" id="telefone_comercial" class="form-control" placeholder="(00) 00000-0000">
+            <div class="card-body p-4">
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <label for="nome" class="form-label">Nome Completo</label>
+                        <input type="text" id="nome" class="form-control" required>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="email" class="form-label">Email</label>
+                        <input type="email" id="email" class="form-control" required>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="tipo_perfil" class="form-label">Tipo de Perfil</label>
+                        <select id="tipo_perfil" class="form-select">
+                            <option value="MAKER" selected>Fabricante</option>
+                            <option value="CLIENTE">Usuário</option>
+                            <option value="ADMIN">Administrador</option>
+                        </select>
+                        <small class="text-danger" style="font-size: 0.8rem;">Atenção: Mudar para 'Usuário' removerá os dados de fabricante.</small>
+                    </div>
+                </div>
             </div>
         </div>
 
-        <div class="mb-3">
-            <label for="endereco_empresa" class="form-label">Endereço da Empresa</label>
-            <input type="text" id="endereco_empresa" class="form-control" placeholder="Rua, Número, Bairro, Cidade - UF">
+        <!-- Dados Comerciais -->
+        <div class="card">
+            <div class="card-header">
+                <h5>Dados Comerciais</h5>
+            </div>
+            <div class="card-body p-4">
+                <div class="row g-3 mb-3">
+                    <div class="col-md-6">
+                        <label for="cnpj" class="form-label">CNPJ</label>
+                        <input type="text" id="cnpj" class="form-control" placeholder="00.000.000/0000-00">
+                    </div>
+                    <div class="col-md-6">
+                        <label for="telefone_comercial" class="form-label">Telefone Comercial</label>
+                        <input type="text" id="telefone_comercial" class="form-control" placeholder="(00) 00000-0000">
+                    </div>
+                </div>
+                <div class="row g-3">
+                    <div class="col-12">
+                        <label for="endereco_empresa" class="form-label">Endereço da Empresa</label>
+                        <input type="text" id="endereco_empresa" class="form-control" placeholder="Rua, Número, Bairro, Cidade - UF">
+                    </div>
+                </div>
+            </div>
         </div>
 
-        <hr>
-        <h5 class="mb-3">Equipamentos e Materiais (Visualização)</h5>
-        
-        <div class="mb-3">
-            <label for="impressoras_visualizar" class="form-label">Impressoras Cadastradas</label>
-            <textarea id="impressoras_visualizar" class="form-control" rows="2" readonly style="background-color: #e9ecef;"></textarea>
-            <small class="text-muted">Para editar impressoras, vá ao módulo de Máquinas.</small>
+        <!-- Equipamentos e Materiais -->
+        <div class="card">
+            <div class="card-header">
+                <h5>Equipamentos e Materiais</h5>
+            </div>
+            <div class="card-body p-4">
+                <div class="mb-3">
+                    <label for="impressoras_visualizar" class="form-label">Impressoras Cadastradas</label>
+                    <textarea id="impressoras_visualizar" class="form-control" rows="2" readonly></textarea>
+                    <small class="text-muted" style="font-size: 0.8rem;">Para editar impressoras, vá ao módulo de Máquinas.</small>
+                </div>
+                <div class="mb-1">
+                    <label for="materiais_visualizar" class="form-label">Materiais Disponíveis</label>
+                    <textarea id="materiais_visualizar" class="form-control" rows="2" readonly></textarea>
+                </div>
+            </div>
         </div>
 
-        <div class="mb-3">
-            <label for="materiais_visualizar" class="form-label">Materiais Disponíveis</label>
-            <textarea id="materiais_visualizar" class="form-control" rows="2" readonly style="background-color: #e9ecef;"></textarea>
+        <div class="form-actions">
+            <a href="index.php?rota=admin-usuarios" class="btn-secondary-custom">Cancelar</a>
+            <button type="submit" class="btn-primary-custom" id="salvar">Salvar Alterações</button>
         </div>
 
-        <div class="mt-4">
-            <button type="submit" class="btn btn-primary" id="salvar">Salvar Alterações</button>
-            <a href="index.php?rota=admin-usuarios" class="btn btn-secondary">Cancelar</a>
-        </div>
     </form>
 </div>
 

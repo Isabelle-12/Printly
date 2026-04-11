@@ -22,6 +22,7 @@
             --printly-border: #c2b9c28c;
             --printly-shadow: 0 2px 12px rgba(229, 70, 181, 0.08);
             --printly-radius: 12px;
+        
         }
 
         * { box-sizing: border-box; }
@@ -36,7 +37,7 @@
         .navbar {
             background: linear-gradient(135deg, var(--printly-primary) 0%, var(--printly-primary-dark) 100%) !important;
             padding: 0.75rem 0;
-            box-shadow: 0 2px 16px rgba(79, 70, 229, 0.25);
+            box-shadow: 0 2px 16px rgba(216, 70, 229, 0.25);
         }
 
         .navbar-brand {
@@ -180,7 +181,7 @@
         }
 
         .table-striped > tbody > tr:nth-of-type(odd) > * {
-            background-color: rgba(99, 102, 241, 0.03);
+            background-color: rgba(241, 99, 229, 0.03);
         }
 
         .table-hover > tbody > tr:hover > * {
@@ -198,6 +199,8 @@
         .btn-primary {
             background: var(--printly-accent);
             border-color: var(--printly-accent);
+            --bs-btn-active-bg: #850b96;
+            --bs-btn-hover-border-color: #4d0449;
         }
 
         .btn-primary:hover {
@@ -252,7 +255,7 @@
         .modal-content {
             border: 1px solid var(--printly-border);
             border-radius: var(--printly-radius);
-            box-shadow: 0 8px 32px rgba(79, 70, 229, 0.15);
+            box-shadow: 0 8px 32px rgba(184, 70, 229, 0.15);
         }
 
         .modal-header {

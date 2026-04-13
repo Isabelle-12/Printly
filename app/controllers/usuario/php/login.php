@@ -4,48 +4,51 @@ header("Content-type: application/json; charset=utf-8");
 
 include_once(__DIR__ . '/../../../../config/conexao.php');
 
-
 $retorno = ['status' => 'nok', 'mensagem' => 'Erro interno', 'data' => []];
 
-// Verifique se a conexão existe
 if (!$conexao) {
     echo json_encode(['status' => 'nok', 'mensagem' => 'Erro de conexão com o banco']);
     exit;
 }
 
-// ... restante do código com a comparação de senha simples (==)
 if (isset($_POST['email']) && isset($_POST['senha'])) {
     $email = $_POST['email'];
     $senha = $_POST['senha'];
 
+    // mudança: busca o usuário pelo email e senha, mas agora vamos validar o status antes de criar a sessão
     $stmt = $conexao->prepare("SELECT * FROM usuarios WHERE email = ? AND senha = ?");
     $stmt->bind_param("ss", $email, $senha);
     $stmt->execute();
     $resultado = $stmt->get_result();
 
     if ($resultado->num_rows > 0) {
-        while ($linha = $resultado->fetch_assoc()) {
-            $tabela[] = $linha;
-        }
-        $_SESSION['email'] = $email; // cria sessão e guarda
-        $_SESSION['tipo'] = $tabela[0]['tipo_perfil']; //ta recebendo o tipo logado la na table, 0 é pq é só um array q tem na lista q é oq loga
-        $_SESSION['id']    = $tabela[0]['id'];
-        $_SESSION['status_fabricante'] = $tabela[0]['status_fabricante']; 
+        $usuario = $resultado->fetch_assoc();
 
-        
+        // mudança: impede login de usuário banido
+        if ($usuario['status'] === 'BANIDO') {
+            $retorno['mensagem'] = "Usuário banido pelo administrador";
+        } else {
+            // mudança: sessão só é criada se o usuário estiver ativo
+            $_SESSION['email'] = $usuario['email'];
+            $_SESSION['tipo'] = $usuario['tipo_perfil'];
+            $_SESSION['id'] = $usuario['id'];
+            $_SESSION['status_fabricante'] = $usuario['status_fabricante'];
+
             $retorno = [
                 'status' => 'ok',
                 'mensagem' => 'Sucesso',
-                'data' => $linha
+                'data' => $usuario
             ];
-        } else {
-            $retorno['mensagem'] = "Senha incorreta";
         }
     } else {
-        $retorno['mensagem'] = "Usuário não encontrado";
+        $retorno['mensagem'] = "Usuário não encontrado ou senha incorreta";
     }
 
-$stmt->close();
+    $stmt->close();
+} else {
+    $retorno['mensagem'] = "Email e senha são obrigatórios";
+}
+
 $conexao->close();
 
 echo json_encode($retorno);

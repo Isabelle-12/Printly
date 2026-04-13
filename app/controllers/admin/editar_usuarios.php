@@ -2,17 +2,13 @@
 session_start();
 include_once(__DIR__ . '/../../../config/conexao.php');
 
-
 header('Content-Type: application/json; charset=UTF-8');
 
 $retorno = [
-    'status'    => '',
-    'mensagem'  => '',
-    'data'      => []
+    'status' => '',
+    'mensagem' => '',
+    'data' => []
 ];
-
-
-
 
 if (!isset($_POST['id'])) {
     $retorno['status'] = 'no';
@@ -21,7 +17,6 @@ if (!isset($_POST['id'])) {
     $conexao->close();
     exit;
 }
-
 
 $id          = (int) ($_POST['id'] ?? 0);
 $nome        = $_POST['nome'] ?? '';
@@ -34,7 +29,7 @@ $cidade      = $_POST['cidade'] ?? '';
 $estado      = $_POST['estado'] ?? '';
 $tipo_perfil = $_POST['tipo_perfil'] ?? '';
 $nova_senha  = $_POST['nova_senha'] ?? '';
-
+$status      = $_POST['status'] ?? 'ATIVO'; // mudança: recebe o status enviado pela tela de edição
 
 $stmt = $conexao->prepare("SELECT * FROM usuarios WHERE id = ?");
 $stmt->bind_param("i", $id);
@@ -43,48 +38,84 @@ $result = $stmt->get_result();
 $stmt->close();
 
 if ($result->num_rows === 0) {
-    echo json_encode(['status'=>'erro','mensagem'=>'Usuário não encontrado']);
+    echo json_encode(['status' => 'erro', 'mensagem' => 'Usuário não encontrado']);
     $conexao->close();
     exit;
 }
 
-
 $stmt = $conexao->prepare("SELECT id FROM usuarios WHERE email = ? AND id != ?");
-$stmt ? $stmt->bind_param("si", $email, $id) : die(json_encode(['status'=>'erro','mensagem'=>'Falha no prepare do SELECT email']));
+$stmt->bind_param("si", $email, $id);
 $stmt->execute();
 $resultEmail = $stmt->get_result();
 $stmt->close();
 
 if ($resultEmail->num_rows > 0) {
-    echo json_encode(['status'=>'erro','mensagem'=>'Email já em uso']);
+    echo json_encode(['status' => 'erro', 'mensagem' => 'Email já em uso']);
     $conexao->close();
     exit;
 }
 
-
 if (!empty($nova_senha)) {
     $senha_hash = password_hash($nova_senha, PASSWORD_DEFAULT);
-    $sql = "UPDATE usuarios SET nome=?, email=?, documento=?, endereco=?, telefone=?, cep=?, cidade=?, estado=?, tipo_perfil=?, senha=? WHERE id=?";
+
+    $sql = "UPDATE usuarios 
+            SET nome=?, email=?, documento=?, endereco=?, telefone=?, cep=?, cidade=?, estado=?, tipo_perfil=?, status=?, senha=? 
+            WHERE id=?"; // mudança: adiciona o campo status na atualização do usuário
+
     $stmt = $conexao->prepare($sql);
+
     if (!$stmt) {
-        echo json_encode(['status'=>'erro','mensagem'=>'Falha no prepare do UPDATE com senha']);
+        echo json_encode(['status' => 'erro', 'mensagem' => 'Falha no prepare do UPDATE com senha']);
         $conexao->close();
         exit;
     }
-    $stmt->bind_param("ssssssssssi", $nome, $email, $documento, $endereco, $telefone, $cep, $cidade, $estado, $tipo_perfil, $senha_hash, $id);
+
+    $stmt->bind_param(
+        "sssssssssssi",
+        $nome,
+        $email,
+        $documento,
+        $endereco,
+        $telefone,
+        $cep,
+        $cidade,
+        $estado,
+        $tipo_perfil,
+        $status,
+        $senha_hash,
+        $id
+    );
 } else {
-    $sql = "UPDATE usuarios SET nome=?, email=?, documento=?, endereco=?, telefone=?, cep=?, cidade=?, estado=?, tipo_perfil=? WHERE id=?";
+    $sql = "UPDATE usuarios 
+            SET nome=?, email=?, documento=?, endereco=?, telefone=?, cep=?, cidade=?, estado=?, tipo_perfil=?, status=? 
+            WHERE id=?"; // mudança: adiciona o campo status na atualização do usuário
+
     $stmt = $conexao->prepare($sql);
+
     if (!$stmt) {
-        echo json_encode(['status'=>'erro','mensagem'=>'Falha no prepare do UPDATE sem senha']);
+        echo json_encode(['status' => 'erro', 'mensagem' => 'Falha no prepare do UPDATE sem senha']);
         $conexao->close();
         exit;
     }
-    $stmt->bind_param("sssssssssi", $nome, $email, $documento, $endereco, $telefone, $cep, $cidade, $estado, $tipo_perfil, $id);
+
+    $stmt->bind_param(
+        "ssssssssssi",
+        $nome,
+        $email,
+        $documento,
+        $endereco,
+        $telefone,
+        $cep,
+        $cidade,
+        $estado,
+        $tipo_perfil,
+        $status,
+        $id
+    );
 }
 
 $executouComSucesso = $stmt->execute();
-$linhasAfetadas = $stmt->affected_rows; 
+$linhasAfetadas = $stmt->affected_rows;
 $stmt->close();
 
 if ($tipo_perfil === 'MAKER') {
@@ -102,14 +133,12 @@ if ($tipo_perfil === 'MAKER') {
     $checkFab->close();
 }
 
-// 5. Retorno final para o JavaScript
 if ($executouComSucesso) {
     if ($linhasAfetadas > 0) {
         $retorno['status'] = 'ok';
         $retorno['mensagem'] = 'Usuário atualizado com sucesso';
     } else {
-        // Se o tipo_perfil mudou para MAKER, tecnicamente houve uma ação bem sucedida na tabela fabricantes
-        $retorno['status'] = 'ok'; 
+        $retorno['status'] = 'ok';
         $retorno['mensagem'] = 'Dados atualizados ou já estavam idênticos.';
     }
 } else {

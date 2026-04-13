@@ -230,6 +230,14 @@
                                 <option value="ADMIN">Administrador</option>
                             </select>
                         </div>
+                        <div class="col-md-6"> <!-- mudança: adicionado campo de status do usuário -->
+                            <label for="status" class="form-label">Status</label> <!-- mudança: label do novo campo -->
+                            <select id="status" class="form-select"> <!-- mudança: select para permitir ativo, pendente e banido -->
+                                <option value="ATIVO">Ativo</option>
+                                <option value="PENDENTE">Pendente</option>
+                                <option value="BANIDO">Banido</option>
+                            </select>
+                        </div>
                     </div>
 
                     <div class="section-label">Endereço</div>

@@ -185,6 +185,22 @@
             box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.12);
         }
 
+        .btn-blue {
+            background: transparent;
+            border: 1px solid #ad7db4;
+            color: #4f0c55;
+            border-radius: 8px;
+            font-size: 0.82rem;
+            font-weight: 500;
+            padding: 0.35rem 0.9rem;
+            transition: background 0.18s, color 0.18s;
+        }
+        .btn-blue:hover {
+            background: #fbdeffb9;
+            color: #71047a  ;
+            border-color: #71047a;
+        }
+
         .btn-success {
             background: var(--printly-accent);
             border-color: var(--printly-accent);
@@ -286,6 +302,11 @@
                         </a>
                     </li>
                     <li class="nav-item">
+                        <a class="nav-link" href="index.php?rota=fabricante-painel">
+                            <i class="bi bi-tools me-1" ></i>Painel do Fabrincate
+                        </a>
+                    </li>
+                    <li class="nav-item">
                         <a class="nav-link" href="index.php?rota=admin-usuarios">
                             <i class="bi bi-people me-1"></i>Usuários
                         </a>
@@ -323,7 +344,7 @@
         <div class="card">
             <div class="card-header">
                 <h5>Notificar Atrasos em Pedidos</h5>
-                <button class="btn btn-sm btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#modalPrazo">
+                <button class="btn btn-sm btn-blue" data-bs-toggle="modal" data-bs-target="#modalPrazo">
                     Configurar Prazo
                 </button>
             </div>

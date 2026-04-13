@@ -16,6 +16,8 @@
 
         document.getElementById("notif")?.classList.add("d-none");
         document.getElementById("painelM")?.classList.add("d-none");
+        document.getElementById("usuarioP")?.classList.add("d-none");
+        document.getElementById("usuario")?.classList.add("d-none");
     }
 
         if (dados.tipos === "CLIENTE") {

@@ -1,4 +1,3 @@
-//paula ve se aparece agora 
 
 document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("btn-enviar").addEventListener("click", solicitarRecuperacao);

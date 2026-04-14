@@ -103,8 +103,8 @@ try {
     ];
     $mail->Host       = 'smtp.gmail.com';
     $mail->SMTPAuth   = true;
-    $mail->Username   = 'pedrobfracaro@gmail.com';   // - email que vai enviar link para recuperação da senha
-    $mail->Password   = 'waoryklshxphauwo';       // - senha de app 
+    $mail->Username   = 'printlyi3d@gmail.com';   // - email que vai enviar link para recuperação da senha
+    $mail->Password   = 'tgzrauenhftrlamo';       // - senha de app 
     $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
     $mail->Port       = 587;
     $mail->CharSet    = 'UTF-8';

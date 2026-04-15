@@ -91,10 +91,10 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
         //REGRAS DOS TERMOS DE CONDIÇÕES
-        // if (aceitouTermos !== padraoEsperado) {
-        //     alert("Por favor, aceite os termos.");
-        //     return;
-        // }
+        if (aceitouTermos !== padraoEsperado) {
+             alert("Por favor, aceite os termos.");
+             return;
+        }
 
         //REGRAS DO EMAIL
         // Validação simples do EMAIL: apenas checa se existe o @

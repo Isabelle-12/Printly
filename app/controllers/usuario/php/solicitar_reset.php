@@ -110,7 +110,7 @@ try {
     $mail->CharSet    = 'UTF-8';
 
     
-    $mail->setFrom('pedrobfracaro@gmail.com', 'Printly'); // - isso é de onde ta saindo 
+    $mail->setFrom('printlyi3d@gmail.com', 'Printly'); // - isso é de onde ta saindo 
     $mail->addAddress($email); // isso é pra quem ta indo
 
     // texto do email

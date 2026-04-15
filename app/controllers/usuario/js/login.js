@@ -50,7 +50,7 @@ async function login(){
         case "MAKER": window.location.href = "index.php?rota=fabricante-painel"; 
         break;
         // case "maker":   window.location.href = "/index.php?rota=usuario-painel"; break;
-        case "ADMIN":   window.location.href = "index.php?rota=admin-notificacoes"; 
+        case "ADMIN":   window.location.href = "index.php?rota=admin-usuarios"; 
         break;
         default:        window.location.href = "index.php?rota=home";
          break;

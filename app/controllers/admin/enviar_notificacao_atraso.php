@@ -1,7 +1,19 @@
 <?php
+ini_set('display_errors', 1);
+error_reporting(E_ALL);
+session_start();
 
 include_once '../../../config/conexao.php';
-// include_once '../../helpers/email.php';
+
+// ta importando as classes da biblioteca phpmailer
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\SMTP;
+use PHPMailer\PHPMailer\Exception;
+// | |
+require __DIR__ . '/../../../../vendor/PHPMailer/src/Exception.php';
+require __DIR__ . '/../../../../vendor/PHPMailer/src/PHPMailer.php';
+require __DIR__ . '/../../../../vendor/PHPMailer/src/SMTP.php';
+//-----
 
 $retorno = [
     "status"   => "",

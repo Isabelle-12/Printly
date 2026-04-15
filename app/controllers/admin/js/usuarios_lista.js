@@ -164,7 +164,6 @@ function preencherTabelaFabricante(lista) {
                     <button class="btn btn-primary btn-sm" onclick='verPerfilFabricante(${JSON.stringify(fab)})' data-bs-toggle="modal" data-bs-target="#modalPerfil">Ver</button>
                     <button class="btn btn-warning btn-sm" onclick="editarFabricante(${fab.usuario_id})">Editar</button>
                     <button class="btn btn-danger btn-sm" onclick="excluirUsuario(${fab.usuario_id})">Excluir</button>
-                    <button class="btn btn-outline-secondary btn-sm" onclick=""(${fab.usuario_id})">Resetar Senha</button>
                 </td>
             </tr>`;
     });

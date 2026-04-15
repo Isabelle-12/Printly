@@ -38,27 +38,28 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
         //REGRAS DA SENHA 
-        if(senha.length < 8){
-            senhaErro.style.display = "block";
-            document.getElementById("senha").focus();
-            return;
-        }else{
-            senhaErro.style.display = "none";
-        }
+        // if(senha.length < 8){
+        //     senhaErro.style.display = "block";
+        //     document.getElementById("senha").focus();
+        //     return;
+        // }else{
+        //     senhaErro.style.display = "none";
+        // }
         
-        const regesEspecial = /[!@#$%^&(),..?:]/;
-        if (!regesEspecial.test(senha)){
-            alert ("A senha deve conter pela menos uma caractere especial");
-            document.getElementById("senha").focus();
-            return;
-        }
 
-        const regsMaiuscula = /[A-Z]/;
-        if (!regsMaiuscula.test(senha)){
-            alert("A senha deve ter pelo uma letra Maiuscula");
-            document.getElementById(senha).focus();
-            return;
-        }
+        // const regesEspecial = /[!@#$%^&(),..?:]/;
+        // if (!regesEspecial.test(senha)){
+        //     alert ("A senha deve conter pela menos uma caractere especial");
+        //     document.getElementById("senha").focus();
+        //     return;
+        // }
+
+        // const regsMaiuscula = /[A-Z]/;
+        // if (!regsMaiuscula.test(senha)){
+        //     alert("A senha deve ter pelo uma letra Maiuscula");
+        //     document.getElementById(senha).focus();
+        //     return;
+        // }
         
         if (senha !== confirmar_senha) {
             alert("As senhas não coincidem!");
@@ -74,25 +75,26 @@ document.addEventListener("DOMContentLoaded", () => {
             document.getElementById(telefone).focus;
             return;
         }
+
         const regsapenasNumerocep = /^[0-9]+$/;
         if (!regsapenasNumerocep.test(cep)){
-            alert("Em CPE só pode numeros");
+            alert("Em CEP só pode numeros");
             document.getElementById(cep).focus;
             return;
         }
 
         const regsapenasNumerocpf = /^[0-9]+$/;
         if (!regsapenasNumerocpf.test(documento)){
-            alert("Em CPF/CNPJ só pode numeros");
+            alert("Em Documento (CPF/CNPJ) só pode numeros");
             document.getElementById(documento).focus;
             return;
         }
 
         //REGRAS DOS TERMOS DE CONDIÇÕES
-        if (aceitouTermos !== padraoEsperado) {
-            alert("Por favor, aceite os termos.");
-            return;
-        }
+        // if (aceitouTermos !== padraoEsperado) {
+        //     alert("Por favor, aceite os termos.");
+        //     return;
+        // }
 
         //REGRAS DO EMAIL
         // Validação simples do EMAIL: apenas checa se existe o @

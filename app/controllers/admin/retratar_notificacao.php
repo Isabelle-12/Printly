@@ -120,6 +120,7 @@ $email_cliente = $partes['email_cliente'];
 $email_maker   = $partes['email_maker'];
 $nome_cliente  = $partes['nome_cliente'];
 $nome_maker    = $partes['nome_maker'];
+//teste de commit
 
 $protocolo = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http';
 $host      = $_SERVER['HTTP_HOST'];

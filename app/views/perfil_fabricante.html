@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meu Perfil - Printly</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --printly-primary: #412746;
+            --printly-primary-dark: #7a3077;
+            --printly-accent: #7b1385;
+            --printly-light: #f0cef5;
+            --printly-surface: #ffffff;
+            --printly-bg: #fff5fe;
+            --printly-text: #4b1b4b;
+            --printly-muted: #9e939e;
+            --printly-border: #c2b9c28c;
+            --printly-shadow: 0 2px 12px rgba(229, 70, 181, 0.08);
+            --printly-radius: 12px;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--printly-bg);
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            color: var(--printly-text);
+            min-height: 100vh;
+        }
+
+        .navbar {
+            background: linear-gradient(135deg, var(--printly-primary) 0%, var(--printly-primary-dark) 100%) !important;
+            padding: 0.75rem 0;
+            box-shadow: 0 2px 16px rgba(224, 70, 229, 0.25);
+        }
+
+        .navbar-brand {
+            font-family: 'Syne', sans-serif;
+            font-weight: 700;
+            font-size: 1.4rem;
+            color: #fff !important;
+        }
+
+        .navbar .nav-link {
+            color: rgba(255, 255, 255, 0.82) !important;
+            font-size: 0.9rem;
+            font-weight: 500;
+            padding: 0.45rem 0.9rem !important;
+            border-radius: 8px;
+            transition: background 0.18s, color 0.18s;
+        }
+
+        .navbar .nav-link:hover,
+        .navbar .nav-link.active {
+            background: rgba(255, 255, 255, 0.18);
+            color: #fff !important;
+        }
+
+        #sair {
+            background: rgba(255, 255, 255, 0.12);
+            color: rgba(255, 255, 255, 0.82);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            padding: 0.35rem 0.75rem;
+            font-size: 0.9rem;
+        }
+
+        #sair:hover {
+            background: rgba(255, 255, 255, 0.22);
+            color: #fff;
+        }
+
+        .container {
+            max-width: 1200px;
+        }
+
+        .page-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--printly-border);
+        }
+
+        .page-header h4 {
+            font-weight: 700;
+            font-size: 1.2rem;
+            margin: 0;
+        }
+
+        .page-header p {
+            font-size: 0.85rem;
+            color: var(--printly-muted);
+            margin: 2px 0 0;
+        }
+
+        .btn-printly {
+            background: var(--printly-primary);
+            color: #fff;
+            border-radius: 8px;
+            padding: 0.45rem 0.9rem;
+            font-size: 0.85rem;
+            border: none;
+            text-decoration: none;
+        }
+
+        .btn-printly:hover {
+            background: var(--printly-primary-dark);
+            color: #fff;
+        }
+
+        .card {
+            border: 1px solid var(--printly-border);
+            border-radius: var(--printly-radius);
+            box-shadow: var(--printly-shadow);
+            background: var(--printly-surface);
+            margin-bottom: 1.25rem;
+            overflow: hidden;
+        }
+
+        .card-header {
+            background: var(--printly-light);
+            border-bottom: 1px solid var(--printly-border);
+            padding: 0.85rem 1.25rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .card-header h5 {
+            margin: 0;
+            font-size: 0.975rem;
+            font-weight: 600;
+            color: var(--printly-primary);
+        }
+
+        .card-icon {
+            width: 30px;
+            height: 30px;
+            border-radius: 8px;
+            background: var(--printly-primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .card-icon i {
+            color: #fff;
+            font-size: 0.85rem;
+        }
+
+        .card-body {
+            padding: 1.25rem;
+        }
+
+        .perfil-topo {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .foto-perfil {
+            width: 115px;
+            height: 115px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 4px solid var(--printly-light);
+            background: #fff;
+        }
+
+        .perfil-info h3 {
+            margin: 0;
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--printly-primary);
+        }
+
+        .perfil-info p {
+            margin: 4px 0;
+            color: var(--printly-muted);
+            font-size: 0.9rem;
+        }
+
+        .info-item {
+            margin-bottom: 0.9rem;
+        }
+
+        .info-label {
+            font-size: 0.8rem;
+            color: var(--printly-muted);
+            margin-bottom: 2px;
+        }
+
+        .info-value {
+            font-size: 0.95rem;
+            font-weight: 500;
+            color: var(--printly-text);
+        }
+
+        .badge-status {
+            display: inline-block;
+            background: #e8d7ec;
+            color: var(--printly-primary);
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        @media (max-width: 576px) {
+            .page-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 12px;
+            }
+
+            .perfil-topo {
+                flex-direction: column;
+                text-align: center;
+            }
+        }
+        .btn-editar-perfil {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: linear-gradient(135deg, var(--printly-primary), var(--printly-primary-dark));
+            color: #fff;
+            border: none;
+            border-radius: 999px;
+            padding: 0.65rem 1.1rem;
+            font-size: 0.88rem;
+            font-weight: 600;
+            text-decoration: none;
+            box-shadow: 0 6px 18px rgba(122, 48, 119, 0.25);
+            transition: transform 0.18s ease, box-shadow 0.18s ease, background 0.18s ease;
+        }
+
+        .btn-editar-card {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            background-color: var(--printly-primary);
+            color: #fff;
+            border-radius: 8px;
+            padding: 0.45rem 0.85rem;
+            font-size: 0.85rem;
+            font-weight: 500;
+            border: none;
+            text-decoration: none;
+        }
+
+        .btn-editar-card:hover {
+            background-color: var(--printly-primary-dark);
+            color: #fff;
+        }
+    </style>
+</head>
+
+<body data-acesso="CLIENTE,MAKER,ADMIN">
+
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container">
+            <a class="navbar-brand" href="index.php?rota=fabricante-painel">Printly</a>
+
+            <div class="collapse navbar-collapse">
+                <ul class="navbar-nav ms-auto">
+
+                    <li class="nav-item">
+                        <a class="nav-link active" href="index.php?rota=perfil-usuario">
+                            <i class="bi bi-person-circle me-1"></i>Perfil
+                        </a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.php?rota=fabricante-painel">
+                            <i class="bi bi-tools me-1"></i>Painel do Fabricante
+                        </a>
+                    </li>
+
+                    <li class="nav-item ms-2">
+                        <button class="btn btn-sm" type="button" id="sair">
+                            <i class="bi bi-door-open"></i>
+                        </button>
+                    </li>
+
+                </ul>
+            </div>
+        </div>
+    </nav>
+    
+
+    <div class="container mt-4">
+
+        <div class="card">
+    <div class="card-body position-relative">
+
+        <a href="index.php?rota=editar-perfil-fabricante" class="btn btn-editar-card">
+            <i class="bi bi-pencil-square me-1"></i>
+            Editar
+        </a>
+
+        <div class="perfil-topo">
+            <img src="../public/img/perfil-padrao.png" alt="Foto de perfil" class="foto-perfil">
+
+            <div class="perfil-info">
+                <h3 id="perfilNome">Nome do Usuário</h3>
+                <p>
+                    <i class="bi bi-person-badge me-1"></i>
+                    <span id="perfilTipo">Cliente / Maker</span>
+                </p>
+                <p>
+                    <i class="bi bi-geo-alt me-1"></i>
+                    <span id="perfilLocalizacao">Curitiba - PR</span>
+                </p>
+                <span class="badge-status" id="perfilStatus">Ativo</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+        <div class="row">
+            <div class="col-md-5">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-icon">
+                            <i class="bi bi-person"></i>
+                        </div>
+                        <h5>Informações Pessoais</h5>
+                    </div>
+
+                    <div class="card-body">
+                        <div class="info-item">
+                            <div class="info-label">Nome completo</div>
+                            <div class="info-value" id="nome">Nome do usuário</div>
+                        </div>
+
+                        <div class="info-item">
+                            <div class="info-label">E-mail</div>
+                            <div class="info-value" id="email">usuario@email.com</div>
+                        </div>
+
+                        <div class="info-item">
+                            <div class="info-label">Telefone</div>
+                            <div class="info-value" id="telefone">(41) 99999-9999</div>
+                        </div>
+
+                        <div class="info-item">
+                            <div class="info-label">Documento</div>
+                            <div class="info-value" id="documento">000.000.000-00</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-icon">
+                            <i class="bi bi-geo-alt"></i>
+                        </div>
+                        <h5>Endereço</h5>
+                    </div>
+
+                    <div class="card-body">
+                        <div class="info-item">
+                            <div class="col-md-4 info-item">
+                                <div class="info-label">CEP</div>
+                                <div class="info-value" id="cep">80000-000</div>
+                            </div>
+
+                            <div class="col-md-4 info-item">
+                                <div class="info-label">Cidade</div>
+                                <div class="info-value" id="cidade">Curitiba</div>
+                            </div>
+        
+                            <div class="col-md-4 info-item">
+                                <div class="info-label">Estado</div>
+                                <div class="info-value" id="estado">PR</div>
+                            </div>
+
+                            <div class="col-md-12 info-item">
+                                <div class="info-label">Endereço completo</div>
+                                <div class="info-value" id="endereco">Rua Exemplo, 123 - Centro</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-icon">
+                            <i class="bi bi-shield-check"></i>
+                        </div>
+                        <h5>Dados da Conta</h5>
+                    </div>
+
+                    <div class="card-body">
+                        <div class="info-item">
+                            <div class="info-label">Tipo de perfil</div>
+                            <div class="info-value" id="tipoPerfil">CLIENTE</div>
+                        </div>
+
+                        <div class="info-item">
+                            <div class="info-label">Status da conta</div>
+                            <div class="info-value" id="statusConta">ATIVO</div>
+                        </div>
+
+                        <div class="info-item">
+                            <div class="info-label">Status fabricante</div>
+                            <div class="info-value" id="statusFabricante">NÃO SOLICITADO</div>
+                        </div>
+
+                        <div class="info-item">
+                            <div class="info-label">Disponível para pedidos</div>
+                            <div class="info-value" id="disponivelPedidos">Sim</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../app/controllers/usuario/js/verif.js"></script>
+    <script src="../app/controllers/usuario/js/perfil_usuario.js"></script>
+
+</body>
+
+</html> 

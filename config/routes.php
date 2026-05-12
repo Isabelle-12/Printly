@@ -15,6 +15,8 @@ return [
     'cadastro-administrador'    => __DIR__ . '/../app/views/cadastro_administrador.html',
     'esqueci-senha'             => __DIR__ . '/../app/views/esqueci_senha.html',
     'redefinir-senha'           => __DIR__ . '/../app/views/redefinir_senha.html',
-    'perfil-usuario'         => __DIR__ . '/../app/views/perfil_usuario.html',
-    'editar-perfil-usuario'  => __DIR__ . '/../app/views/editar_perfil_usuario.html'
+    'perfil-usuario'            => __DIR__ . '/../app/views/perfil_usuario.html',
+    'editar-perfil-usuario'     => __DIR__ . '/../app/views/editar_perfil_usuario.html',
+    'perfil-fabricante'         => __DIR__ . '/../app/views/perfil_fabricante.html',
+    'editar-perfil-fabricante'  => __DIR__ . '/../app/views/editar_perfil_fabricante.html'
 ];

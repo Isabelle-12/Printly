@@ -219,21 +219,27 @@ SELECT
     p.data_solicitacao,
     p.data_atualizacao,
     p.prazo_pedido,
+
     pr.id AS projeto_id,
     pr.nome_projeto,
+    pr.descricao,   -- 👈 FALTAVA ISSO
     pr.formato,
     pr.arquivo_caminho,
+
     c.id AS cliente_id,
     c.nome AS cliente_nome,
     c.email AS cliente_email,
+
     m.id AS maker_id,
     m.nome AS maker_nome,
     m.cidade AS maker_cidade,
     m.estado AS maker_estado
+
 FROM pedidos p
 JOIN projetos pr ON pr.id = p.projeto_id
 JOIN usuarios c ON c.id = pr.cliente_id
 JOIN usuarios m ON m.id = p.maker_id;
+
 
 CREATE OR REPLACE VIEW view_metricas_plataforma AS
 SELECT
@@ -299,3 +305,86 @@ ALTER TABLE mensagens
 
 ALTER TABLE usuarios 
     ADD COLUMN foto_perfil VARCHAR(255) NULL AFTER endereco;
+
+INSERT INTO projetos (
+    cliente_id,
+    nome_projeto,
+    descricao,
+    arquivo_caminho,
+    formato,
+    volume_estimado_cm3,
+    peso_estimado_gramas,
+    status
+) VALUES (
+    1,
+    'Capacete Cyberpunk',
+    'Capacete futurista personalizado com detalhes neon.',
+    'uploads/capacete_cyberpunk.stl',
+    'STL',
+    350.50,
+    820.00,
+    'COM_PEDIDO'
+);
+
+
+
+INSERT INTO pedidos (
+    projeto_id,
+    maker_id,
+    material_escolhido,
+    quantidade,
+    valor_total,
+    status,
+    endereco_entrega,
+    prazo_pedido
+) VALUES (
+    1,
+    2,
+    'PLA Premium Preto',
+    1,
+    320.00,
+    'EM_PRODUCAO',
+    'Rua dos Clientes, 10 - Curitiba/PR',
+    DATE_ADD(NOW(), INTERVAL 7 DAY)
+);
+
+INSERT INTO projetos (
+    cliente_id,
+    nome_projeto,
+    descricao,
+    arquivo_caminho,
+    formato,
+    volume_estimado_cm3,
+    peso_estimado_gramas,
+    status
+) VALUES (
+    1,
+    'Suporte Gamer RGB',
+    'Suporte personalizado para headset com acabamento futurista.',
+    'uploads/suporte_gamer_rgb.stl',
+    'STL',
+    180.75,
+    420.00,
+    'COM_PEDIDO'
+);
+
+INSERT INTO pedidos (
+    projeto_id,
+    maker_id,
+    material_escolhido,
+    quantidade,
+    valor_total,
+    status,
+    endereco_entrega,
+    prazo_pedido
+) VALUES (
+    2,
+    2,
+    'PLA Azul Metálico',
+    2,
+    185.90,
+    'ACEITO',
+    'Av. Tecnologia, 450 - Curitiba/PR',
+    DATE_ADD(NOW(), INTERVAL 5 DAY)
+);
+

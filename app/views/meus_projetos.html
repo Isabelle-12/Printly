@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meus Projetos - Printly</title>
+    <!-- CSS mantido para consistência visual -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --printly-primary: #412746;
+            --printly-primary-dark: #7a3077;
+            --printly-accent: #5a0a61;
+            --printly-light: #f0cef5;
+            --printly-surface: #ffffff;
+            --printly-bg: #fff5fe;
+            --printly-text: #7e1b7e;
+            --printly-muted: #9e939e;
+            --printly-border: #c2b9c28c;
+            --printly-shadow: 0 2px 12px rgba(229, 70, 181, 0.08);
+            --printly-radius: 12px;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--printly-bg);
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            color: var(--printly-text);
+            min-height: 100vh;
+        }
+
+        /* ── Navbar ── */
+        .navbar {
+            background: linear-gradient(135deg, var(--printly-primary) 0%, var(--printly-primary-dark) 100%) !important;
+            padding: 0.75rem 0;
+            box-shadow: 0 2px 16px rgba(229, 70, 216, 0.25);
+            border-bottom: none;
+        }
+
+        .navbar-brand {
+            font-family: 'Syne', sans-serif;
+            font-weight: 700;
+            font-size: 1.4rem;
+            letter-spacing: -0.5px;
+            color: #fff !important;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .navbar .nav-link {
+            color: rgba(255,255,255,0.82) !important;
+            font-size: 0.9rem;
+            font-weight: 500;
+            padding: 0.45rem 0.9rem !important;
+            border-radius: 8px;
+            transition: background 0.18s, color 0.18s;
+        }
+
+        .navbar .nav-link:hover,
+        .navbar .nav-link.active {
+            background: rgba(255,255,255,0.18);
+            color: #fff !important;
+        }
+
+        .container {
+            max-width: 1200px;
+        }
+
+        #sair {
+            background: rgba(255,255,255,0.12);
+            color: rgba(255,255,255,0.82);
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 8px;
+            padding: 0.35rem 0.75rem;
+            font-size: 0.9rem;
+            transition: background 0.18s;
+        }
+
+        #sair:hover {
+            background: rgba(255,255,255,0.22);
+            color: #fff;
+        }
+
+        /* ── Page header ── */
+        .page-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--printly-border);
+        }
+
+        .page-header h4 {
+            font-weight: 700;
+            font-size: 1.2rem;
+            color: var(--printly-text);
+            margin: 0;
+        }
+
+        .page-header p {
+            font-size: 0.85rem;
+            color: var(--printly-muted);
+            margin: 2px 0 0;
+        }
+
+        /* ── Filtros ── */
+        .filtros {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 1.5rem;
+        }
+
+        .filtros button {
+            background: var(--printly-surface);
+            border: 1px solid var(--printly-border);
+            color: var(--printly-primary);
+            padding: 7px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.85rem;
+            transition: background 0.18s, color 0.18s;
+            box-shadow: var(--printly-shadow);
+        }
+
+        .filtros button:hover,
+        .filtros button.ativo {
+            background: var(--printly-primary);
+            color: #fff;
+        }
+
+        /* ── Grid de cards ── */
+        .cards-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 1.25rem;
+        }
+
+        /* ── Card base ── */
+        .card {
+            border: 1px solid var(--printly-border);
+            border-radius: var(--printly-radius);
+            box-shadow: var(--printly-shadow);
+            background: var(--printly-surface);
+            margin-bottom: 0;
+            overflow: hidden;
+            transition: box-shadow 0.2s, transform 0.2s;
+        }
+
+        .card:hover {
+            box-shadow: 0 4px 24px rgba(229, 70, 176, 0.13);
+            transform: translateY(-3px);
+        }
+
+        /* ── Imagem do card ── */
+        .card-imagem {
+            position: relative;
+            height: 200px;
+            overflow: hidden;
+            background: var(--printly-light);
+        }
+
+        .card-imagem img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* ── Badge de status ── */
+        .status {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            padding: 5px 13px;
+            border-radius: 999px;
+            font-size: 0.78rem;
+            font-weight: 700;
+            color: #fff;
+        }
+
+        .analise   { background: #f59e0b; }
+        .aceito    { background: #10b981; }
+        .producao  { background: #3b82f6; }
+        .concluido { background: #059669; }
+        .negado    { background: #ef4444; }
+        .bloqueado { background: #6b7280; }
+
+        /* ── Card header (igual ao painel) ── */
+        .card-header {
+            background: var(--printly-light);
+            border-bottom: 1px solid var(--printly-border);
+            padding: 0.85rem 1.25rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .card-header h5 {
+            margin: 0;
+            font-size: 0.975rem;
+            font-weight: 600;
+            color: var(--printly-primary);
+            letter-spacing: -0.2px;
+        }
+
+        .card-header .card-icon {
+            width: 30px;
+            height: 30px;
+            border-radius: 8px;
+            background: var(--printly-primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .card-header .card-icon i {
+            color: #fff;
+            font-size: 0.85rem;
+        }
+
+        /* ── Card body ── */
+        .card-body {
+            padding: 1.25rem;
+        }
+
+        .card-body p.desc {
+            color: var(--printly-muted);
+            font-size: 0.9rem;
+            margin: 0 0 14px;
+            line-height: 1.5;
+        }
+
+        /* ── Informações ── */
+        .informacoes {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            margin-bottom: 16px;
+            color: var(--printly-primary-dark);
+            font-weight: 500;
+            font-size: 0.88rem;
+        }
+
+        /* ── Feedback ── */
+        .feedback-maker {
+            background: #fff0f0;
+            border-left: 4px solid #ef4444;
+            padding: 10px 12px;
+            border-radius: 0 8px 8px 0;
+            margin-bottom: 14px;
+            color: #991b1b;
+            font-size: 0.88rem;
+        }
+
+        /* ── Ações ── */
+        .acoes {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .acoes button {
+            flex: 1;
+            min-width: 70px;
+            border: none;
+            padding: 9px 10px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.85rem;
+            transition: background 0.18s, transform 0.15s;
+            background: var(--printly-primary);
+            color: #fff;
+        }
+
+        .acoes button:hover {
+            background: var(--printly-primary-dark);
+            transform: scale(1.03);
+        }
+
+        .acoes button.btn-danger {
+            background: #ef4444;
+        }
+
+        .acoes button.btn-danger:hover {
+            background: #dc2626;
+        }
+
+        /* ── Responsivo ── */
+        @media (max-width: 576px) {
+            .cards-container {
+                grid-template-columns: 1fr;
+            }
+            .card-header {
+                padding: 0.75rem 1rem;
+            }
+            .card-body {
+                padding: 1rem;
+            }
+            .acoes {
+                flex-direction: column;
+            }
+            .acoes button {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+
+<body data-acesso="CLIENTE,ADMIN">
+
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container">
+            <a class="navbar-brand" href="index.php?rota=usuario-painel">Printly</a>
+            <div class="collapse navbar-collapse">
+                <ul class="navbar-nav ms-auto">
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.php?rota=perfil-usuario">
+                            <i class="bi bi-person-circle me-1"></i>Perfil
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active">
+                            <i class="bi bi-grid me-1"></i>Painel do Usuário
+                        </a>
+                    </li>
+                    <li class="nav-item" id="projetos">
+                        <a class="nav-link" href="index.php?rota=meus_projetos">
+                            <i class="bi bi-journal me-1"></i>Meus Projetos
+                        </a>
+                    </li>
+                
+                       <li class="nav-item ms-2">
+                        <button class="btn btn-sm" type="button" id="sair">
+                            <i class="bi bi-door-open"></i>
+                        </button>
+                    </li>
+
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+        <div class="page-header mb-4">
+            <h4>Meus Projetos</h4>
+            <p class="text-muted small">Gerencie suas solicitações de impressão 3D</p>
+        </div>
+
+        <!-- Filtros (Pode ser implementado no JS futuramente) -->
+        <div class="filtros mb-4 d-flex flex-wrap gap-2">
+            <button class="btn btn-sm btn-dark ativo">Todos</button>
+            <button class="btn btn-sm btn-outline-secondary" data-status="AGUARDANDO_CONFIRMACAO">Em análise</button>
+            <button class="btn btn-sm btn-outline-secondary" data-status="ACEITO">Aceitos</button>
+            <button class="btn btn-sm btn-outline-secondary" data-status="CONCLUIDO">Concluídos</button>
+        </div>
+
+        <!-- CONTAINER ONDE O JS IRÁ INJETAR OS CARDS -->
+        <div class="cards-container">
+            <div class="text-center w-100 py-5">
+                <div class="spinner-border text-primary" role="status"></div>
+                <p class="mt-2">Carregando seus projetos...</p>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    
+
+    <script>
+        // Lógica simples para trocar a classe 'ativo' nos botões de filtro
+        document.querySelectorAll('.filtros button').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelector('.filtros .ativo').classList.replace('btn-dark', 'btn-outline-secondary');
+                document.querySelector('.filtros .ativo').classList.remove('ativo');
+                
+                this.classList.add('ativo');
+                this.classList.replace('btn-outline-secondary', 'btn-dark');
+            });
+        });
+    </script>
+    
+    <script src="../app/controllers/usuario/js/meus_projetos.js"></script>
+    <script src="../app/controllers/usuario/js/verif.js"></script>
+</body>
+</html>

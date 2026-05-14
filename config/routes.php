@@ -18,5 +18,6 @@ return [
     'perfil-usuario'            => __DIR__ . '/../app/views/perfil_usuario.html',
     'editar-perfil-usuario'     => __DIR__ . '/../app/views/editar_perfil_usuario.html',
     'perfil-fabricante'         => __DIR__ . '/../app/views/perfil_fabricante.html',
-    'editar-perfil-fabricante'  => __DIR__ . '/../app/views/editar_perfil_fabricante.html'
+    'editar-perfil-fabricante'  => __DIR__ . '/../app/views/editar_perfil_fabricante.html',
+    'editar-portfolio'          => __DIR__ . '/../app/views/editar_portfolio.html',
 ];

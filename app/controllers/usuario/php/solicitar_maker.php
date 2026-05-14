@@ -49,16 +49,18 @@ if (in_array($status_fab, ['PENDENTE', 'APROVADO'])) {
 }
 
 //insere ou atualiza na tabela fabricantes
-$cnpj     = $dados['cnpj']              ?? '';
-$telefone = $dados['telefone_comercial'] ?? '';
-$endereco = $dados['endereco_empresa']  ?? '';
+$nome_empresa       = $dados['nome_empresa'] ?? '';
+$email_comercial    = $dados['email_comercial'] ?? '';
+$cnpj               = $dados['cnpj']              ?? '';
+$telefone           = $dados['telefone_comercial'] ?? '';
+$endereco           = $dados['endereco_empresa']  ?? '';
 
 $stmt = $conexao->prepare("
-    INSERT INTO fabricantes (usuario_id, cnpj, telefone_comercial, endereco_empresa)
-    VALUES (?, ?, ?, ?)
-    ON DUPLICATE KEY UPDATE cnpj=VALUES(cnpj), telefone_comercial=VALUES(telefone_comercial), endereco_empresa=VALUES(endereco_empresa)
+    INSERT INTO fabricantes (usuario_id, nome_empresa, email_comercial, cnpj, telefone_comercial, endereco_empresa)
+    VALUES (?, ?, ?, ?, ?, ?)
+    ON DUPLICATE KEY UPDATE nome_empresa=VALUES(nome_empresa), email_comercial=VALUES(email_comercial), cnpj=VALUES(cnpj), telefone_comercial=VALUES(telefone_comercial), endereco_empresa=VALUES(endereco_empresa)
 ");
-$stmt->bind_param("isss", $usuario_id, $cnpj, $telefone, $endereco);
+$stmt->bind_param("isssss", $usuario_id, $nome_empresa, $email_comercial, $cnpj, $telefone, $endereco);
 $stmt->execute();
 $stmt->close();
 

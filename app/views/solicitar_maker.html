@@ -210,6 +210,14 @@
             </div>
             <div class="card-body p-4">
                 <div class="mb-3">
+                    <label class="form-label">Nome da Empresa</label>
+                    <input type="text" id="nome_empresa" class="form-control" placeholder="Nome da empresa">
+                </div>
+                <div class="mb-3">
+                        <label class="form-label">E-mail Comercial</label>
+                        <input type="email" id="email_comercial" class="form-control" placeholder="contato@empresa.com">
+                    </div>
+                <div class="mb-3">
                     <label class="form-label">CNPJ <small class="text-muted">(opcional)</small></label>
                     <input type="text" id="cnpj" class="form-control" placeholder="00.000.000/0000-00">
                 </div>
@@ -258,6 +266,7 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="../app/controllers/usuario/js/verif.js"></script>
+
     <script>
         function adicionarImpressora() {
             const div = document.createElement('div');
@@ -307,9 +316,11 @@
             })).filter(m => m.tipo);
 
             const body = {
-                cnpj:              document.getElementById('cnpj').value.trim(),
+                nome_empresa:       document.getElementById('nome_empresa').value.trim(),
+                email_comercial:    document.getElementById('email_comercial').value.trim(),
+                cnpj:               document.getElementById('cnpj').value.trim(),
                 telefone_comercial: document.getElementById('telefone_comercial').value.trim(),
-                endereco_empresa:  document.getElementById('endereco_empresa').value.trim(),
+                endereco_empresa:   document.getElementById('endereco_empresa').value.trim(),
                 impressoras,
                 materiais
             };
@@ -319,7 +330,10 @@
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(body)
             });
-            const dados = await resp.json();
+
+            const texto = await resp.text();
+            console.log("RESPOSTA SOLICITAR MAKER:", texto);
+            const dados = JSON.parse(texto);
 
             const el = document.getElementById('msg-feedback');
             el.classList.remove('d-none', 'alert-success', 'alert-danger');

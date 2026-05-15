@@ -21,4 +21,6 @@ return [
     'editar-perfil-fabricante'  => __DIR__ . '/../app/views/editar_perfil_fabricante.html',
     'meus_projetos'             => __DIR__ . '/../app/views/meus_projetos.html',
     'editar-portfolio'          => __DIR__ . '/../app/views/editar_portfolio.html',
+    'listagem-maker'            =>__DIR__  . '/../app/views/portfolio_makers.html',
+    'realizar-pedido'           =>__DIR__  . '/../app/views/novo_pedido.html',
 ];

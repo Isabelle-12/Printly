@@ -442,6 +442,9 @@ ADD COLUMN email_comercial VARCHAR(100) NULL AFTER nome_empresa;
 ALTER TABLE fabricantes
 ADD COLUMN foto_empresa VARCHAR(255) NULL AFTER nome_empresa;
 
-
+INSERT INTO materiais_maker (maker_id, tipo_material, preco_por_grama) VALUES
+((SELECT id FROM usuarios WHERE email='maria@email.com'), 'PLA Premium', 0.16),
+((SELECT id FROM usuarios WHERE email='maria@email.com'), 'ABS', 0.19),
+((SELECT id FROM usuarios WHERE email='maria@email.com'), 'PETG', 0.23);
 
 

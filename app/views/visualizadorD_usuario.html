@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Visualizador 3D - Printly</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700&family=DM+Sans:wght@400;500&display=swap"
+        rel="stylesheet">
+
+    <style>
+        :root {
+            --printly-primary: #412746;
+            --printly-primary-dark: #7a3077;
+            --printly-accent: #7b1385;
+            --printly-light: #f0cef5;
+            --printly-surface: #ffffff;
+            --printly-bg: #fff5fe;
+            --printly-text: #4b1b4b;
+            --printly-muted: #9e939e;
+            --printly-border: #c2b9c28c;
+            --printly-shadow: 0 2px 12px rgba(229, 70, 181, 0.08);
+            --printly-radius: 12px;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--printly-bg);
+            font-family: 'DM Sans', system-ui, -apple-system, sans-serif;
+            color: var(--printly-text);
+            min-height: 100vh;
+        }
+
+        /* ── Navbar ── */
+        .navbar {
+            background: linear-gradient(135deg, var(--printly-primary) 0%, var(--printly-primary-dark) 100%) !important;
+            padding: 0.75rem 0;
+            box-shadow: 0 2px 16px rgba(224, 70, 229, 0.25);
+        }
+
+        .navbar-brand {
+            font-family: 'Syne', sans-serif;
+            font-weight: 700;
+            font-size: 1.4rem;
+            color: #fff !important;
+        }
+
+        .navbar .nav-link {
+            color: rgba(255, 255, 255, 0.82) !important;
+            font-size: 0.9rem;
+            font-weight: 500;
+            padding: 0.45rem 0.9rem !important;
+            border-radius: 8px;
+            transition: background 0.18s, color 0.18s;
+        }
+
+        .navbar .nav-link:hover,
+        .navbar .nav-link.active {
+            background: rgba(255, 255, 255, 0.18);
+            color: #fff !important;
+        }
+
+        #sair {
+            background: rgba(255, 255, 255, 0.12);
+            color: rgba(255, 255, 255, 0.82);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            padding: 0.35rem 0.75rem;
+            font-size: 0.9rem;
+        }
+
+        #sair:hover {
+            background: rgba(255, 255, 255, 0.22);
+            color: #fff;
+        }
+
+        .container {
+            max-width: 1200px;
+        }
+
+        /* ── Page header ── */
+        .page-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--printly-border);
+        }
+
+        .page-header h4 {
+            font-weight: 700;
+            font-size: 1.2rem;
+            margin: 0;
+        }
+
+        .page-header p {
+            font-size: 0.85rem;
+            color: var(--printly-muted);
+            margin: 2px 0 0;
+        }
+
+        /* ── Cards ── */
+        .card {
+            border: 1px solid var(--printly-border);
+            border-radius: var(--printly-radius);
+            box-shadow: var(--printly-shadow);
+            background: var(--printly-surface);
+            margin-bottom: 1.25rem;
+            overflow: hidden;
+        }
+
+        .card-header {
+            background: var(--printly-light);
+            border-bottom: 1px solid var(--printly-border);
+            padding: 0.85rem 1.25rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .card-header h5 {
+            margin: 0;
+            font-size: 0.975rem;
+            font-weight: 600;
+            color: var(--printly-primary);
+        }
+
+        .card-icon {
+            width: 30px;
+            height: 30px;
+            border-radius: 8px;
+            background: var(--printly-primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .card-icon i {
+            color: #fff;
+            font-size: 0.85rem;
+        }
+
+        .card-body {
+            padding: 1.25rem;
+        }
+
+        /* ── Upload zone ── */
+        .upload-zone {
+            border: 2px dashed var(--printly-border);
+            border-radius: var(--printly-radius);
+            background: var(--printly-bg);
+            padding: 2.5rem 1.5rem;
+            text-align: center;
+            cursor: pointer;
+            transition: border-color 0.2s, background 0.2s;
+            position: relative;
+        }
+
+        .upload-zone:hover,
+        .upload-zone.dragover {
+            border-color: var(--printly-primary-dark);
+            background: #f7e8fc;
+        }
+
+        .upload-zone .upload-icon {
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background: var(--printly-light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+        }
+
+        .upload-zone .upload-icon i {
+            font-size: 1.6rem;
+            color: var(--printly-primary);
+        }
+
+        .upload-zone h6 {
+            font-weight: 600;
+            color: var(--printly-primary);
+            margin-bottom: 0.35rem;
+        }
+
+        .upload-zone p {
+            font-size: 0.82rem;
+            color: var(--printly-muted);
+            margin: 0;
+        }
+
+        /* hidden real input */
+        #inputArquivo3D {
+            display: none;
+        }
+
+        .btn-upload-manual {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            margin-top: 1rem;
+            background: var(--printly-primary);
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            padding: 0.5rem 1rem;
+            font-size: 0.85rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background 0.18s;
+        }
+
+        .btn-upload-manual:hover {
+            background: var(--printly-primary-dark);
+        }
+
+        /* ── Badges de formato ── */
+        .formato-badges {
+            display: flex;
+            gap: 8px;
+            justify-content: center;
+            margin-top: 0.75rem;
+            flex-wrap: wrap;
+        }
+
+        .formato-badge {
+            background: #ede0f0;
+            color: var(--printly-primary);
+            border-radius: 20px;
+            padding: 3px 10px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+
+        /* ── Alerta de erro ── */
+        #alertaErroArquivo {
+            display: none;
+            border-radius: var(--printly-radius);
+            font-size: 0.87rem;
+            margin-top: 0.75rem;
+        }
+
+        /* ── Loading overlay no visualizador ── */
+        #loadingVisualizador {
+            display: none;
+            position: absolute;
+            inset: 0;
+            background: rgba(255, 255, 255, 0.82);
+            border-radius: var(--printly-radius);
+            z-index: 10;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+        }
+
+        #loadingVisualizador.ativo {
+            display: flex;
+        }
+
+        #loadingVisualizador .spinner-border {
+            color: var(--printly-primary);
+            width: 2.5rem;
+            height: 2.5rem;
+        }
+
+        #loadingVisualizador p {
+            color: var(--printly-primary);
+            font-size: 0.9rem;
+            font-weight: 500;
+            margin: 0;
+        }
+
+        /* ── Erro visualizador ── */
+        #erroVisualizador {
+            display: none;
+            position: absolute;
+            inset: 0;
+            background: var(--printly-bg);
+            border-radius: var(--printly-radius);
+            z-index: 9;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        #erroVisualizador.ativo {
+            display: flex;
+        }
+
+        #erroVisualizador i {
+            font-size: 2.5rem;
+            color: #c0392b;
+        }
+
+        #erroVisualizador p {
+            color: #c0392b;
+            font-size: 0.9rem;
+            font-weight: 500;
+            margin: 0;
+        }
+
+        /* ── Canvas wrapper ── */
+        .viewer-wrapper {
+            position: relative;
+            width: 100%;
+            height: 420px;
+            border-radius: var(--printly-radius);
+            overflow: hidden;
+            background: #1e1226;
+        }
+
+        #canvasVisualizador3D {
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
+
+        /* placeholder vazio */
+        #placeholderVisualizador {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            color: rgba(255, 255, 255, 0.35);
+        }
+
+        #placeholderVisualizador i {
+            font-size: 3.5rem;
+            opacity: 0.5;
+        }
+
+        #placeholderVisualizador p {
+            font-size: 0.88rem;
+            margin: 0;
+        }
+
+        /* ── Controles do visualizador ── */
+        .viewer-controls {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-top: 0.75rem;
+        }
+
+        .btn-viewer {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            background: var(--printly-light);
+            color: var(--printly-primary);
+            border: 1px solid var(--printly-border);
+            border-radius: 8px;
+            padding: 0.4rem 0.85rem;
+            font-size: 0.82rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background 0.18s, color 0.18s;
+        }
+
+        .btn-viewer:hover {
+            background: var(--printly-primary);
+            color: #fff;
+            border-color: var(--printly-primary);
+        }
+
+        /* ── Informações do modelo ── */
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 0.85rem;
+        }
+
+        .info-item {
+            background: var(--printly-bg);
+            border: 1px solid var(--printly-border);
+            border-radius: 10px;
+            padding: 0.85rem 1rem;
+        }
+
+        .info-label {
+            font-size: 0.75rem;
+            color: var(--printly-muted);
+            margin-bottom: 3px;
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
+        }
+
+        .info-value {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--printly-primary);
+        }
+
+        .info-value.placeholder-info {
+            color: var(--printly-border);
+            font-weight: 400;
+            font-size: 0.85rem;
+        }
+
+        /* ── Responsivo ── */
+        @media (max-width: 576px) {
+            .page-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 12px;
+            }
+
+            .viewer-wrapper {
+                height: 280px;
+            }
+        }
+    </style>
+</head>
+
+<body data-acesso="CLIENTE,MAKER,ADMIN">
+
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container">
+            <a class="navbar-brand" href="index.php?rota=usuario-painel">Printly</a>
+
+            <div class="collapse navbar-collapse">
+                <ul class="navbar-nav ms-auto">
+
+                    <li class="nav-item">
+                        <a class="nav-link active" href="index.php?rota=visualizador3D">
+                            <i class="bi bi-box me-1"></i>Visualizador 3D
+                        </a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.php?rota=perfil-usuario">
+                            <i class="bi bi-person-circle me-1"></i>Perfil
+                        </a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.php?rota=usuario-painel">
+                            <i class="bi bi-grid me-1"></i>Painel do Usuário
+                        </a>
+                    </li>
+
+                    <li class="nav-item ms-2">
+                        <button class="btn btn-sm" type="button" id="sair">
+                            <i class="bi bi-door-open"></i>
+                        </button>
+                    </li>
+
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+
+        <!-- Cabeçalho da página -->
+        <div class="page-header">
+            <div>
+                <h4><i class="bi bi-box me-2" style="color:var(--printly-primary-dark)"></i>Visualizador 3D</h4>
+                <p>Faça upload de um arquivo <strong>.STL</strong> ou <strong>.OBJ</strong> para visualizar o modelo em
+                    3D</p>
+            </div>
+        </div>
+
+        <!-- Upload de arquivo -->
+        <div class="card">
+            <div class="card-header">
+                <div class="card-icon"><i class="bi bi-cloud-arrow-up"></i></div>
+                <h5>Upload do Arquivo</h5>
+            </div>
+            <div class="card-body">
+
+                <!-- Zona drag & drop -->
+                <div class="upload-zone" id="uploadZone">
+                    <div class="upload-icon">
+                        <i class="bi bi-file-earmark-arrow-up"></i>
+                    </div>
+                    <h6>Arraste e solte seu arquivo aqui</h6>
+                    <p>ou clique no botão abaixo para selecionar manualmente</p>
+
+                    <div class="formato-badges">
+                        <span class="formato-badge">.STL</span>
+                        <span class="formato-badge">.OBJ</span>
+                    </div>
+
+                    <button class="btn-upload-manual" type="button" id="btnSelecionarArquivo">
+                        <i class="bi bi-folder2-open"></i> Selecionar Arquivo
+                    </button>
+
+                    <p style="margin-top:0.6rem; font-size:0.78rem; color:var(--printly-muted);">
+                        Tamanho máximo: <strong>50 MB</strong>
+                    </p>
+                </div>
+
+                <!-- Input oculto -->
+                <input type="file" id="inputArquivo3D" accept=".stl,.obj">
+
+                <!-- Alerta de erro -->
+                <div class="alert alert-danger" id="alertaErroArquivo" role="alert">
+                    <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                    <span id="msgErroArquivo">Arquivo inválido.</span>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- Visualizador 3D -->
+        <div class="card">
+            <div class="card-header">
+                <div class="card-icon"><i class="bi bi-display"></i></div>
+                <h5>Visualização 3D</h5>
+            </div>
+            <div class="card-body">
+
+                <!-- Canvas + overlays -->
+                <div class="viewer-wrapper" id="viewerWrapper">
+
+                    <!-- Canvas Three.js -->
+                    <canvas id="canvasVisualizador3D"></canvas>
+
+                    <!-- Placeholder (nenhum arquivo carregado) -->
+                    <div id="placeholderVisualizador">
+                        <i class="bi bi-box-seam"></i>
+                        <p>Nenhum modelo carregado</p>
+                    </div>
+
+                    <!-- Loading -->
+                    <div id="loadingVisualizador">
+                        <div class="spinner-border" role="status">
+                            <span class="visually-hidden">Carregando...</span>
+                        </div>
+                        <p>Carregando modelo 3D...</p>
+                    </div>
+
+                    <!-- Erro de renderização -->
+                    <div id="erroVisualizador">
+                        <i class="bi bi-exclamation-octagon"></i>
+                        <p id="msgErroVisualizador">Não foi possível renderizar o modelo.</p>
+                    </div>
+
+                </div>
+
+                <!-- Controles -->
+                <div class="viewer-controls" id="viewerControls">
+                    <button class="btn-viewer" type="button" id="btnResetarCamera">
+                        <i class="bi bi-arrow-counterclockwise"></i> Resetar câmera
+                    </button>
+                    <button class="btn-viewer" type="button" id="btnToggleGrid">
+                        <i class="bi bi-grid-3x3"></i> Grid
+                    </button>
+                    <button class="btn-viewer" type="button" id="btnToggleWireframe">
+                        <i class="bi bi-pentagon"></i> Wireframe
+                    </button>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- Informações do modelo -->
+        <div class="card">
+            <div class="card-header">
+                <div class="card-icon"><i class="bi bi-info-circle"></i></div>
+                <h5>Informações do Modelo</h5>
+            </div>
+            <div class="card-body">
+                <div class="info-grid">
+
+                    <div class="info-item">
+                        <div class="info-label"><i class="bi bi-file-earmark me-1"></i>Nome do arquivo</div>
+                        <div class="info-value" id="infoNomeArquivo">
+                            <span class="placeholder-info">—</span>
+                        </div>
+                    </div>
+
+                    <div class="info-item">
+                        <div class="info-label"><i class="bi bi-hdd me-1"></i>Tamanho</div>
+                        <div class="info-value" id="infoTamanhoArquivo">
+                            <span class="placeholder-info">—</span>
+                        </div>
+                    </div>
+
+                    <div class="info-item">
+                        <div class="info-label"><i class="bi bi-tag me-1"></i>Formato</div>
+                        <div class="info-value" id="infoFormato">
+                            <span class="placeholder-info">—</span>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+    </div><!-- /container -->
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../app/controllers/usuario/js/verif.js"></script>
+    <script type="module" src="../app/controllers/usuario/js/visualizador3D.js"></script>
+</body>
+
+</html>

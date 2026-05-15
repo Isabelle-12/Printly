@@ -388,11 +388,12 @@ INSERT INTO pedidos (
     DATE_ADD(NOW(), INTERVAL 5 DAY)
 );
 
+
 ALTER TABLE fabricantes
-ADD COLUMN email_comercial VARCHAR(100) NULL AFTER nome_empresa;
+ADD COLUMN nome_empresa VARCHAR(100) NULL AFTER usuario_id;
 
 ALTER TABLE fabricantes
 ADD COLUMN foto_empresa VARCHAR(255) NULL AFTER nome_empresa;
 
 ALTER TABLE fabricantes
-ADD COLUMN nome_empresa VARCHAR(100) NULL AFTER usuario_id;
+ADD COLUMN email_comercial VARCHAR(100) NULL AFTER nome_empresa;

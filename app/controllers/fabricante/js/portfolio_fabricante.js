@@ -45,7 +45,7 @@ function preencherDadosMaker(maker) {
     if (fotoPortfolio) {
         fotoPortfolio.src = maker.foto_empresa
             ? "../" + maker.foto_empresa
-            : "/img/perfil-padrao.jpg";
+            : "img/perfil-padrao.jpg";
     }
 
     document.getElementById("nome_empresa").textContent = maker.nome_empresa || "Nome não informado";

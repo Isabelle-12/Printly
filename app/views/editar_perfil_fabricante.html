@@ -183,17 +183,18 @@
         }
 
         .btn-cancelar {
-            background: #e8e0e8;
+            background: #edd9f0;
             color: var(--printly-primary);
             border-radius: 8px;
-            padding: 0.55rem 1rem;
-            font-size: 0.9rem;
+            padding: 0.45rem 0.85rem;
+            font-size: 0.85rem;
+            font-weight: 500;
             border: none;
             text-decoration: none;
         }
 
         .btn-cancelar:hover {
-            background: #d8ccd8;
+            background: #d9b8df;
             color: var(--printly-primary);
         }
 
@@ -230,6 +231,22 @@
                 flex-direction: column;
                 align-items: flex-start;
             }
+        }
+
+        .btn-editar-card {
+            background-color: var(--printly-primary);
+            color: #fff;
+            border-radius: 8px;
+            padding: 0.45rem 0.85rem;
+            font-size: 0.85rem;
+            font-weight: 500;
+            border: none;
+            text-decoration: none;
+        }
+
+        .btn-editar-card:hover {
+            background-color: var(--printly-primary-dark);
+            color: #fff;
         }
     </style>
 </head>
@@ -287,7 +304,7 @@
 
                 <div class="card-body">
                     <div class="foto-preview">
-                        <img src="../assets/img/perfil-padrao.png" alt="Foto de perfil" class="foto-perfil" id="previewFoto">
+                        <img src="img/perfil-padrao.jpg" alt="Foto de perfil" class="foto-perfil" id="previewFoto">
 
                         <div class="w-100">
                             <label for="foto" class="form-label">Alterar foto</label>
@@ -402,8 +419,8 @@
                     Cancelar
                 </a>
 
-                <button type="submit" class="btn-printly">
-                    <i class="bi bi-check-lg me-1"></i>Salvar Alterações
+                <button type="submit" class="btn btn-editar-card">
+                    <i class="bi bi-check-circle"></i>         Salvar Alterações
                 </button>
             </div>
 
@@ -414,7 +431,7 @@
     <script>
     async function carregarDadosPerfil() {
             try {
-                const resposta = await fetch("/Printly/app/controllers/usuario/php/buscar_perfil.php");
+                const resposta = await fetch("../app/controllers/fabricante/php/buscar_perfil_f.php");
 
                 const texto = await resposta.text();
                 console.log("RESPOSTA EDITAR PERFIL:", texto);
@@ -430,9 +447,9 @@
                 const usuario = dados.data;
 
                 if (usuario.foto_perfil) {
-                    document.getElementById("previewFoto").src = "/Printly/" + usuario.foto_perfil;
+                    document.getElementById("previewFoto").src = "../" + usuario.foto_perfil;
                 } else {
-                    document.getElementById("previewFoto").src = "/Printly/public/img/perfil-padrao.png";
+                    document.getElementById("previewFoto").src = "img/perfil-padrao.jpg";
                 }
 
                 document.getElementById("nome").value = usuario.nome || "";
@@ -496,7 +513,7 @@
         const formData = new FormData(this);
 
         try {
-            const resposta = await fetch("/Printly/app/controllers/usuario/php/atualizar_perfil_usuario.php", {
+            const resposta = await fetch("../app/controllers/fabricante/php/atualizar_perfil_fabricante.php", {
                 method: "POST",
                 body: formData
             });

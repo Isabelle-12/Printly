@@ -1,0 +1,989 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Novo Pedido — Printly</title>
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+
+    <!-- Fonte -->
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
+
+    <style>
+
+    *, *::before, *::after{
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+    }
+
+    :root{
+        --printly-primary: #412746;
+        --printly-primary-dark: #7a3077;
+        --printly-accent: #5a0a61;
+        --printly-light: #f0cef5;
+        --printly-surface: #ffffff;
+        --printly-bg: #fff5fe;
+        --printly-text: #7e1b7e;
+        --printly-muted: #9e939e;
+        --printly-border: #c2b9c28c;
+        --printly-shadow: 0 2px 12px rgba(229, 70, 181, 0.08);
+        --printly-radius: 12px;
+
+        --roxo-escuro: #2d1b4e;
+        --roxo-medio: #6b3fa0;
+        --roxo-claro: #a66dd4;
+        --rosa: #e0aaff;
+        --rosa-claro: #f3e8ff;
+        --cinza-bg: #faf7ff;
+        --cinza-texto: #6b7280;
+        --cinza-borda: #e5d9f2;
+
+        --sombra: 0 2px 12px rgba(107, 63, 160, 0.10);
+        --sombra-hover: 0 8px 32px rgba(107, 63, 160, 0.18);
+    }
+
+    body{
+        font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+        background: var(--cinza-bg);
+        color: var(--roxo-escuro);
+        min-height: 100vh;
+    }
+
+    .navbar{
+        background: linear-gradient(
+            135deg,
+            var(--printly-primary) 0%,
+            var(--printly-primary-dark) 100%
+        ) !important;
+
+        padding: .75rem 0;
+        box-shadow: 0 2px 16px rgba(229, 70, 216, 0.25);
+    }
+
+    .navbar-brand{
+        font-family: 'Syne', sans-serif;
+        font-weight: 700;
+        font-size: 1.4rem;
+        color: #fff !important;
+        letter-spacing: -.5px;
+    }
+
+    .navbar .nav-link{
+        color: rgba(255,255,255,.82) !important;
+        font-size: .9rem;
+        font-weight: 500;
+        padding: .45rem .9rem !important;
+        border-radius: 8px;
+        transition: .2s;
+    }
+
+    .navbar .nav-link:hover,
+    .navbar .nav-link.active{
+        background: rgba(255,255,255,.18);
+        color: #fff !important;
+    }
+
+    #sair{
+        background: rgba(255,255,255,.12);
+        color: rgba(255,255,255,.82);
+        border: 1px solid rgba(255,255,255,.2);
+        border-radius: 8px;
+        padding: .35rem .75rem;
+        transition: .2s;
+    }
+
+    #sair:hover{
+        background: rgba(255,255,255,.22);
+        color: white;
+    }
+
+    .hero-pedido{
+        background: linear-gradient(
+            135deg,
+            var(--roxo-escuro),
+            var(--roxo-medio)
+        );
+
+        color: white;
+        padding: 3rem 2rem;
+        text-align: center;
+        box-shadow: 0 4px 20px rgba(107, 63, 160, .18);
+    }
+
+    .hero-pedido h1{
+        font-size: 2.2rem;
+        font-weight: 700;
+        margin-bottom: .7rem;
+    }
+
+    .hero-pedido p{
+        color: var(--rosa);
+        font-size: 1rem;
+        margin: 0;
+    }
+
+    .container{
+        max-width: 1200px;
+    }
+
+    .card{
+        border: 1px solid var(--cinza-borda);
+        border-radius: 18px;
+        overflow: hidden;
+        box-shadow: var(--sombra);
+        transition: .2s;
+        background: white;
+    }
+
+    .card:hover{
+        box-shadow: var(--sombra-hover);
+    }
+
+    .card-body{
+        padding: 1.5rem;
+    }
+
+    .card h4,
+    .card h5,
+    .card h6{
+        color: var(--roxo-escuro);
+        font-weight: 700;
+    }
+
+    .card-maker{
+        position: sticky;
+        top: 20px;
+    }
+
+    .maker-avatar{
+        width: 72px;
+        height: 72px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 3px solid var(--rosa);
+        background: var(--rosa-claro);
+    }
+
+    #makerNome{
+        font-size: 1.1rem;
+        margin-bottom: 4px;
+    }
+
+    #makerCidade{
+        font-size: .9rem;
+        color: var(--cinza-texto) !important;
+    }
+
+    #makerAvaliacoes{
+        color: #f59e0b;
+        font-size: 1rem;
+        letter-spacing: 2px;
+    }
+
+    .badge-material{
+        background: var(--rosa-claro);
+        color: var(--roxo-medio);
+        border: 1px solid var(--cinza-borda);
+        padding: 5px 10px;
+        border-radius: 999px;
+        font-size: .75rem;
+        font-weight: 600;
+    }
+
+    .resumo-item{
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        padding: 12px 0;
+        border-bottom: 1px solid #f0e7f5;
+    }
+
+    .resumo-item:last-child{
+        border-bottom: none;
+    }
+
+    .resumo-item span{
+        color: var(--cinza-texto);
+        font-size: .95rem;
+    }
+
+    .resumo-item strong{
+        color: var(--roxo-escuro);
+        font-size: .95rem;
+    }
+
+    .form-label{
+        font-weight: 600;
+        color: var(--roxo-escuro);
+        margin-bottom: 8px;
+    }
+
+    .form-control,
+    .form-select{
+        border: 1px solid var(--cinza-borda);
+        border-radius: 12px;
+        padding: 12px 14px;
+        background: white;
+        transition: .2s;
+        box-shadow: none !important;
+    }
+
+    .form-control:focus,
+    .form-select:focus{
+        border-color: var(--roxo-claro);
+        box-shadow: 0 0 0 4px rgba(166, 109, 212, .15) !important;
+    }
+
+    textarea.form-control{
+        resize: vertical;
+    }
+
+    .upload-area{
+        border: 2px dashed var(--roxo-claro);
+        border-radius: 16px;
+        padding: 2.5rem 1.5rem;
+        text-align: center;
+        background: var(--rosa-claro);
+        transition: .2s;
+        position: relative;
+    }
+
+    .upload-area:hover{
+        background: #f7eeff;
+        border-color: var(--roxo-medio);
+    }
+
+    .upload-area i{
+        font-size: 2.4rem;
+        color: var(--roxo-medio);
+        margin-bottom: 12px;
+        display: block;
+    }
+
+    .upload-area p{
+        margin: 0;
+        color: var(--roxo-escuro);
+        font-weight: 500;
+    }
+
+    .upload-area input[type="file"]{
+        position: absolute;
+        inset: 0;
+        opacity: 0;
+        cursor: pointer;
+    }
+
+    .upload-subtitle{
+        display: block;
+        margin-top: 4px;
+        color: var(--cinza-texto);
+        font-size: .9rem;
+    }
+
+    #listaArquivos{
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .arquivo-item{
+        background: #f8f3fc;
+        border: 1px solid #eadcf5;
+        border-radius: 12px;
+        padding: 10px 14px;
+
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    .arquivo-item span{
+        font-size: .9rem;
+        color: var(--roxo-escuro);
+    }
+
+    .btn{
+        border-radius: 12px;
+        font-weight: 600;
+        padding: 10px 18px;
+        transition: .2s;
+    }
+
+    .btn-primary{
+        background: linear-gradient(
+            135deg,
+            var(--roxo-medio),
+            var(--roxo-escuro)
+        );
+
+        border: none;
+    }
+
+    .btn-primary:hover{
+        background: linear-gradient(
+            135deg,
+            var(--roxo-escuro),
+            var(--roxo-medio)
+        );
+
+        transform: translateY(-1px);
+    }
+
+    .btn-outline-secondary{
+        border: 1px solid var(--cinza-borda);
+        color: var(--cinza-texto);
+    }
+
+    .btn-outline-secondary:hover{
+        background: #f3eef8;
+        color: var(--roxo-escuro);
+        border-color: var(--roxo-claro);
+    }
+
+    .parte-card{
+        border: 1px solid #eadcf5;
+        background: #fcf9ff;
+    }
+
+    .parte-card .card-body{
+        padding: 1.25rem;
+    }
+
+    .titulo-parte{
+        color: var(--roxo-medio);
+    }
+
+    .form-check-input:checked{
+        background-color: var(--roxo-medio);
+        border-color: var(--roxo-medio);
+    }
+
+    .alert-danger{
+        border-radius: 14px;
+        border: none;
+        background: #fff0f3;
+        color: #b42318;
+    }
+
+    hr{
+        border-color: #efe5f5;
+        opacity: 1;
+    }
+
+    @media(max-width: 991px){
+
+        .card-maker{
+            position: relative;
+            top: 0;
+        }
+
+        .hero-pedido{
+            padding: 2.5rem 1.5rem;
+        }
+
+        .hero-pedido h1{
+            font-size: 1.8rem;
+        }
+    }
+
+    @media(max-width: 768px){
+
+        .card-body{
+            padding: 1.2rem;
+        }
+
+        .hero-pedido h1{
+            font-size: 1.6rem;
+        }
+
+        .d-flex.justify-content-end{
+            flex-direction: column;
+        }
+
+        .d-flex.justify-content-end .btn{
+            width: 100%;
+        }
+    }
+
+    </style>
+</head>
+
+<body data-acesso="CLIENTE,ADMIN">
+
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container">
+
+            <a class="navbar-brand" href="index.php?rota=usuario-painel">
+                Printly
+            </a>
+
+            <div class="collapse navbar-collapse">
+
+                <ul class="navbar-nav ms-auto">
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.php?rota=usuario-painel">
+                            <i class="bi bi-grid me-1"></i>
+                            Painel
+                        </a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.php?rota=meus_projetos">
+                            <i class="bi bi-box-seam me-1"></i>
+                            Meus Projetos
+                        </a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.php?rota=listagem-maker">
+                            <i class="bi bi-people me-1"></i>
+                            Fabricantes
+                        </a>
+                    </li>
+
+                    <li class="nav-item ms-2">
+                        <button class="btn btn-sm" id="sair">
+                            <i class="bi bi-door-open"></i>
+                        </button>
+                    </li>
+
+                </ul>
+
+            </div>
+        </div>
+    </nav>
+
+    <section class="hero-pedido">
+
+        <div class="container">
+
+            <h1>Solicitação de Impressão</h1>
+
+            <p>
+                Configure seu projeto e envie para análise do fabricante.
+            </p>
+
+        </div>
+
+    </section>
+
+    <main class="container py-5">
+
+        <div class="row g-4">
+
+            <div class="col-lg-4">
+
+                <div class="card card-maker shadow-sm">
+
+                    <div class="card-body">
+
+                        <div class="d-flex align-items-center gap-3 mb-4">
+
+                            <img
+                                id="makerFoto"
+                                class="maker-avatar"
+                                src=""
+                                alt="Maker"
+                            >
+
+                            <div>
+
+                                <h4 id="makerNome">
+                                    Maker
+                                </h4>
+
+                                <p id="makerCidade" class="text-muted mb-0">
+                                    Cidade
+                                </p>
+
+                            </div>
+
+                        </div>
+
+                        <hr>
+
+                        <h6 class="mb-3">
+                            Materiais disponíveis
+                        </h6>
+
+                        <div id="makerMateriais" class="d-flex flex-wrap gap-2">
+                        </div>
+
+                        <hr>
+
+                        <h6 class="mb-3">
+                            Avaliações
+                        </h6>
+
+                        <div id="makerAvaliacoes">
+                            ★★★★★
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="card shadow-sm mt-4">
+
+                    <div class="card-body">
+
+                        <h5 class="mb-3">
+                            Resumo do Pedido
+                        </h5>
+
+                        <div class="resumo-item">
+                            <span>Partes:</span>
+                            <strong id="resumoPartes">0</strong>
+                        </div>
+
+                        <div class="resumo-item">
+                            <span>Quantidade:</span>
+                            <strong id="resumoQuantidade">0</strong>
+                        </div>
+
+                        <div class="resumo-item">
+                            <span>Estimativa:</span>
+                            <strong id="resumoValor">
+                                A calcular
+                            </strong>
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="card shadow-sm mt-4">
+
+                </div>
+
+            </div>
+
+            <div class="col-lg-8">
+
+                <form id="formPedido">
+
+                    <input
+                        type="hidden"
+                        id="maker_id"
+                        name="maker_id"
+                    >
+
+                    <input
+                        type="hidden"
+                        name="status"
+                        value="AGUARDANDO_CONFIRMACAO"
+                    >
+
+                    <div class="card shadow-sm mb-4">
+
+                        <div class="card-body">
+
+                            <h4 class="mb-4">
+                                Dados do Projeto
+                            </h4>
+
+                            <div class="mb-3">
+
+                                <label class="form-label">
+                                    Nome do Projeto
+                                </label>
+
+                                <input
+                                    type="text"
+                                    class="form-control"
+                                    name="nome_projeto"
+                                    id="nome_projeto"
+                                    required
+                                >
+
+                            </div>
+
+                            <div class="mb-3">
+
+                                <label class="form-label">
+                                    Descrição Geral
+                                </label>
+
+                                <textarea
+                                    class="form-control"
+                                    rows="5"
+                                    name="descricao"
+                                    id="descricao"
+                                    required
+                                ></textarea>
+
+                            </div>
+
+                            <div class="mb-3">
+
+                                <label class="form-label">
+                                    Imagem de Capa do Projeto
+                                </label>
+
+                                <input
+                                    type="file"
+                                    class="form-control"
+                                    name="imagem_capa"
+                                    id="imagem_capa"
+                                    accept=".png,.jpg,.jpeg"
+                                >
+
+                                <small class="text-muted">
+                                    Esta imagem será exibida nos cards de projetos.
+                                </small>
+
+                            </div>
+
+                            <div class="row">
+
+                                <div class="col-md-6 mb-3">
+
+                                    <label class="form-label">
+                                        Quantidade
+                                    </label>
+
+                                    <input
+                                        type="number"
+                                        class="form-control"
+                                        name="quantidade"
+                                        id="quantidade"
+                                        min="1"
+                                        required
+                                    >
+
+                                </div>
+
+                                <div class="col-md-6 mb-3">
+
+                                    <label class="form-label">
+                                        Prazo desejado
+                                    </label>
+
+                                    <input
+                                        type="date"
+                                        class="form-control"
+                                        name="prazo"
+                                        id="prazo"
+                                    >
+
+                                </div>
+
+                            </div>
+
+                            <div class="mb-3">
+
+                                <label class="form-label">
+                                    Endereço de entrega
+                                </label>
+
+                                <textarea
+                                    class="form-control"
+                                    rows="3"
+                                    name="endereco"
+                                    id="endereco"
+                                    required
+                                ></textarea>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <div class="card shadow-sm mb-4">
+
+                        <div class="card-body">
+
+                            <h4 class="mb-4">
+                                Arquivos do Projeto
+                            </h4>
+
+                            <div class="upload-area">
+
+                                <i class="bi bi-cloud-upload"></i>
+
+                                <p class="mb-2">
+                                    Envie os arquivos do seu projeto
+                                </p>
+
+                                <span class="upload-subtitle">
+                                    STL, OBJ e imagens PNG/JPG para referência
+                                </span>
+
+                                <input
+                                    type="file"
+                                    id="arquivo_3d"
+                                    name="arquivos[]"
+                                    accept=".stl,.obj,.png,.jpg,.jpeg"
+                                    multiple
+                                >
+
+                            </div>
+
+                            <div id="listaArquivos" class="mt-3"></div>
+
+                            <small class="text-muted">
+                                Formatos aceitos:
+                                STL, OBJ, PNG, JPG e JPEG
+                            </small>
+
+                        </div>
+
+                    </div>
+
+                    <div class="card shadow-sm mb-4">
+
+                        <div class="card-body">
+
+                            <div class="d-flex justify-content-between align-items-center mb-4">
+
+                                <h4 class="mb-0">
+                                    Partes Personalizadas
+                                </h4>
+
+                                <button
+                                    type="button"
+                                    class="btn btn-primary"
+                                    id="btnAdicionarParte"
+                                >
+                                    <i class="bi bi-plus-circle me-1"></i>
+                                    Adicionar Parte
+                                </button>
+
+                            </div>
+
+                            <div id="containerPartes"></div>
+
+                        </div>
+
+                    </div>
+
+                    <div class="card shadow-sm mb-4">
+
+                        <div class="card-body">
+
+                            <h4 class="mb-4">
+                                Observações Extras
+                            </h4>
+
+                            <textarea
+                                class="form-control"
+                                rows="4"
+                                name="observacoes"
+                                id="observacoes"
+                                placeholder="Informações adicionais para o fabricante..."
+                            ></textarea>
+
+                        </div>
+
+                    </div>
+
+                    <div
+                        id="mensagensFormulario"
+                        class="alert alert-danger d-none mb-4"
+                    ></div>
+
+                    <div class="form-check mb-4">
+
+                        <input
+                            class="form-check-input"
+                            type="checkbox"
+                            id="confirmacaoPedido"
+                            required
+                        >
+
+                        <label class="form-check-label" for="confirmacaoPedido">
+
+                            Confirmo que as informações enviadas estão corretas.
+
+                        </label>
+
+                    </div>
+
+                    <div class="d-flex justify-content-end gap-3">
+
+                        <a
+                            href="index.php?rota=listagem-maker"
+                            class="btn btn-outline-secondary"
+                        >
+                            Cancelar
+                        </a>
+
+                        <button
+                            type="submit"
+                            class="btn btn-primary"
+                            id="btnEnviarPedido"
+                        >
+                            <i class="bi bi-send me-2"></i>
+                            Enviar Pedido
+                        </button>
+
+                    </div>
+
+                </form>
+
+            </div>
+
+        </div>
+
+    </main>
+
+    <template id="templateParte">
+
+        <div class="parte-card card mb-3">
+
+            <div class="card-body">
+
+                <div class="d-flex justify-content-between mb-3">
+
+                    <h5 class="mb-0 titulo-parte">
+                        Parte Personalizada
+                    </h5>
+
+                    <button
+                        type="button"
+                        class="btn btn-sm btn-danger btn-remover-parte"
+                    >
+                        <i class="bi bi-trash"></i>
+                    </button>
+
+                </div>
+
+                <div class="mb-3">
+
+                    <label class="form-label">
+                        Nome da Parte
+                    </label>
+
+                    <input
+                        type="text"
+                        class="form-control nome-parte"
+                        placeholder="Ex: Cabeça, Base, Corpo..."
+                        required
+                    >
+
+                </div>
+
+                <div class="mb-3">
+
+                    <label class="form-label">
+                        Descrição
+                    </label>
+
+                    <textarea
+                        class="form-control descricao-parte"
+                        rows="3"
+                        placeholder="Descreva esta parte..."
+                        required
+                    ></textarea>
+
+                </div>
+
+                <div class="row">
+
+                    <div class="col-md-3 mb-3">
+
+                        <label class="form-label">
+                            Material
+                        </label>
+
+                        <select
+                            class="form-select material-parte"
+                            required
+                        >
+
+                            <option value="">
+                                Selecione
+                            </option>
+
+                        </select>
+
+                    </div>
+
+                    <div class="col-md-3 mb-3">
+
+                        <label class="form-label">
+                            Cor
+                        </label>
+
+                        <input
+                            type="text"
+                            class="form-control cor-parte"
+                            placeholder="Ex: Rosa, Preto Fosco..."
+                            required
+                        >
+
+                    </div>
+
+                    <div class="col-md-3 mb-3">
+
+                        <label class="form-label">
+                            Acabamento
+                        </label>
+
+                        <select class="form-select acabamento-parte">
+
+                            <option value="">
+                                Selecione
+                            </option>
+
+                            <option value="fosco">
+                                Fosco
+                            </option>
+
+                            <option value="brilhante">
+                                Brilhante
+                            </option>
+
+                            <option value="lixado">
+                                Lixado
+                            </option>
+
+                            <option value="pintado">
+                                Pintado
+                            </option>
+
+                        </select>
+
+                    </div>
+
+                    <div class="col-md-3 mb-3">
+
+                        <label class="form-label">
+                            Quantidade
+                        </label>
+
+                        <input
+                            type="number"
+                            class="form-control quantidade-parte"
+                            min="1"
+                            value="1"
+                            required
+                        >
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </template>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../app/controllers/usuario/js/verif.js"></script>
+    <script src="../app/controllers/usuario/js/novo_pedido.js"></script>
+    
+</body>
+</html>
+

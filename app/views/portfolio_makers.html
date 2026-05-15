@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fabricantes — Printly</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
+
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        :root {
+            --printly-primary: #412746;
+            --printly-primary-dark: #7a3077;
+            --printly-accent: #5a0a61;
+            --printly-light: #f0cef5;
+            --printly-surface: #ffffff;
+            --printly-bg: #fff5fe;
+            --printly-text: #7e1b7e;
+            --printly-muted: #9e939e;
+            --printly-border: #c2b9c28c;
+            --printly-shadow: 0 2px 12px rgba(229, 70, 181, 0.08);
+            --printly-radius: 12px;
+
+            /* aliases para os cards de maker */
+            --roxo-escuro: #2d1b4e;
+            --roxo-medio: #6b3fa0;
+            --roxo-claro: #a66dd4;
+            --rosa: #e0aaff;
+            --rosa-claro: #f3e8ff;
+            --cinza-bg: #faf7ff;
+            --cinza-texto: #6b7280;
+            --cinza-borda: #e5d9f2;
+            --sombra: 0 2px 12px rgba(107, 63, 160, 0.10);
+            --sombra-hover: 0 8px 32px rgba(107, 63, 160, 0.18);
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background-color: var(--cinza-bg);
+            color: var(--roxo-escuro);
+            min-height: 100vh;
+        }
+
+        /* ── NAVBAR — idêntica ao usuario_painel ── */
+        .navbar {
+            background: linear-gradient(135deg, var(--printly-primary) 0%, var(--printly-primary-dark) 100%) !important;
+            padding: 0.75rem 0;
+            box-shadow: 0 2px 16px rgba(229, 70, 216, 0.25);
+            border-bottom: none;
+        }
+        .navbar-brand {
+            font-family: 'Syne', sans-serif;
+            font-weight: 700;
+            font-size: 1.4rem;
+            letter-spacing: -0.5px;
+            color: #fff !important;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .navbar .nav-link {
+            color: rgba(255,255,255,0.82) !important;
+            font-size: 0.9rem;
+            font-weight: 500;
+            padding: 0.45rem 0.9rem !important;
+            border-radius: 8px;
+            transition: background 0.18s, color 0.18s;
+        }
+        .navbar .nav-link:hover,
+        .navbar .nav-link.active {
+            background: rgba(255,255,255,0.18);
+            color: #fff !important;
+        }
+        .container { max-width: 1200px; }
+        #sair {
+            background: rgba(255,255,255,0.12);
+            color: rgba(255,255,255,0.82);
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 8px;
+            padding: 0.35rem 0.75rem;
+            font-size: 0.9rem;
+            transition: background 0.18s;
+        }
+        #sair:hover {
+            background: rgba(255,255,255,0.22);
+            color: #fff;
+        }
+
+        /* ── HERO ── */
+        .hero {
+            background: linear-gradient(135deg, var(--roxo-escuro) 0%, var(--roxo-medio) 100%);
+            padding: 3rem 2rem 2.5rem;
+            text-align: center;
+            color: #fff;
+        }
+        .hero h1 { font-size: 2rem; font-weight: 700; margin-bottom: 0.5rem; }
+        .hero p { color: var(--rosa); font-size: 1rem; margin-bottom: 1.5rem; }
+
+        .busca-wrapper { max-width: 480px; margin: 0 auto; position: relative; }
+        .busca-wrapper svg {
+            position: absolute; left: 14px; top: 50%;
+            transform: translateY(-50%);
+            color: var(--cinza-texto); pointer-events: none;
+        }
+        #input-busca {
+            width: 100%;
+            padding: 12px 16px 12px 42px;
+            border-radius: 30px;
+            border: none;
+            font-size: 0.95rem;
+            outline: none;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.15);
+        }
+        #input-busca:focus { box-shadow: 0 0 0 3px rgba(166, 109, 212, 0.4); }
+
+        /* ── GRID ── */
+        .main-container { max-width: 1200px; margin: 0 auto; padding: 2rem 1.5rem; }
+        #grid-makers {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 1.5rem;
+        }
+
+        /* ── MAKER CARD ── */
+        .maker-card {
+            background: #fff;
+            border-radius: 16px;
+            border: 1px solid var(--cinza-borda);
+            box-shadow: var(--sombra);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .maker-card:hover { transform: translateY(-4px); box-shadow: var(--sombra-hover); }
+
+        .card-header {
+            display: flex; align-items: flex-start; gap: 12px;
+            padding: 1rem 1rem 0.75rem;
+            background: transparent; border-bottom: none;
+        }
+        .maker-avatar {
+            width: 52px; height: 52px; border-radius: 50%;
+            object-fit: cover; flex-shrink: 0; border: 2px solid var(--rosa);
+        }
+        .avatar-inicial {
+            background: linear-gradient(135deg, var(--roxo-medio), var(--roxo-claro));
+            color: #fff; font-size: 1.3rem; font-weight: 700;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .maker-info { flex: 1; min-width: 0; }
+        .maker-nome {
+            font-size: 1rem; font-weight: 600; color: var(--roxo-escuro);
+            white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+        }
+        .maker-local {
+            display: flex; align-items: center; gap: 4px;
+            font-size: 0.8rem; color: var(--cinza-texto); margin: 2px 0 4px;
+        }
+        .maker-avaliacao { display: flex; align-items: center; gap: 6px; }
+        .estrelas { font-size: 0.85rem; line-height: 1; }
+        .estrela.cheia { color: #f59e0b; }
+        .estrela.meia  { color: #f59e0b; opacity: 0.6; }
+        .estrela.vazia { color: #d1d5db; }
+        .nota-texto { font-size: 0.78rem; color: var(--cinza-texto); }
+        .total-aval  { color: #9ca3af; }
+
+        .badge-disponivel {
+            font-size: 0.7rem; font-weight: 600;
+            padding: 3px 10px; border-radius: 20px;
+            white-space: nowrap; flex-shrink: 0;
+        }
+        .badge-disponivel.disponivel   { background: #dcfce7; color: #16a34a; }
+        .badge-disponivel.indisponivel { background: #fee2e2; color: #dc2626; }
+
+        /* ── GALERIA ── */
+        .card-galeria {
+            display: grid; gap: 2px; margin: 0.5rem 0;
+            height: 180px; overflow: hidden;
+            grid-template-columns: 2fr 1fr; grid-template-rows: 1fr 1fr;
+        }
+        .card-galeria[data-total="1"] { grid-template-columns: 1fr; grid-template-rows: 1fr; }
+        .card-galeria[data-total="2"] { grid-template-columns: 1fr 1fr; grid-template-rows: 1fr; }
+
+        .galeria-item { overflow: hidden; position: relative; background: var(--rosa-claro); }
+        .galeria-item.galeria-destaque { grid-row: 1 / 3; }
+        .galeria-item img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s; }
+        .maker-card:hover .galeria-item img { transform: scale(1.04); }
+        .galeria-mais {
+            position: absolute; inset: 0;
+            background: rgba(45, 27, 78, 0.65);
+            color: #fff; font-size: 1.1rem; font-weight: 700;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .galeria-vazia {
+            height: 160px; margin: 0.5rem 1rem;
+            display: flex; flex-direction: column;
+            align-items: center; justify-content: center; gap: 8px;
+            background: var(--rosa-claro); border-radius: 10px;
+            color: var(--roxo-claro); font-size: 0.8rem;
+        }
+
+        /* ── CARD FOOTER ── */
+        .card-footer {
+            padding: 0.75rem 1rem 1rem;
+            display: flex; flex-direction: column; gap: 10px;
+            margin-top: auto; background: transparent; border-top: none;
+        }
+        .materiais-lista { display: flex; flex-wrap: wrap; gap: 5px; }
+        .badge-material {
+            background: var(--rosa-claro); color: var(--roxo-medio);
+            font-size: 0.72rem; font-weight: 500;
+            padding: 3px 9px; border-radius: 20px; border: 1px solid var(--cinza-borda);
+        }
+        .sem-material { font-size: 0.78rem; color: var(--cinza-texto); }
+
+        .btn-ver-perfil {
+            display: block; text-align: center;
+            background: var(--roxo-medio); color: #fff;
+            text-decoration: none; padding: 9px; border-radius: 30px;
+            font-size: 0.875rem; font-weight: 600;
+            transition: background 0.2s, transform 0.1s;
+        }
+        .btn-ver-perfil:hover { background: var(--roxo-escuro); transform: scale(1.01); }
+
+        /* ── LOADING / EMPTY ── */
+        .loading-state, .empty-state {
+            grid-column: 1 / -1;
+            display: flex; flex-direction: column;
+            align-items: center; justify-content: center;
+            gap: 12px; padding: 4rem 0;
+            color: var(--cinza-texto); font-size: 0.95rem;
+        }
+        .empty-icon { font-size: 2.5rem; }
+        .spinner-custom {
+            width: 36px; height: 36px;
+            border: 3px solid var(--cinza-borda);
+            border-top-color: var(--roxo-medio);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        /* ───────── MODAL ───────── */
+
+        .modal-portfolio{
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,.65);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 99999;
+            padding: 20px;
+            backdrop-filter: blur(4px);
+        }
+
+        .hidden{
+            display: none;
+        }
+
+        .modal-portfolio-content{
+            width: 100%;
+            max-width: 1200px;
+            max-height: 95vh;
+            overflow-y: auto;
+            background: #fff;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,.25);
+            animation: modalEntrada .25s ease;
+        }
+
+        @keyframes modalEntrada{
+            from{
+                opacity: 0;
+                transform: translateY(20px) scale(.98);
+            }
+            to{
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .modal-header-custom{
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 18px 24px;
+            border-bottom: 1px solid #eee;
+            background: linear-gradient(
+                135deg,
+                var(--roxo-escuro),
+                var(--roxo-medio)
+            );
+            color: white;
+        }
+
+        .modal-header-custom h2{
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 0;
+        }
+
+        .btn-fechar-modal{
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: none;
+            background: rgba(255,255,255,.15);
+            color: white;
+            cursor: pointer;
+            transition: .2s;
+        }
+
+        .btn-fechar-modal:hover{
+            background: rgba(255,255,255,.3);
+            transform: rotate(90deg);
+        }
+
+        #conteudoPortfolio{
+            padding: 24px;
+        }
+
+        .loading-modal{
+            min-height: 300px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+        }
+    </style>
+</head>
+
+<body data-acesso="CLIENTE,ADMIN">
+
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container">
+            <a class="navbar-brand" href="index.php?rota=usuario-painel">Printly</a>
+            <div class="collapse navbar-collapse">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item" id="notif">
+                        <a class="nav-link" href="index.php?rota=admin-notificacoes">
+                            <i class="bi bi-bell me-1"></i>Notificações
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.php?rota=perfil-usuario">
+                            <i class="bi bi-person-circle me-1"></i>Perfil
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.php?rota=usuario-painel">
+                            <i class="bi bi-grid me-1"></i>Painel do Usuário
+                        </a>
+                    </li>
+                    <li class="nav-item" id="projetos">
+                        <a class="nav-link" href="index.php?rota=meus_projetos">
+                            <i class="bi bi-journal me-1"></i>Meus Projetos
+                        </a>
+                    </li>
+                    <li class="nav-item" id="portfolio_maker">
+                        <a class="nav-link active" href="index.php?rota=listagem-maker">
+                            <i class="bi bi-people me-1"></i>Fabricantes
+                        </a>
+                    </li>
+                    <li class="nav-item" id="painelM">
+                        <a class="nav-link" href="index.php?rota=fabricante-painel">
+                            <i class="bi bi-tools me-1"></i>Painel do Fabricante
+                        </a>
+                    </li>
+                    <li class="nav-item" id="usuario">
+                        <a class="nav-link" href="index.php?rota=admin-usuarios">
+                            <i class="bi bi-people me-1"></i>Usuários
+                        </a>
+                    </li>
+                    <li class="nav-item ms-2">
+                        <button class="btn btn-sm" type="button" id="sair">
+                            <i class="bi bi-door-open"></i>
+                        </button>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="hero">
+        <h1>Encontre um Fabricante</h1>
+        <p>Explore portfólios e escolha o maker ideal para o seu projeto</p>
+        <div class="busca-wrapper">
+            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+            </svg>
+            <input type="text" id="input-busca" placeholder="Buscar por nome, cidade ou material...">
+        </div>
+    </div>
+
+    <div class="main-container">
+        <div id="grid-makers"></div>
+    </div>
+    
+
+    <!-- MODAL PORTFÓLIO -->
+    <div id="modalPortfolio" class="modal-portfolio hidden">
+
+        <div class="modal-portfolio-content">
+
+            <!-- HEADER -->
+            <div class="modal-header-custom">
+
+                <h2>
+                    <i class="bi bi-images"></i>
+                    Portfólio do Fabricante
+                </h2>
+
+                <button id="fecharModal" class="btn-fechar-modal">
+                    <i class="bi bi-x-lg"></i>
+                </button>
+
+            </div>
+
+            <!-- CONTEÚDO DINÂMICO -->
+            <div id="conteudoPortfolio">
+
+                <div class="loading-modal">
+                    <div class="spinner-custom"></div>
+                    <p>Carregando portfólio...</p>
+                </div>
+
+            </div>
+            
+            
+
+        </div>
+        
+
+    </div>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../app/controllers/fabricante/js/portfolio_makers_listagem.js"></script>
+    <script src="../app/controllers/usuario/js/verif.js"></script>
+    
+</body>
+</html>

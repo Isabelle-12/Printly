@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editar Portfólio - Printly</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --printly-primary: #412746;
+            --printly-primary-dark: #7a3077;
+            --printly-light: #f0cef5;
+            --printly-surface: #ffffff;
+            --printly-bg: #fff5fe;
+            --printly-text: #4b1b4b;
+            --printly-muted: #9e939e;
+            --printly-border: #c2b9c28c;
+            --printly-shadow: 0 2px 12px rgba(229, 70, 181, 0.08);
+            --printly-radius: 12px;
+        }
+
+        body {
+            background-color: var(--printly-bg);
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            color: var(--printly-text);
+            min-height: 100vh;
+        }
+
+        .navbar {
+            background: linear-gradient(135deg, var(--printly-primary) 0%, var(--printly-primary-dark) 100%) !important;
+            padding: 0.75rem 0;
+            box-shadow: 0 2px 16px rgba(224, 70, 229, 0.25);
+        }
+
+        .navbar-brand {
+            font-family: 'Syne', sans-serif;
+            font-weight: 700;
+            font-size: 1.4rem;
+            color: #fff !important;
+        }
+
+        .navbar .nav-link {
+            color: rgba(255, 255, 255, 0.82) !important;
+            font-size: 0.9rem;
+            font-weight: 500;
+            padding: 0.45rem 0.9rem !important;
+            border-radius: 8px;
+            transition: background 0.18s, color 0.18s;
+        }
+        .navbar .nav-link:hover,
+        .navbar .nav-link.active {
+            background: rgba(255, 255, 255, 0.18);
+            color: #fff !important;
+        }
+
+        #sair {
+            background: rgba(255, 255, 255, 0.12);
+            color: rgba(255, 255, 255, 0.82);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            padding: 0.35rem 0.75rem;
+            font-size: 0.9rem;
+        }
+        #sair:hover {
+            background: rgba(255, 255, 255, 0.22);
+            color: #fff;
+        }
+
+        .container {
+            max-width: 1200px;
+        }
+
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--printly-border);
+        }
+
+        .page-header h4 {
+            font-weight: 700;
+            font-size: 1.2rem;
+            margin: 0;
+        }
+
+        .page-header p {
+            font-size: 0.85rem;
+            color: var(--printly-muted);
+            margin: 2px 0 0;
+        }
+
+        .card {
+            border: 1px solid var(--printly-border);
+            border-radius: var(--printly-radius);
+            box-shadow: var(--printly-shadow);
+            background: var(--printly-surface);
+            margin-bottom: 1.25rem;
+            overflow: hidden;
+        }
+
+        .card-header {
+            background: var(--printly-light);
+            border-bottom: 1px solid var(--printly-border);
+            padding: 0.85rem 1.25rem;
+        }
+
+        .card-header h5 {
+            margin: 0;
+            font-size: 0.975rem;
+            font-weight: 600;
+            color: var(--printly-primary);
+        }
+
+        .card-body {
+            padding: 1.25rem;
+        }
+
+        .form-label {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--printly-text);
+        }
+
+        .form-control {
+            border-radius: 10px;
+            border: 1px solid var(--printly-border);
+            padding: 0.65rem 0.8rem;
+            font-size: 0.9rem;
+        }
+
+        .btn-printly {
+            background: var(--printly-primary);
+            color: #fff;
+            border-radius: 8px;
+            padding: 0.55rem 1rem;
+            font-size: 0.9rem;
+            border: none;
+            text-decoration: none;
+        }
+
+        .btn-printly:hover {
+            background: var(--printly-primary-dark);
+            color: #fff;
+        }
+
+        .btn-cancelar {
+            background: #edd9f0;
+            color: var(--printly-primary);
+            border-radius: 8px;
+            padding: 0.45rem 0.85rem;
+            font-size: 0.85rem;
+            font-weight: 500;
+            border: none;
+            text-decoration: none;
+        }
+
+        .btn-cancelar:hover {
+            background: #d9b8df;
+            color: var(--printly-primary);
+        }
+
+        .portfolio-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+            gap: 16px;
+        }
+
+        .portfolio-card {
+            border: 1px solid var(--printly-border);
+            border-radius: 12px;
+            overflow: hidden;
+            background: #fff;
+        }
+
+        .portfolio-card img {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+        }
+
+        .portfolio-card-body {
+            padding: 12px;
+        }
+
+        .portfolio-card h6 {
+            margin: 0 0 4px;
+            font-weight: 700;
+            color: var(--printly-primary);
+        }
+
+        .portfolio-card p {
+            font-size: 0.85rem;
+            color: var(--printly-muted);
+            margin-bottom: 8px;
+        }
+
+        .portfolio-actions {
+            display: flex;
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .btn-card-editar,
+        .btn-card-excluir {
+            border: none;
+            border-radius: 8px;
+            padding: 0.4rem 0.65rem;
+            font-size: 0.8rem;
+            cursor: pointer;
+        }
+
+        .btn-card-editar {
+            background: #3d1755;
+            color: #ffffff;
+            border-radius: 8px;
+            padding: 0.45rem 0.85rem;
+            font-size: 0.85rem;
+            font-weight: 500;
+            border: none;
+            text-decoration: none;
+        }
+
+        .btn-card-excluir {
+            background: #f8d7da;
+            color: #842029;
+            border-radius: 8px;
+            padding: 0.45rem 0.85rem;
+            font-size: 0.85rem;
+            font-weight: 500;
+            border: none;
+            text-decoration: none;
+        }
+
+        .btn-card-editar:hover {
+            background: var(--printly-primary-dark);
+        }
+
+        .btn-card-excluir:hover {
+            background: #f1b0b7;
+        }
+
+        .btn-editar-card {
+            background-color: var(--printly-primary);
+            color: #fff;
+            border-radius: 8px;
+            padding: 0.45rem 0.85rem;
+            font-size: 0.85rem;
+            font-weight: 500;
+            border: none;
+            text-decoration: none;
+        }
+
+        .btn-editar-card:hover {
+            background-color: var(--printly-primary-dark);
+            color: #fff;
+        }
+    </style>
+</head>
+
+<body data-acesso="MAKER,ADMIN">
+
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container">
+            <a class="navbar-brand" href="index.php?rota=fabricante-painel">Printly</a>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+
+        <div class="page-header">
+            <div>
+                <h4>Editar Portfólio</h4>
+                <p>Adicione fotos dos seus trabalhos de impressão 3D</p>
+            </div>
+            <a href="index.php?rota=perfil-fabricante" class="btn-cancelar">
+                Voltar
+            </a>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <h5>Dados do Fabricante</h5>
+            </div>
+
+            <div class="card-body">
+                <form id="formDadosFabricante" enctype="multipart/form-data">
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="nome_empresa" class="form-label">Nome da empresa</label>
+                            <input type="text" id="nome_empresa" name="nome_empresa" class="form-control">
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <label for="email_comercial" class="form-label">E-mail comercial</label>
+                            <input type="email" id="email_comercial" name="email_comercial" class="form-control">
+                        </div>
+
+                        <div class="col-md-4 mb-3">
+                            <label for="cnpj" class="form-label">CNPJ</label>
+                            <input type="text" id="cnpj" name="cnpj" class="form-control">
+                        </div>
+
+                        <div class="col-md-4 mb-3">
+                            <label for="telefone_comercial" class="form-label">Telefone comercial</label>
+                            <input type="text" id="telefone_comercial" name="telefone_comercial" class="form-control">
+                        </div>
+
+                        <div class="col-md-4 mb-3">
+                            <label for="foto_empresa" class="form-label">Foto empresarial</label>
+                            <input type="file" id="foto_empresa" name="foto_empresa" class="form-control" accept="image/*">
+                        </div>
+
+                        <div class="col-md-12 mb-3">
+                            <label for="endereco_empresa" class="form-label">Endereço da empresa / ateliê</label>
+                            <input type="text" id="endereco_empresa" name="endereco_empresa" class="form-control">
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-editar-card">
+                        <i class="bi bi-check-circle"></i>       Salvar dados do fabricante
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <h5>Adicionar Informações</h5>
+            </div>
+
+            <div class="card-body">
+                <form id="formPortfolioMaker" enctype="multipart/form-data">
+                    <div class="mb-3">
+                        <label for="titulo" class="form-label">Título do projeto</label>
+                        <input type="text" id="titulo" name="titulo" class="form-control" placeholder="Ex: Miniatura personalizada" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="descricao" class="form-label">Descrição</label>
+                        <textarea id="descricao" name="descricao" class="form-control" rows="3" placeholder="Descreva brevemente esse trabalho"></textarea>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="imagem" class="form-label">Imagem do projeto</label>
+                        <input type="file" id="imagem" name="imagem" class="form-control" accept="image/*" required>
+                    </div>
+
+                    <button type="submit" class="btn btn-editar-card">
+                        <i class="bi bi-check-circle"></i>         Salvar no Portfólio
+                    </button>
+                </form>
+            </div>
+
+            <div class="modal fade" id="modalEditarPortfolio" tabindex="-1" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+
+                        <div class="modal-header">
+                            <h5 class="modal-title">Editar item do portfólio</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+                        </div>
+
+                        <div class="modal-body">
+                            <form id="formEditarItemPortfolio">
+                                <input type="hidden" id="editar_id" name="id">
+
+                                <div class="mb-3">
+                                    <label for="editar_titulo" class="form-label">Título</label>
+                                    <input type="text" id="editar_titulo" name="titulo" class="form-control" required>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="editar_descricao" class="form-label">Descrição</label>
+                                    <textarea id="editar_descricao" name="descricao" class="form-control" rows="3"></textarea>
+                                </div>
+
+                                <button type="submit" class="btn btn-editar-card">
+                                    <i class="bi bi"></i>Salvar alterações
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <h5>Projetos / Portfólio</h5>
+            </div>
+            <div class="card-body">
+                <div id="listaPortfolioMaker" class="portfolio-grid">
+                    <p class="text-muted">Carregando fotos...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../app/controllers/usuario/js/verif.js"></script>
+    <script src="../app/controllers/fabricante/js/editar_portfolio.js"></script>
+</body>
+
+</html>

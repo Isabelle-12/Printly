@@ -51,7 +51,7 @@
 
                 <a href="editar_perfil_f.php" class="btn-editar">Editar Perfil</a>
             </section>
-        </main>
+        </main> 
 
     </body>
     </html>

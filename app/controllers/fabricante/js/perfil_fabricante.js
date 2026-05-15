@@ -10,7 +10,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     try {
-        const retorno = await fetch("/Printly/app/controllers/usuario/php/buscar_perfil_f.php");
+        const retorno = await fetch("../app/controllers/fabricante/php/buscar_perfil_f.php");
 
         const texto = await retorno.text();
         console.log("RESPOSTA PERFIL:", texto);
@@ -29,14 +29,15 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         if (fotoPerfil) {
             fotoPerfil.src = usuario.foto_perfil
-                ? "/Printly/" + usuario.foto_perfil
-                : "/Printly/assets/img/perfil-padrao.png";
+                ? "../" + usuario.foto_perfil
+                : "../public/img/perfil-padrao.jpg";
         }
 
         setTexto("perfilNome", usuario.nome, "Nome não informado");
         setTexto("perfilTipo", usuario.tipo_perfil, "Perfil não informado");
 
         const localizacao = `${usuario.cidade || "Cidade"} - ${usuario.estado || "UF"}`;
+        
         setTexto("perfilLocalizacao", localizacao);
 
         setTexto("perfilStatus", usuario.status, "Status não informado");

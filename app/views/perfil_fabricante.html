@@ -262,10 +262,96 @@
             background-color: var(--printly-primary-dark);
             color: #fff;
         }
+
+        .portfolio-maker-header {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+            margin-bottom: 1rem;
+        }
+
+        .portfolio-foto {
+            width: 90px;
+            height: 90px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 4px solid var(--printly-light);
+            background: #fff;
+        }
+
+        .portfolio-maker-header h4 {
+            margin: 0;
+            font-weight: 700;
+            color: var(--printly-primary);
+        }
+
+        .portfolio-subtitulo {
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: var(--printly-primary);
+            margin-bottom: 0.75rem;
+        }
+
+        .portfolio-lista {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .portfolio-item {
+            background: #fff8ff;
+            border: 1px solid var(--printly-border);
+            border-radius: 10px;
+            padding: 10px 12px;
+        }
+
+        .portfolio-item strong {
+            color: var(--printly-primary);
+        }
+
+        .portfolio-item small {
+            color: var(--printly-muted);
+        }
+
+        .portfolio-sem-foto {
+            min-height: 260px;
+            background: #fff8ff;
+            border: 1px dashed var(--printly-border);
+            border-radius: 12px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: var(--printly-muted);
+        }
+
+        .portfolio-sem-foto i {
+            font-size: 2.3rem;
+            margin-bottom: 8px;
+        }
+
+        .portfolio-img-carousel {
+            height: 320px;
+            object-fit: cover;
+            border-radius: 12px;
+        }
+
+        .carousel-control-prev-icon,
+        .carousel-control-next-icon {
+            background-color: var(--printly-primary);
+            border-radius: 50%;
+            padding: 16px;
+        }
+
+        @media (max-width: 576px) {
+            .portfolio-img-carousel {
+                height: 220px;
+            }
+        }   
     </style>
 </head>
 
-<body data-acesso="CLIENTE,MAKER,ADMIN">
+<body data-acesso="MAKER,ADMIN">
 
     <nav class="navbar navbar-expand-lg navbar-dark">
         <div class="container">
@@ -275,7 +361,7 @@
                 <ul class="navbar-nav ms-auto">
 
                     <li class="nav-item">
-                        <a class="nav-link active" href="index.php?rota=perfil-usuario">
+                        <a class="nav-link active" href="index.php?rota=perfil-fabricante">
                             <i class="bi bi-person-circle me-1"></i>Perfil
                         </a>
                     </li>
@@ -299,33 +385,32 @@
     
 
     <div class="container mt-4">
-
         <div class="card">
-    <div class="card-body position-relative">
+            <div class="card-body position-relative">
 
-        <a href="index.php?rota=editar-perfil-fabricante" class="btn btn-editar-card">
-            <i class="bi bi-pencil-square me-1"></i>
-            Editar
-        </a>
+                <a href="index.php?rota=editar-perfil-fabricante" class="btn btn-editar-card">
+                    <i class="bi bi-pencil-square me-1"></i>
+                    Editar Perfil
+                </a>
 
-        <div class="perfil-topo">
-            <img src="../public/img/perfil-padrao.png" alt="Foto de perfil" class="foto-perfil">
+                <div class="perfil-topo">
+                    <img src="img/perfil-padrao.jpg" alt="Foto de perfil" class="foto-perfil">
 
-            <div class="perfil-info">
-                <h3 id="perfilNome">Nome do Usuário</h3>
-                <p>
-                    <i class="bi bi-person-badge me-1"></i>
-                    <span id="perfilTipo">Cliente / Maker</span>
-                </p>
-                <p>
-                    <i class="bi bi-geo-alt me-1"></i>
-                    <span id="perfilLocalizacao">Curitiba - PR</span>
-                </p>
-                <span class="badge-status" id="perfilStatus">Ativo</span>
+                    <div class="perfil-info">
+                        <h3 id="perfilNome">Nome do Usuário</h3>
+                        <p>
+                            <i class="bi bi-person-badge me-1"></i>
+                            <span id="perfilTipo">Cliente / Maker</span>
+                        </p>
+                        <p>
+                            <i class="bi bi-geo-alt me-1"></i>
+                            <span id="perfilLocalizacao">Curitiba - PR</span>
+                        </p>
+                        <span class="badge-status" id="perfilStatus">Ativo</span>
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
-</div>
 
         <div class="row">
             <div class="col-md-5">
@@ -377,7 +462,7 @@
                                 <div class="info-value" id="cep">80000-000</div>
                             </div>
 
-                            <div class="col-md-4 info-item">
+                            <div class="col-md-12 info-item">
                                 <div class="info-label">Cidade</div>
                                 <div class="info-value" id="cidade">Curitiba</div>
                             </div>
@@ -429,9 +514,102 @@
                 </div>
             </div>
 
+            <div class="col-12">
+                <div class="card" id="cardPortfolioMaker">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <div class="d-flex align-items-center gap-2">
+                            <div class="card-icon">
+                                <i class="bi bi-images"></i>
+                            </div>
+
+                            <h5>Portfólio do Fabricante</h5>
+
+                            <a href="index.php?rota=editar-portfolio" class="btn btn-editar-card">
+                                <i class="bi bi-pencil-square me-1"></i>
+                                 Editar Portfólio
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="card-body">                            
+                        <div class="portfolio-maker-header">
+                            <img src="img/perfil-padrao.jpg" alt="Foto do fabricante" class="portfolio-foto" id="portfolioFoto">
+                            <div>
+                            <h4 id="nome_empresa">Nome da Empresa</h4>
+                            <p class="mb-1">
+                                <i class="bi bi-geo-alt me-1"></i>
+                                <span id="portfolioLocalizacao">Cidade - UF</span>
+                            </p>
+                            </div>
+                        </div>
+
+                        <hr>
+
+                        <div id="carouselPortfolioMaker" class="carousel slide mb-4" data-bs-ride="carousel">
+                            <div class="carousel-inner" id="portfolioCarouselInner">
+                                <div class="carousel-item active">
+                                    <div class="portfolio-sem-foto">
+                                        <i class="bi bi-image"></i>
+                                        <p>Nenhuma foto adicionada ao portfólio ainda.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <button class="carousel-control-prev" type="button" data-bs-target="#carouselPortfolioMaker" data-bs-slide="prev">
+                                <span class="carousel-control-prev-icon"></span>
+                            </button>
+                            <button class="carousel-control-next" type="button" data-bs-target="#carouselPortfolioMaker" data-bs-slide="next">
+                                <span class="carousel-control-next-icon"></span>
+                            </button>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-2 info-item">
+                                <div class="info-label">CNPJ</div>
+                                <div class="info-value" id="portfolioCnpj">Não informado</div>
+                            </div>
+                            <div class="col-md-3 info-item">
+                                <div class="info-label">E-mail Comercial</div>
+                                <div class="info-value" id="email_comercial">Não informado</div>
+                            </div>
+                            <div class="col-md-3 info-item">
+                                <div class="info-label">Telefone comercial</div>
+                                <div class="info-value" id="portfolioTelefoneComercial">Não informado</div>
+                            </div>
+                            <div class="col-md-4 info-item">
+                                <div class="info-label">Endereço da empresa / ateliê</div>
+                                <div class="info-value" id="portfolioEnderecoEmpresa">Não informado</div>
+                            </div>
+                        </div>
+
+                        <hr>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <h6 class="portfolio-subtitulo">
+                                    <i class="bi bi-printer me-1"></i>Impressoras
+                                </h6>
+                                <div id="portfolioImpressoras" class="portfolio-lista">
+                                    <p class="text-muted mb-0">Nenhuma impressora cadastrada.</p>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <h6 class="portfolio-subtitulo">
+                                    <i class="bi bi-box-seam me-1"></i>Materiais
+                                </h6>
+                                <div id="portfolioMateriais" class="portfolio-lista">
+                                    <p class="text-muted mb-0">Nenhum material cadastrado.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>                                       
+                </div>
+            </div>
+                        
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="../app/controllers/usuario/js/verif.js"></script>
-    <script src="../app/controllers/usuario/js/perfil_usuario.js"></script>
+    <script src="../app/controllers/fabricante/js/perfil_fabricante.js"></script>
+    <script src="../app/controllers/fabricante/js/portfolio_fabricante.js"></script>
 
 </body>
 

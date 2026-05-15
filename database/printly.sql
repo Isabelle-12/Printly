@@ -198,6 +198,29 @@ CREATE TABLE tokens_reset_senha (
     FOREIGN KEY (usuario_id) REFERENCES usuarios(id) ON DELETE CASCADE
 );
 
+ALTER TABLE historico_status_pedido
+    ADD COLUMN mensagem_publica VARCHAR(255) NULL
+    AFTER observacao;
+
+
+ALTER TABLE pedidos
+    ADD COLUMN arquivo_caminho VARCHAR(255) NULL
+    AFTER endereco_entrega;
+    
+CREATE TABLE partes_pedido (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    pedido_id INT NOT NULL,
+    nome VARCHAR(100) NOT NULL,
+    descricao TEXT,
+    material VARCHAR(100) NOT NULL,
+    cor VARCHAR(50) NOT NULL,
+    quantidade INT NOT NULL DEFAULT 1,
+    custo_estimado DECIMAL(10,2) NULL,
+    data_criacao TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (pedido_id) REFERENCES pedidos(id) ON DELETE CASCADE,
+    KEY idx_partes_pedido (pedido_id)
+);
+
 CREATE OR REPLACE VIEW view_media_avaliacoes_maker AS
 SELECT
     u.id AS maker_id,
@@ -219,21 +242,49 @@ SELECT
     p.data_solicitacao,
     p.data_atualizacao,
     p.prazo_pedido,
+    p.motivo_recusa,
+    p.endereco_entrega,
+
     pr.id AS projeto_id,
     pr.nome_projeto,
+    pr.descricao,
     pr.formato,
     pr.arquivo_caminho,
+    pr.volume_estimado_cm3,
+    pr.peso_estimado_gramas,
+
     c.id AS cliente_id,
     c.nome AS cliente_nome,
     c.email AS cliente_email,
+    c.telefone AS cliente_telefone,
+
     m.id AS maker_id,
     m.nome AS maker_nome,
     m.cidade AS maker_cidade,
-    m.estado AS maker_estado
+    m.estado AS maker_estado,
+    m.email AS maker_email,
+
+    (SELECT COUNT(*) FROM partes_pedido pp WHERE pp.pedido_id = p.id) AS total_partes
+
 FROM pedidos p
 JOIN projetos pr ON pr.id = p.projeto_id
 JOIN usuarios c ON c.id = pr.cliente_id
 JOIN usuarios m ON m.id = p.maker_id;
+
+
+CREATE OR REPLACE VIEW view_rastreamento_pedido AS
+SELECT
+    h.pedido_id,
+    h.status_anterior,
+    h.status_novo,
+    h.observacao,
+    h.mensagem_publica,
+    h.data_hora,
+    u.nome AS alterado_por_nome
+FROM historico_status_pedido h
+LEFT JOIN usuarios u ON u.id = h.alterado_por
+ORDER BY h.data_hora ASC;
+
 
 CREATE OR REPLACE VIEW view_metricas_plataforma AS
 SELECT
@@ -299,3 +350,101 @@ ALTER TABLE mensagens
 
 ALTER TABLE usuarios 
     ADD COLUMN foto_perfil VARCHAR(255) NULL AFTER endereco;
+
+INSERT INTO projetos (
+    cliente_id,
+    nome_projeto,
+    descricao,
+    arquivo_caminho,
+    formato,
+    volume_estimado_cm3,
+    peso_estimado_gramas,
+    status
+) VALUES (
+    1,
+    'Capacete Cyberpunk',
+    'Capacete futurista personalizado com detalhes neon.',
+    'uploads/capacete_cyberpunk.stl',
+    'STL',
+    350.50,
+    820.00,
+    'COM_PEDIDO'
+);
+
+
+
+INSERT INTO pedidos (
+    projeto_id,
+    maker_id,
+    material_escolhido,
+    quantidade,
+    valor_total,
+    status,
+    endereco_entrega,
+    prazo_pedido
+) VALUES (
+    1,
+    2,
+    'PLA Premium Preto',
+    1,
+    320.00,
+    'EM_PRODUCAO',
+    'Rua dos Clientes, 10 - Curitiba/PR',
+    DATE_ADD(NOW(), INTERVAL 7 DAY)
+);
+
+INSERT INTO projetos (
+    cliente_id,
+    nome_projeto,
+    descricao,
+    arquivo_caminho,
+    formato,
+    volume_estimado_cm3,
+    peso_estimado_gramas,
+    status
+) VALUES (
+    1,
+    'Suporte Gamer RGB',
+    'Suporte personalizado para headset com acabamento futurista.',
+    'uploads/suporte_gamer_rgb.stl',
+    'STL',
+    180.75,
+    420.00,
+    'COM_PEDIDO'
+);
+
+INSERT INTO pedidos (
+    projeto_id,
+    maker_id,
+    material_escolhido,
+    quantidade,
+    valor_total,
+    status,
+    endereco_entrega,
+    prazo_pedido
+) VALUES (
+    2,
+    2,
+    'PLA Azul Metálico',
+    2,
+    185.90,
+    'ACEITO',
+    'Av. Tecnologia, 450 - Curitiba/PR',
+    DATE_ADD(NOW(), INTERVAL 5 DAY)
+);
+
+ALTER TABLE fabricantes
+ADD COLUMN nome_empresa VARCHAR(100) NULL AFTER usuario_id;
+
+ALTER TABLE fabricantes
+ADD COLUMN email_comercial VARCHAR(100) NULL AFTER nome_empresa;
+
+ALTER TABLE fabricantes
+ADD COLUMN foto_empresa VARCHAR(255) NULL AFTER nome_empresa;
+
+INSERT INTO materiais_maker (maker_id, tipo_material, preco_por_grama) VALUES
+((SELECT id FROM usuarios WHERE email='maria@email.com'), 'PLA Premium', 0.16),
+((SELECT id FROM usuarios WHERE email='maria@email.com'), 'ABS', 0.19),
+((SELECT id FROM usuarios WHERE email='maria@email.com'), 'PETG', 0.23);
+
+

@@ -69,10 +69,13 @@ $conexao->query("DELETE FROM impressoras WHERE maker_id = $usuario_id");
 $conexao->query("DELETE FROM materiais_maker WHERE maker_id = $usuario_id");
 
 foreach ($dados['impressoras'] as $imp) {
-    $modelo  = $imp['modelo'] ?? '';
-    $volume  = !empty($imp['volume']) ? (float)$imp['volume'] : null;
-    $s = $conexao->prepare("INSERT INTO impressoras (maker_id, modelo, volume_maximo_cm3) VALUES (?, ?, ?)");
-    $s->bind_param("isd", $usuario_id, $modelo, $volume);
+    $modelo    = $imp['modelo']    ?? '';
+    $volume    = !empty($imp['volume'])    ? (float)$imp['volume']    : null;
+    $quantidade = !empty($imp['quantidade']) ? (int)$imp['quantidade']  : 1;
+    $tipos     = !empty($imp['tipos']) ? implode(',', array_map('trim', (array)$imp['tipos'])) : null;
+    error_log("DEBUG impressora - modelo: $modelo | tipos recebidos: " . json_encode($imp['tipos']) . " | tipos salvos: $tipos");
+    $s = $conexao->prepare("INSERT INTO impressoras (maker_id, modelo, tipo_impressora, volume_maximo_cm3, quantidade) VALUES (?, ?, ?, ?, ?)");
+    $s->bind_param("issdi", $usuario_id, $modelo, $tipos, $volume, $quantidade);
     $s->execute();
     $s->close();
 }

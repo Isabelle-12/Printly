@@ -268,30 +268,114 @@
     <script src="../app/controllers/usuario/js/verif.js"></script>
 
     <script>
+        const materiaisPorTipo = {
+            FDM: ['PLA', 'ABS', 'PETG', 'TPU', 'Nylon', 'ASA', 'PVA'],
+            SLS: ['Nylon (Pó)', 'Poliestireno', 'Alumida'],
+            SLA: ['Resina'],
+            DLP: ['Resina']
+        };
+
+        function atualizarOpcoesMateriaisDisponiveis() {
+            const tiposSelecionados = new Set();
+            document.querySelectorAll('.imp-tipo:checked').forEach(cb => {
+                tiposSelecionados.add(cb.value);
+            });
+
+            const materiaisDisponiveis = new Set();
+            tiposSelecionados.forEach(tipo => {
+                (materiaisPorTipo[tipo] || []).forEach(m => materiaisDisponiveis.add(m));
+            });
+
+            document.querySelectorAll('.mat-tipo').forEach(sel => {
+                const valorAtual = sel.value;
+                sel.innerHTML = '<option value="">Selecione o material...</option>';
+                materiaisDisponiveis.forEach(mat => {
+                    const opt = document.createElement('option');
+                    opt.value = mat;
+                    opt.textContent = mat;
+                    if (mat === valorAtual) opt.selected = true;
+                    sel.appendChild(opt);
+                });
+
+                if (materiaisDisponiveis.size === 0) {
+                    sel.innerHTML = '<option value="">Selecione um tipo de impressora primeiro</option>';
+                }
+            });
+        }
+
         function adicionarImpressora() {
             const div = document.createElement('div');
-            div.className = 'row g-2 mb-2 linha-impressora';
+            div.className = 'mb-3 p-3 linha-impressora';
+            div.style.cssText = 'border:1px solid var(--border); border-radius:var(--radius); background:#fdfdfd;';
             div.innerHTML = `
-                <div class="col-md-6">
-                    <input type="text" class="form-control imp-modelo" placeholder="Modelo (ex: Ender 3 S1)">
+                <div class="row g-2 mb-2">
+                    <div class="col-md-5">
+                        <label class="form-label">Modelo</label>
+                        <input type="text" class="form-control imp-modelo" placeholder="Modelo (ex: Ender 3 S1)">
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">Volume máx. (cm³)</label>
+                        <input type="number" class="form-control imp-volume" placeholder="ex: 15625">
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">Quantidade</label>
+                        <input type="number" min="1" class="form-control imp-quantidade" placeholder="ex: 2">
+                    </div>
+                    <div class="col-md-1 d-flex align-items-end pb-1">
+                        <button class="btn-remove" onclick="this.closest('.linha-impressora').remove(); atualizarOpcoesMateriaisDisponiveis();">
+                            <i class="bi bi-trash"></i>
+                        </button>
+                    </div>
                 </div>
-                <div class="col-md-5">
-                    <input type="number" class="form-control imp-volume" placeholder="Volume máx. (cm³)">
-                </div>
-                <div class="col-md-1 d-flex align-items-center">
-                    <button class="btn-remove" onclick="this.closest('.linha-impressora').remove()">
-                        <i class="bi bi-trash"></i>
-                    </button>
+                <div>
+                    <label class="form-label">Tipo de Impressora</label>
+                    <div class="d-flex flex-wrap gap-3">
+                        <div class="form-check">
+                            <input class="form-check-input imp-tipo" type="checkbox" value="FDM" onchange="atualizarOpcoesMateriaisDisponiveis()">
+                            <label class="form-check-label">FDM</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input imp-tipo" type="checkbox" value="SLS" onchange="atualizarOpcoesMateriaisDisponiveis()">
+                            <label class="form-check-label">SLS</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input imp-tipo" type="checkbox" value="SLA" onchange="atualizarOpcoesMateriaisDisponiveis()">
+                            <label class="form-check-label">SLA</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input imp-tipo" type="checkbox" value="DLP" onchange="atualizarOpcoesMateriaisDisponiveis()">
+                            <label class="form-check-label">DLP</label>
+                        </div>
+                    </div>
                 </div>`;
             document.getElementById('lista-impressoras').appendChild(div);
         }
 
         function adicionarMaterial() {
+            const tiposSelecionados = new Set();
+            document.querySelectorAll('.imp-tipo:checked').forEach(cb => {
+                tiposSelecionados.add(cb.value);
+            });
+
+            const materiaisDisponiveis = new Set();
+            tiposSelecionados.forEach(tipo => {
+                (materiaisPorTipo[tipo] || []).forEach(m => materiaisDisponiveis.add(m));
+            });
+
+            let opcoesHtml = '<option value="">Selecione o material...</option>';
+            if (materiaisDisponiveis.size === 0) {
+                opcoesHtml = '<option value="">Selecione um tipo de impressora primeiro</option>';
+            } else {
+                materiaisDisponiveis.forEach(mat => {
+                    opcoesHtml += `<option value="${mat}">${mat}</option>`;
+                });
+            }
+
             const div = document.createElement('div');
             div.className = 'row g-2 mb-2 linha-material';
             div.innerHTML = `
                 <div class="col-md-6">
-                    <input type="text" class="form-control mat-tipo" placeholder="Material (ex: PLA, ABS, PETG)">
+                    <select class="form-control mat-tipo">${opcoesHtml}</select>
                 </div>
                 <div class="col-md-5">
                     <input type="number" step="0.01" class="form-control mat-preco" placeholder="R$/grama (ex: 0.15)">
@@ -305,10 +389,15 @@
         }
 
         async function enviarSolicitacao() {
-            const impressoras = [...document.querySelectorAll('.linha-impressora')].map(l => ({
-                modelo: l.querySelector('.imp-modelo').value.trim(),
-                volume:  l.querySelector('.imp-volume').value.trim()
-            })).filter(i => i.modelo);
+            const impressoras = [...document.querySelectorAll('.linha-impressora')].map(l => {
+                const tiposSelecionados = [...l.querySelectorAll('.imp-tipo:checked')].map(cb => cb.value);
+                return {
+                    modelo:     l.querySelector('.imp-modelo').value.trim(),
+                    volume:     l.querySelector('.imp-volume').value.trim(),
+                    quantidade: l.querySelector('.imp-quantidade').value.trim(),
+                    tipos:      tiposSelecionados
+                };
+            }).filter(i => i.modelo);
 
             const materiais = [...document.querySelectorAll('.linha-material')].map(l => ({
                 tipo:  l.querySelector('.mat-tipo').value.trim(),

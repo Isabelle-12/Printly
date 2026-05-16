@@ -347,7 +347,47 @@
             .portfolio-img-carousel {
                 height: 220px;
             }
-        }   
+        }
+
+        .btn-add-impressora {
+            background: transparent;
+            color: var(--printly-primary);
+            border: 1px solid var(--printly-border);
+            border-radius: 8px;
+            padding: 0.28rem 0.75rem;
+            font-size: 0.8rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            transition: background 0.15s;
+        }
+        .btn-add-impressora:hover { background: var(--printly-light); }
+
+        .btn-imp-acao {
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            padding: 2px 6px;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            transition: background 0.15s;
+        }
+        .btn-imp-editar { color: var(--printly-primary); }
+        .btn-imp-editar:hover { background: var(--printly-light); }
+        .btn-imp-excluir { color: #dc3545; }
+        .btn-imp-excluir:hover { background: #fff0f0; }
+
+        .modal-label {
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--printly-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            margin-bottom: 0.3rem;
+            display: block;
+        }
     </style>
 </head>
 
@@ -585,9 +625,14 @@
 
                         <div class="row">
                             <div class="col-md-6">
-                                <h6 class="portfolio-subtitulo">
-                                    <i class="bi bi-printer me-1"></i>Impressoras
-                                </h6>
+                                <div class="d-flex align-items-center justify-content-between mb-2">
+                                    <h6 class="portfolio-subtitulo mb-0">
+                                        <i class="bi bi-printer me-1"></i>Impressoras
+                                    </h6>
+                                    <button class="btn-add-impressora" onclick="abrirModalImpressora()">
+                                        <i class="bi bi-plus"></i> Adicionar
+                                    </button>
+                                </div>
                                 <div id="portfolioImpressoras" class="portfolio-lista">
                                     <p class="text-muted mb-0">Nenhuma impressora cadastrada.</p>
                                 </div>
@@ -601,10 +646,67 @@
                                 </div>
                             </div>
                         </div>
-                    </div>                                       
+                    </div>
                 </div>
             </div>
-                        
+
+    <!-- crud impressora -->
+    <div class="modal fade" id="modalImpressora" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content" style="border-radius:12px; border:1px solid var(--printly-border);">
+                <div class="modal-header" style="background:var(--printly-light); border-bottom:1px solid var(--printly-border);">
+                    <h5 class="modal-title" id="modalImpressoraTitle" style="font-family:'Syne',sans-serif; color:var(--printly-primary); font-weight:700;">Impressora</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body p-4">
+                    <input type="hidden" id="modalImpId">
+                    <div class="mb-3">
+                        <label class="modal-label">Modelo</label>
+                        <input type="text" id="modalImpModelo" class="form-control" placeholder="Ex: Ender 3 S1">
+                    </div>
+                    <div class="row g-2 mb-3">
+                        <div class="col-6">
+                            <label class="modal-label">Volume máx. (cm³)</label>
+                            <input type="number" id="modalImpVolume" class="form-control" placeholder="ex: 30cm³">
+                        </div>
+                        <div class="col-6">
+                            <label class="modal-label">Quantidade</label>
+                            <input type="number" id="modalImpQuantidade" class="form-control" min="1" placeholder="ex: 2">
+                        </div>
+                    </div>
+                    <div class="mb-1">
+                        <label class="modal-label">Tipo de Impressora</label>
+                        <div class="d-flex flex-wrap gap-3 mt-1">
+                            <div class="form-check">
+                                <input class="form-check-input modal-imp-tipo" type="checkbox" value="FDM" id="chkFDM">
+                                <label class="form-check-label" for="chkFDM">FDM</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input modal-imp-tipo" type="checkbox" value="SLS" id="chkSLS">
+                                <label class="form-check-label" for="chkSLS">SLS</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input modal-imp-tipo" type="checkbox" value="SLA" id="chkSLA">
+                                <label class="form-check-label" for="chkSLA">SLA</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input modal-imp-tipo" type="checkbox" value="DLP" id="chkDLP">
+                                <label class="form-check-label" for="chkDLP">DLP</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer" style="border-top:1px solid var(--printly-border);">
+                    <button type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-sm" id="btnSalvarImpressora"
+                        style="background:var(--printly-primary);color:#fff;font-weight:600;"
+                        onclick="salvarImpressora()">
+                        <i class="bi bi-check-lg me-1"></i>Salvar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="../app/controllers/usuario/js/verif.js"></script>
@@ -613,4 +715,4 @@
 
 </body>
 
-</html> 
+</html>

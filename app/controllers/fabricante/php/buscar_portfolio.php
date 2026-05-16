@@ -65,7 +65,9 @@
     $sqlImpressoras = "SELECT 
                             id,
                             modelo,
+                            tipo_impressora,
                             volume_maximo_cm3,
+                            quantidade,
                             status
                     FROM impressoras
                     WHERE maker_id = ?";

@@ -447,4 +447,10 @@ INSERT INTO materiais_maker (maker_id, tipo_material, preco_por_grama) VALUES
 ((SELECT id FROM usuarios WHERE email='maria@email.com'), 'ABS', 0.19),
 ((SELECT id FROM usuarios WHERE email='maria@email.com'), 'PETG', 0.23);
 
+-- adiciona o tipo de impressora na tabela impressoras
+ALTER TABLE impressoras
+ADD COLUMN tipo_impressora VARCHAR(20) NULL AFTER modelo;
 
+-- adiciona a quantidade de impressoras com as mesmas especificações
+ALTER TABLE impressoras
+ADD COLUMN quantidade INT NOT NULL DEFAULT 1 AFTER tipo_impressora;

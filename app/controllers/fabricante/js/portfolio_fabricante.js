@@ -85,15 +85,95 @@ function preencherImpressoras(impressoras) {
     area.innerHTML = "";
 
     impressoras.forEach((imp) => {
+        const tiposHtml = imp.tipo_impressora
+            ? imp.tipo_impressora.split(',').map(t => `<span class="badge" style="background:#e8d7ec;color:#412746;font-size:0.75rem;font-weight:600;padding:3px 8px;border-radius:20px;">${t.trim()}</span>`).join(' ')
+            : '<span style="color:#9e939e;font-size:0.8rem;">Tipo não informado</span>';
+
         area.innerHTML += `
-            <div class="portfolio-item">
-                <strong>${imp.modelo || "Modelo não informado"}</strong><br>
+            <div class="portfolio-item" id="imp-card-${imp.id}">
+                <div class="d-flex justify-content-between align-items-start">
+                    <strong>${imp.modelo || "Modelo não informado"}</strong>
+                    <div>
+                        <button class="btn-imp-acao btn-imp-editar" title="Editar" onclick="abrirModalImpressora(${JSON.stringify(imp).replace(/"/g, '&quot;')})">
+                            <i class="bi bi-pencil"></i>
+                        </button>
+                        <button class="btn-imp-acao btn-imp-excluir" title="Excluir" onclick="excluirImpressora(${imp.id})">
+                            <i class="bi bi-trash"></i>
+                        </button>
+                    </div>
+                </div>
+                <small>Tipo: ${tiposHtml}</small><br>
+                <small>Quantidade: ${imp.quantidade || 1}</small><br>
                 <small>Volume máximo: ${imp.volume_maximo_cm3 || "Não informado"} cm³</small><br>
                 <small>Status: ${imp.status || "Não informado"}</small>
             </div>
         `;
     });
 }
+
+function abrirModalImpressora(imp = null) {
+    document.getElementById("modalImpId").value       = imp ? imp.id : "";
+    document.getElementById("modalImpModelo").value   = imp ? (imp.modelo || "") : "";
+    document.getElementById("modalImpVolume").value   = imp ? (imp.volume_maximo_cm3 || "") : "";
+    document.getElementById("modalImpQuantidade").value = imp ? (imp.quantidade || 1) : 1;
+
+    // Reseta e marca checkboxes conforme tipos salvos
+    const tipos = imp && imp.tipo_impressora ? imp.tipo_impressora.split(',').map(t => t.trim()) : [];
+    document.querySelectorAll(".modal-imp-tipo").forEach(cb => {
+        cb.checked = tipos.includes(cb.value);
+    });
+
+    document.getElementById("modalImpressoraTitle").textContent = imp ? "Editar Impressora" : "Adicionar Impressora";
+    new bootstrap.Modal(document.getElementById("modalImpressora")).show();
+}
+
+async function salvarImpressora() {
+    const id        = document.getElementById("modalImpId").value;
+    const modelo    = document.getElementById("modalImpModelo").value.trim();
+    const volume    = document.getElementById("modalImpVolume").value.trim();
+    const quantidade = document.getElementById("modalImpQuantidade").value.trim();
+    const tipos     = [...document.querySelectorAll(".modal-imp-tipo:checked")].map(cb => cb.value).join(",");
+
+    if (!modelo) { alert("Informe o modelo da impressora."); return; }
+
+    const url = id
+        ? "../app/controllers/fabricante/php/editar_impressora.php"
+        : "../app/controllers/fabricante/php/adicionar_impressora.php";
+
+    const resp = await fetch(url, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id, modelo, volume, quantidade, tipos })
+    });
+
+    const dados = await resp.json();
+
+    if (dados.status === "ok") {
+        bootstrap.Modal.getInstance(document.getElementById("modalImpressora")).hide();
+        carregarPortfolioMaker();
+    } else {
+        alert("Erro: " + dados.mensagem);
+    }
+}
+
+async function excluirImpressora(id) {
+    if (!confirm("Tem certeza que deseja excluir esta impressora?")) return;
+
+    const resp = await fetch("../app/controllers/fabricante/php/excluir_impressora.php", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id })
+    });
+
+    const dados = await resp.json();
+
+    if (dados.status === "ok") {
+        carregarPortfolioMaker();
+    } else {
+        alert("Erro: " + dados.mensagem);
+    }
+}
+
 
 function preencherMateriais(materiais) {
     const area = document.getElementById("portfolioMateriais");

@@ -3,987 +3,634 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <title>Novo Pedido — Printly</title>
-
-    <!-- Bootstrap -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-
-    <!-- Bootstrap Icons -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
-
-    <!-- Fonte -->
-    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
-
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700&family=DM+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
     <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-    *, *::before, *::after{
-        box-sizing: border-box;
-        margin: 0;
-        padding: 0;
-    }
-
-    :root{
-        --printly-primary: #412746;
+    :root {
+        --printly-primary:      #412746;
         --printly-primary-dark: #7a3077;
-        --printly-accent: #5a0a61;
-        --printly-light: #f0cef5;
-        --printly-surface: #ffffff;
-        --printly-bg: #fff5fe;
-        --printly-text: #7e1b7e;
-        --printly-muted: #9e939e;
-        --printly-border: #c2b9c28c;
-        --printly-shadow: 0 2px 12px rgba(229, 70, 181, 0.08);
-        --printly-radius: 12px;
-
-        --roxo-escuro: #2d1b4e;
-        --roxo-medio: #6b3fa0;
-        --roxo-claro: #a66dd4;
-        --rosa: #e0aaff;
-        --rosa-claro: #f3e8ff;
-        --cinza-bg: #faf7ff;
-        --cinza-texto: #6b7280;
-        --cinza-borda: #e5d9f2;
-
-        --sombra: 0 2px 12px rgba(107, 63, 160, 0.10);
-        --sombra-hover: 0 8px 32px rgba(107, 63, 160, 0.18);
+        --printly-accent:       #5a0a61;
+        --printly-light:        #f0cef5;
+        --printly-surface:      #ffffff;
+        --printly-bg:           #fff5fe;
+        --printly-text:         #2d1b4e;
+        --printly-muted:        #9e939e;
+        --printly-border:       #e2d5ec;
+        --printly-shadow:       0 2px 16px rgba(107,63,160,.10);
+        --printly-radius:       16px;
+        --roxo-medio:           #6b3fa0;
+        --roxo-claro:           #a66dd4;
+        --rosa:                 #e0aaff;
+        --rosa-claro:           #f3e8ff;
+        --cinza-texto:          #6b7280;
+        --cinza-borda:          #e5d9f2;
     }
 
-    body{
-        font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-        background: var(--cinza-bg);
-        color: var(--roxo-escuro);
+    body {
+        font-family: 'DM Sans', system-ui, sans-serif;
+        background: var(--printly-bg);
+        color: var(--printly-text);
         min-height: 100vh;
     }
 
-    .navbar{
-        background: linear-gradient(
-            135deg,
-            var(--printly-primary) 0%,
-            var(--printly-primary-dark) 100%
-        ) !important;
-
+    /* ── NAVBAR ── */
+    .navbar {
+        background: linear-gradient(135deg, var(--printly-primary) 0%, var(--printly-primary-dark) 100%) !important;
         padding: .75rem 0;
-        box-shadow: 0 2px 16px rgba(229, 70, 216, 0.25);
+        box-shadow: 0 2px 16px rgba(229,70,216,.25);
     }
-
-    .navbar-brand{
+    .navbar-brand {
         font-family: 'Syne', sans-serif;
-        font-weight: 700;
-        font-size: 1.4rem;
-        color: #fff !important;
-        letter-spacing: -.5px;
+        font-weight: 700; font-size: 1.4rem;
+        color: #fff !important; letter-spacing: -.5px;
     }
-
-    .navbar .nav-link{
+    .navbar .nav-link {
         color: rgba(255,255,255,.82) !important;
-        font-size: .9rem;
-        font-weight: 500;
+        font-size: .9rem; font-weight: 500;
         padding: .45rem .9rem !important;
-        border-radius: 8px;
-        transition: .2s;
+        border-radius: 8px; transition: .18s;
     }
-
-    .navbar .nav-link:hover,
-    .navbar .nav-link.active{
-        background: rgba(255,255,255,.18);
-        color: #fff !important;
+    .navbar .nav-link:hover, .navbar .nav-link.active {
+        background: rgba(255,255,255,.18); color: #fff !important;
     }
-
-    #sair{
+    #sair {
         background: rgba(255,255,255,.12);
         color: rgba(255,255,255,.82);
         border: 1px solid rgba(255,255,255,.2);
-        border-radius: 8px;
-        padding: .35rem .75rem;
-        transition: .2s;
+        border-radius: 8px; padding: .35rem .75rem;
+        font-size: .9rem; transition: .18s;
     }
+    #sair:hover { background: rgba(255,255,255,.22); color: #fff; }
 
-    #sair:hover{
-        background: rgba(255,255,255,.22);
-        color: white;
-    }
-
-    .hero-pedido{
-        background: linear-gradient(
-            135deg,
-            var(--roxo-escuro),
-            var(--roxo-medio)
-        );
-
-        color: white;
-        padding: 3rem 2rem;
+    /* ── HERO ── */
+    .hero-pedido {
+        background: linear-gradient(135deg, var(--printly-primary), var(--printly-primary-dark));
+        padding: 3.5rem 2rem 4rem;
         text-align: center;
-        box-shadow: 0 4px 20px rgba(107, 63, 160, .18);
-    }
-
-    .hero-pedido h1{
-        font-size: 2.2rem;
-        font-weight: 700;
-        margin-bottom: .7rem;
-    }
-
-    .hero-pedido p{
-        color: var(--rosa);
-        font-size: 1rem;
-        margin: 0;
-    }
-
-    .container{
-        max-width: 1200px;
-    }
-
-    .card{
-        border: 1px solid var(--cinza-borda);
-        border-radius: 18px;
+        color: #fff;
+        position: relative;
         overflow: hidden;
-        box-shadow: var(--sombra);
+    }
+    .hero-pedido::after {
+        content: '';
+        position: absolute;
+        bottom: -2px; left: 0; right: 0; height: 40px;
+        background: var(--printly-bg);
+        clip-path: ellipse(55% 100% at 50% 100%);
+    }
+    .hero-pedido h1 {
+        font-family: 'Syne', sans-serif;
+        font-size: 2.2rem; font-weight: 700;
+        margin-bottom: .6rem; letter-spacing: -.5px;
+    }
+    .hero-pedido p { color: var(--rosa); font-size: 1rem; margin: 0; }
+
+    /* ── STEPS ── */
+    .steps-bar {
+        display: flex; align-items: center; justify-content: center;
+        gap: 0; margin-top: 2rem;
+    }
+    .step {
+        display: flex; flex-direction: column; align-items: center; gap: 4px;
+        position: relative;
+    }
+    .step-circle {
+        width: 32px; height: 32px; border-radius: 50%;
+        background: rgba(255,255,255,.2);
+        border: 2px solid rgba(255,255,255,.4);
+        color: #fff; font-size: .8rem; font-weight: 700;
+        display: flex; align-items: center; justify-content: center;
         transition: .2s;
-        background: white;
     }
-
-    .card:hover{
-        box-shadow: var(--sombra-hover);
+    .step.active .step-circle {
+        background: #fff; color: var(--printly-primary); border-color: #fff;
     }
+    .step-label { font-size: .7rem; color: rgba(255,255,255,.7); white-space: nowrap; }
+    .step.active .step-label { color: #fff; font-weight: 600; }
+    .step-line { width: 60px; height: 2px; background: rgba(255,255,255,.25); margin-bottom: 18px; }
 
-    .card-body{
-        padding: 1.5rem;
+    /* ── LAYOUT ── */
+    .container { max-width: 1200px; }
+    main { padding: 2.5rem 0 4rem; }
+
+    /* ── CARDS ── */
+    .card-secao {
+        background: var(--printly-surface);
+        border: 1px solid var(--printly-border);
+        border-radius: var(--printly-radius);
+        box-shadow: var(--printly-shadow);
+        margin-bottom: 1.5rem;
+        overflow: hidden;
+        transition: box-shadow .2s;
     }
+    .card-secao:hover { box-shadow: 0 6px 28px rgba(107,63,160,.14); }
 
-    .card h4,
-    .card h5,
-    .card h6{
-        color: var(--roxo-escuro);
-        font-weight: 700;
+    .card-secao-header {
+        padding: 1.1rem 1.5rem;
+        background: linear-gradient(90deg, var(--printly-light) 0%, #fff 100%);
+        border-bottom: 1px solid var(--printly-border);
+        display: flex; align-items: center; gap: 10px;
     }
-
-    .card-maker{
-        position: sticky;
-        top: 20px;
+    .card-secao-icon {
+        width: 34px; height: 34px; border-radius: 10px;
+        background: var(--printly-primary);
+        display: flex; align-items: center; justify-content: center;
+        flex-shrink: 0;
     }
+    .card-secao-icon i { color: #fff; font-size: .95rem; }
+    .card-secao-header h4 {
+        margin: 0; font-size: 1rem; font-weight: 700;
+        color: var(--printly-primary); font-family: 'Syne', sans-serif;
+    }
+    .card-secao-body { padding: 1.5rem; }
 
-    .maker-avatar{
-        width: 72px;
-        height: 72px;
-        border-radius: 50%;
+    /* ── SIDEBAR MAKER ── */
+    .sidebar-maker { position: sticky; top: 24px; }
+
+    .maker-perfil-topo {
+        display: flex; align-items: center; gap: 14px;
+        margin-bottom: 1.25rem;
+    }
+    .maker-avatar {
+        width: 60px; height: 60px; border-radius: 50%;
         object-fit: cover;
         border: 3px solid var(--rosa);
-        background: var(--rosa-claro);
+        flex-shrink: 0;
+    }
+    #makerNome {
+        font-size: 1rem; font-weight: 700;
+        color: var(--printly-primary); margin: 0 0 2px;
+        font-family: 'Syne', sans-serif;
+    }
+    #makerCidade { font-size: .82rem; color: var(--cinza-texto); margin: 0; }
+    .estrela.cheia { color: #f59e0b; }
+    .estrela.meia  { color: #f59e0b; opacity: .6; }
+    .estrela.vazia { color: #d1d5db; }
+
+    .secao-label {
+        font-size: .7rem; font-weight: 700; letter-spacing: .08em;
+        text-transform: uppercase; color: var(--roxo-claro);
+        margin-bottom: .6rem; display: block;
     }
 
-    #makerNome{
-        font-size: 1.1rem;
-        margin-bottom: 4px;
+    /* Materiais sidebar */
+    .material-item {
+        display: flex; align-items: center; justify-content: space-between;
+        padding: 7px 10px; background: var(--rosa-claro);
+        border-radius: 8px; border: 1px solid var(--cinza-borda);
+        margin-bottom: 5px;
     }
+    .material-nome { font-size: .82rem; font-weight: 600; color: var(--printly-primary); }
+    .material-preco { font-size: .8rem; font-weight: 700; color: var(--roxo-medio); }
+    .material-preco small { font-weight: 400; color: var(--cinza-texto); font-size: .72rem; }
 
-    #makerCidade{
-        font-size: .9rem;
-        color: var(--cinza-texto) !important;
+    /* Resumo */
+    .resumo-row {
+        display: flex; justify-content: space-between; align-items: center;
+        padding: 10px 0; border-bottom: 1px solid var(--cinza-borda);
     }
+    .resumo-row:last-child { border-bottom: none; }
+    .resumo-row span { font-size: .88rem; color: var(--cinza-texto); }
+    .resumo-row strong { font-size: .9rem; color: var(--printly-primary); }
 
-    #makerAvaliacoes{
-        color: #f59e0b;
-        font-size: 1rem;
-        letter-spacing: 2px;
+    /* ── FORM ── */
+    .form-label {
+        font-weight: 600; color: var(--printly-primary);
+        margin-bottom: 6px; font-size: .88rem;
     }
-
-    .badge-material{
-        background: var(--rosa-claro);
-        color: var(--roxo-medio);
-        border: 1px solid var(--cinza-borda);
-        padding: 5px 10px;
-        border-radius: 999px;
-        font-size: .75rem;
-        font-weight: 600;
+    .form-control, .form-select {
+        border: 1.5px solid var(--cinza-borda);
+        border-radius: 10px; padding: 10px 14px;
+        background: #fff; transition: .18s;
+        font-size: .9rem; box-shadow: none !important;
+        color: var(--printly-text);
     }
-
-    .resumo-item{
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-
-        padding: 12px 0;
-        border-bottom: 1px solid #f0e7f5;
-    }
-
-    .resumo-item:last-child{
-        border-bottom: none;
-    }
-
-    .resumo-item span{
-        color: var(--cinza-texto);
-        font-size: .95rem;
-    }
-
-    .resumo-item strong{
-        color: var(--roxo-escuro);
-        font-size: .95rem;
-    }
-
-    .form-label{
-        font-weight: 600;
-        color: var(--roxo-escuro);
-        margin-bottom: 8px;
-    }
-
-    .form-control,
-    .form-select{
-        border: 1px solid var(--cinza-borda);
-        border-radius: 12px;
-        padding: 12px 14px;
-        background: white;
-        transition: .2s;
-        box-shadow: none !important;
-    }
-
-    .form-control:focus,
-    .form-select:focus{
+    .form-control:focus, .form-select:focus {
         border-color: var(--roxo-claro);
-        box-shadow: 0 0 0 4px rgba(166, 109, 212, .15) !important;
+        box-shadow: 0 0 0 4px rgba(166,109,212,.15) !important;
     }
-
-    textarea.form-control{
-        resize: vertical;
+    .form-control.is-invalid, .form-select.is-invalid {
+        border-color: #dc2626 !important;
+        box-shadow: 0 0 0 3px rgba(220,38,38,.1) !important;
     }
+    textarea.form-control { resize: vertical; min-height: 100px; }
 
-    .upload-area{
+    /* ── DROPZONE ── */
+    .dropzone {
         border: 2px dashed var(--roxo-claro);
-        border-radius: 16px;
+        border-radius: 14px;
         padding: 2.5rem 1.5rem;
         text-align: center;
         background: var(--rosa-claro);
-        transition: .2s;
+        transition: .2s; cursor: pointer;
         position: relative;
     }
-
-    .upload-area:hover{
-        background: #f7eeff;
-        border-color: var(--roxo-medio);
+    .dropzone:hover, .dropzone.dragover {
+        background: #ede0ff; border-color: var(--roxo-medio);
+        transform: scale(1.005);
     }
-
-    .upload-area i{
-        font-size: 2.4rem;
-        color: var(--roxo-medio);
-        margin-bottom: 12px;
-        display: block;
+    .dropzone.dropzone-erro { border-color: #dc2626; background: #fff5f5; }
+    .dropzone input[type="file"] {
+        position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%;
     }
+    .dropzone-icone { font-size: 2.2rem; color: var(--roxo-medio); margin-bottom: 10px; display: block; }
+    .dropzone-texto p { margin: 0; font-weight: 600; color: var(--printly-primary); }
+    .dropzone-texto small { color: var(--cinza-texto); font-size: .82rem; }
 
-    .upload-area p{
-        margin: 0;
-        color: var(--roxo-escuro);
-        font-weight: 500;
-    }
-
-    .upload-area input[type="file"]{
-        position: absolute;
-        inset: 0;
-        opacity: 0;
-        cursor: pointer;
-    }
-
-    .upload-subtitle{
-        display: block;
-        margin-top: 4px;
-        color: var(--cinza-texto);
-        font-size: .9rem;
-    }
-
-    #listaArquivos{
-        display: flex;
-        flex-direction: column;
-        gap: 8px;
-    }
-
-    .arquivo-item{
-        background: #f8f3fc;
-        border: 1px solid #eadcf5;
-        border-radius: 12px;
-        padding: 10px 14px;
-
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-    }
-
-    .arquivo-item span{
-        font-size: .9rem;
-        color: var(--roxo-escuro);
-    }
-
-    .btn{
-        border-radius: 12px;
-        font-weight: 600;
-        padding: 10px 18px;
-        transition: .2s;
-    }
-
-    .btn-primary{
-        background: linear-gradient(
-            135deg,
-            var(--roxo-medio),
-            var(--roxo-escuro)
-        );
-
-        border: none;
-    }
-
-    .btn-primary:hover{
-        background: linear-gradient(
-            135deg,
-            var(--roxo-escuro),
-            var(--roxo-medio)
-        );
-
-        transform: translateY(-1px);
-    }
-
-    .btn-outline-secondary{
+    .arquivo-item {
+        background: #f6f0fd;
         border: 1px solid var(--cinza-borda);
-        color: var(--cinza-texto);
+        border-radius: 10px;
+        padding: 10px 14px;
+        display: flex; align-items: center; justify-content: space-between;
     }
+    .arquivo-info { display: flex; align-items: center; gap: 10px; }
+    .arquivo-icone { font-size: 1.4rem; color: var(--roxo-medio); }
+    .arquivo-nome { font-size: .88rem; font-weight: 600; color: var(--printly-primary); display: block; }
+    .arquivo-tamanho { font-size: .78rem; color: var(--cinza-texto); }
+    .btn-remover-arquivo {
+        background: none; border: none; color: var(--cinza-texto);
+        cursor: pointer; padding: 4px 6px; border-radius: 6px; transition: .15s;
+    }
+    .btn-remover-arquivo:hover { background: #fee2e2; color: #dc2626; }
 
-    .btn-outline-secondary:hover{
-        background: #f3eef8;
-        color: var(--roxo-escuro);
+    /* ── PARTES ── */
+    .parte-card {
+        background: #fcf9ff;
+        border: 1.5px solid var(--cinza-borda);
+        border-radius: 14px; margin-bottom: 1rem;
+        overflow: hidden;
+        transition: box-shadow .2s;
+    }
+    .parte-card:hover { box-shadow: 0 4px 16px rgba(107,63,160,.10); }
+
+    .parte-header {
+        padding: .85rem 1.25rem;
+        background: linear-gradient(90deg, var(--rosa-claro), #fff);
+        border-bottom: 1px solid var(--cinza-borda);
+        display: flex; align-items: center; justify-content: space-between;
+    }
+    .parte-header h5 {
+        margin: 0; font-size: .9rem; font-weight: 700;
+        color: var(--roxo-medio); font-family: 'Syne', sans-serif;
+        display: flex; align-items: center; gap: 8px;
+    }
+    .parte-numero {
+        width: 22px; height: 22px; border-radius: 50%;
+        background: var(--roxo-medio); color: #fff;
+        font-size: .7rem; font-weight: 700;
+        display: flex; align-items: center; justify-content: center;
+    }
+    .parte-body { padding: 1.25rem; }
+    .btn-remover-parte {
+        background: none; border: 1px solid #fecaca;
+        color: #dc2626; border-radius: 8px;
+        padding: 4px 10px; font-size: .8rem;
+        transition: .15s; cursor: pointer;
+    }
+    .btn-remover-parte:hover { background: #fee2e2; }
+
+    /* ── BOTÕES ── */
+    .btn { border-radius: 10px; font-weight: 600; padding: 10px 20px; transition: .18s; }
+    .btn-primary {
+        background: linear-gradient(135deg, var(--roxo-medio), var(--printly-primary));
+        border: none; color: #fff;
+    }
+    .btn-primary:hover {
+        background: linear-gradient(135deg, var(--printly-primary), var(--roxo-medio));
+        transform: translateY(-1px);
+        box-shadow: 0 4px 16px rgba(107,63,160,.3);
+        color: #fff;
+    }
+    .btn-outline-secondary {
+        border: 1.5px solid var(--cinza-borda); color: var(--cinza-texto);
+        background: #fff;
+    }
+    .btn-outline-secondary:hover {
+        background: var(--rosa-claro); color: var(--printly-primary);
         border-color: var(--roxo-claro);
     }
-
-    .parte-card{
-        border: 1px solid #eadcf5;
-        background: #fcf9ff;
+    .btn-enviar {
+        padding: 12px 32px; font-size: 1rem;
+        border-radius: 12px; letter-spacing: .02em;
     }
 
-    .parte-card .card-body{
-        padding: 1.25rem;
+    /* ── CHECKBOX ── */
+    .form-check-input:checked {
+        background-color: var(--roxo-medio); border-color: var(--roxo-medio);
     }
+    .form-check-label { font-size: .88rem; color: var(--cinza-texto); }
 
-    .titulo-parte{
-        color: var(--roxo-medio);
+    /* ── ALERT ── */
+    .alert-danger  { background: #fff0f3; border: none; border-left: 4px solid #dc2626; color: #991b1b; border-radius: 12px; }
+    .alert-success { background: #f0fdf4; border: none; border-left: 4px solid #16a34a; color: #166534; border-radius: 12px; }
+
+    /* ── RESPONSIVO ── */
+    @media (max-width: 991px) {
+        .sidebar-maker { position: relative; top: 0; }
+        .hero-pedido { padding: 2.5rem 1.5rem 3.5rem; }
+        .hero-pedido h1 { font-size: 1.8rem; }
+        .steps-bar .step-line { width: 36px; }
     }
-
-    .form-check-input:checked{
-        background-color: var(--roxo-medio);
-        border-color: var(--roxo-medio);
+    @media (max-width: 576px) {
+        .card-secao-body { padding: 1.1rem; }
+        .steps-bar { gap: 0; }
+        .steps-bar .step-line { width: 24px; }
     }
-
-    .alert-danger{
-        border-radius: 14px;
-        border: none;
-        background: #fff0f3;
-        color: #b42318;
-    }
-
-    hr{
-        border-color: #efe5f5;
-        opacity: 1;
-    }
-
-    @media(max-width: 991px){
-
-        .card-maker{
-            position: relative;
-            top: 0;
-        }
-
-        .hero-pedido{
-            padding: 2.5rem 1.5rem;
-        }
-
-        .hero-pedido h1{
-            font-size: 1.8rem;
-        }
-    }
-
-    @media(max-width: 768px){
-
-        .card-body{
-            padding: 1.2rem;
-        }
-
-        .hero-pedido h1{
-            font-size: 1.6rem;
-        }
-
-        .d-flex.justify-content-end{
-            flex-direction: column;
-        }
-
-        .d-flex.justify-content-end .btn{
-            width: 100%;
-        }
-    }
-
     </style>
 </head>
-
 <body data-acesso="CLIENTE,ADMIN">
 
     <nav class="navbar navbar-expand-lg navbar-dark">
         <div class="container">
-
-            <a class="navbar-brand" href="index.php?rota=usuario-painel">
-                Printly
-            </a>
-
+            <a class="navbar-brand" href="index.php?rota=usuario-painel">Printly</a>
             <div class="collapse navbar-collapse">
-
                 <ul class="navbar-nav ms-auto">
-
                     <li class="nav-item">
                         <a class="nav-link" href="index.php?rota=usuario-painel">
-                            <i class="bi bi-grid me-1"></i>
-                            Painel
+                            <i class="bi bi-grid me-1"></i>Painel
                         </a>
                     </li>
-
                     <li class="nav-item">
                         <a class="nav-link" href="index.php?rota=meus_projetos">
-                            <i class="bi bi-box-seam me-1"></i>
-                            Meus Projetos
+                            <i class="bi bi-box-seam me-1"></i>Meus Projetos
                         </a>
                     </li>
-
                     <li class="nav-item">
                         <a class="nav-link" href="index.php?rota=listagem-maker">
-                            <i class="bi bi-people me-1"></i>
-                            Fabricantes
+                            <i class="bi bi-people me-1"></i>Fabricantes
                         </a>
                     </li>
-
                     <li class="nav-item ms-2">
-                        <button class="btn btn-sm" id="sair">
-                            <i class="bi bi-door-open"></i>
-                        </button>
+                        <button class="btn btn-sm" id="sair"><i class="bi bi-door-open"></i></button>
                     </li>
-
                 </ul>
-
             </div>
         </div>
     </nav>
 
     <section class="hero-pedido">
-
         <div class="container">
-
-            <h1>Solicitação de Impressão</h1>
-
-            <p>
-                Configure seu projeto e envie para análise do fabricante.
-            </p>
-
+            <h1><i class="bi bi-send me-2" style="font-size:1.6rem;"></i>Solicitação de Impressão</h1>
+            <p>Configure seu projeto e envie para análise do fabricante</p>
+            <div class="steps-bar mt-4">
+                <div class="step active">
+                    <div class="step-circle">1</div>
+                    <span class="step-label">Projeto</span>
+                </div>
+                <div class="step-line"></div>
+                <div class="step active">
+                    <div class="step-circle">2</div>
+                    <span class="step-label">Arquivos</span>
+                </div>
+                <div class="step-line"></div>
+                <div class="step active">
+                    <div class="step-circle">3</div>
+                    <span class="step-label">Partes</span>
+                </div>
+                <div class="step-line"></div>
+                <div class="step">
+                    <div class="step-circle">4</div>
+                    <span class="step-label">Envio</span>
+                </div>
+            </div>
         </div>
-
     </section>
 
-    <main class="container py-5">
+    <main>
+        <div class="container">
+            <div class="row g-4">
 
-        <div class="row g-4">
+                <!-- SIDEBAR -->
+                <div class="col-lg-4">
+                    <div class="sidebar-maker">
 
-            <div class="col-lg-4">
-
-                <div class="card card-maker shadow-sm">
-
-                    <div class="card-body">
-
-                        <div class="d-flex align-items-center gap-3 mb-4">
-
-                            <img
-                                id="makerFoto"
-                                class="maker-avatar"
-                                src=""
-                                alt="Maker"
-                            >
-
-                            <div>
-
-                                <h4 id="makerNome">
-                                    Maker
-                                </h4>
-
-                                <p id="makerCidade" class="text-muted mb-0">
-                                    Cidade
-                                </p>
-
+                        <!-- Card Maker -->
+                        <div class="card-secao">
+                            <div class="card-secao-header">
+                                <div class="card-secao-icon"><i class="bi bi-person-badge"></i></div>
+                                <h4>Fabricante</h4>
                             </div>
-
-                        </div>
-
-                        <hr>
-
-                        <h6 class="mb-3">
-                            Materiais disponíveis
-                        </h6>
-
-                        <div id="makerMateriais" class="d-flex flex-wrap gap-2">
-                        </div>
-
-                        <hr>
-
-                        <h6 class="mb-3">
-                            Avaliações
-                        </h6>
-
-                        <div id="makerAvaliacoes">
-                            ★★★★★
-                        </div>
-
-                    </div>
-
-                </div>
-
-                <div class="card shadow-sm mt-4">
-
-                    <div class="card-body">
-
-                        <h5 class="mb-3">
-                            Resumo do Pedido
-                        </h5>
-
-                        <div class="resumo-item">
-                            <span>Partes:</span>
-                            <strong id="resumoPartes">0</strong>
-                        </div>
-
-                        <div class="resumo-item">
-                            <span>Quantidade:</span>
-                            <strong id="resumoQuantidade">0</strong>
-                        </div>
-
-                        <div class="resumo-item">
-                            <span>Estimativa:</span>
-                            <strong id="resumoValor">
-                                A calcular
-                            </strong>
-                        </div>
-
-                    </div>
-
-                </div>
-
-                <div class="card shadow-sm mt-4">
-
-                </div>
-
-            </div>
-
-            <div class="col-lg-8">
-
-                <form id="formPedido">
-
-                    <input
-                        type="hidden"
-                        id="maker_id"
-                        name="maker_id"
-                    >
-
-                    <input
-                        type="hidden"
-                        name="status"
-                        value="AGUARDANDO_CONFIRMACAO"
-                    >
-
-                    <div class="card shadow-sm mb-4">
-
-                        <div class="card-body">
-
-                            <h4 class="mb-4">
-                                Dados do Projeto
-                            </h4>
-
-                            <div class="mb-3">
-
-                                <label class="form-label">
-                                    Nome do Projeto
-                                </label>
-
-                                <input
-                                    type="text"
-                                    class="form-control"
-                                    name="nome_projeto"
-                                    id="nome_projeto"
-                                    required
-                                >
-
-                            </div>
-
-                            <div class="mb-3">
-
-                                <label class="form-label">
-                                    Descrição Geral
-                                </label>
-
-                                <textarea
-                                    class="form-control"
-                                    rows="5"
-                                    name="descricao"
-                                    id="descricao"
-                                    required
-                                ></textarea>
-
-                            </div>
-
-                            <div class="mb-3">
-
-                                <label class="form-label">
-                                    Imagem de Capa do Projeto
-                                </label>
-
-                                <input
-                                    type="file"
-                                    class="form-control"
-                                    name="imagem_capa"
-                                    id="imagem_capa"
-                                    accept=".png,.jpg,.jpeg"
-                                >
-
-                                <small class="text-muted">
-                                    Esta imagem será exibida nos cards de projetos.
-                                </small>
-
-                            </div>
-
-                            <div class="row">
-
-                                <div class="col-md-6 mb-3">
-
-                                    <label class="form-label">
-                                        Quantidade
-                                    </label>
-
-                                    <input
-                                        type="number"
-                                        class="form-control"
-                                        name="quantidade"
-                                        id="quantidade"
-                                        min="1"
-                                        required
-                                    >
-
+                            <div class="card-secao-body">
+                                <div class="maker-perfil-topo">
+                                    <img id="makerFoto" class="maker-avatar" src="" alt="Maker">
+                                    <div>
+                                        <p id="makerNome">Carregando...</p>
+                                        <p id="makerCidade"></p>
+                                        <div id="makerAvaliacoes" style="font-size:.9rem;margin-top:3px;"></div>
+                                    </div>
                                 </div>
+                                <hr style="border-color:var(--cinza-borda);margin:1rem 0;">
+                                <span class="secao-label">Materiais disponíveis</span>
+                                <div id="makerMateriais"></div>
+                            </div>
+                        </div>
 
-                                <div class="col-md-6 mb-3">
-
-                                    <label class="form-label">
-                                        Prazo desejado
-                                    </label>
-
-                                    <input
-                                        type="date"
-                                        class="form-control"
-                                        name="prazo"
-                                        id="prazo"
-                                    >
-
+                        <!-- Card Resumo -->
+                        <div class="card-secao mt-3">
+                            <div class="card-secao-header">
+                                <div class="card-secao-icon"><i class="bi bi-clipboard-check"></i></div>
+                                <h4>Resumo</h4>
+                            </div>
+                            <div class="card-secao-body">
+                                <div class="resumo-row">
+                                    <span>Partes adicionadas</span>
+                                    <strong id="resumoPartes">0</strong>
                                 </div>
-
+                                <div class="resumo-row">
+                                    <span>Quantidade total</span>
+                                    <strong id="resumoQuantidade">0</strong>
+                                </div>
+                                <div class="resumo-row">
+                                    <span>Estimativa</span>
+                                    <strong id="resumoValor" style="color:var(--roxo-medio);">A calcular</strong>
+                                </div>
                             </div>
-
-                            <div class="mb-3">
-
-                                <label class="form-label">
-                                    Endereço de entrega
-                                </label>
-
-                                <textarea
-                                    class="form-control"
-                                    rows="3"
-                                    name="endereco"
-                                    id="endereco"
-                                    required
-                                ></textarea>
-
-                            </div>
-
                         </div>
 
                     </div>
+                </div>
 
-                    <div class="card shadow-sm mb-4">
+                <!-- FORMULÁRIO -->
+                <div class="col-lg-8">
+                    <form id="formPedido">
+                        <input type="hidden" id="maker_id" name="maker_id">
 
-                        <div class="card-body">
-
-                            <h4 class="mb-4">
-                                Arquivos do Projeto
-                            </h4>
-
-                            <div class="upload-area">
-
-                                <i class="bi bi-cloud-upload"></i>
-
-                                <p class="mb-2">
-                                    Envie os arquivos do seu projeto
-                                </p>
-
-                                <span class="upload-subtitle">
-                                    STL, OBJ e imagens PNG/JPG para referência
-                                </span>
-
-                                <input
-                                    type="file"
-                                    id="arquivo_3d"
-                                    name="arquivos[]"
-                                    accept=".stl,.obj,.png,.jpg,.jpeg"
-                                    multiple
-                                >
-
+                        <!-- Dados do Projeto -->
+                        <div class="card-secao">
+                            <div class="card-secao-header">
+                                <div class="card-secao-icon"><i class="bi bi-pencil-square"></i></div>
+                                <h4>Dados do Projeto</h4>
                             </div>
-
-                            <div id="listaArquivos" class="mt-3"></div>
-
-                            <small class="text-muted">
-                                Formatos aceitos:
-                                STL, OBJ, PNG, JPG e JPEG
-                            </small>
-
+                            <div class="card-secao-body">
+                                <div class="mb-3">
+                                    <label class="form-label">Nome do Projeto <span style="color:#dc2626">*</span></label>
+                                    <input type="text" class="form-control" name="nome_projeto" id="nome_projeto"
+                                           placeholder="Ex: Capacete Cyberpunk" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Descrição Geral <span style="color:#dc2626">*</span></label>
+                                    <textarea class="form-control" rows="4" name="descricao" id="descricao"
+                                              placeholder="Descreva seu projeto, referências visuais, detalhes importantes..." required></textarea>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Imagem de Capa <span style="color:var(--cinza-texto);font-weight:400;">(opcional)</span></label>
+                                    <input type="file" class="form-control" name="imagem_capa" id="imagem_capa" accept=".png,.jpg,.jpeg">
+                                    <small class="text-muted">Exibida nos cards de projeto. PNG ou JPG.</small>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label">Quantidade <span style="color:#dc2626">*</span></label>
+                                        <input type="number" class="form-control" name="quantidade" id="quantidade" min="1" value="1" required>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label">Prazo desejado <span style="color:var(--cinza-texto);font-weight:400;">(opcional)</span></label>
+                                        <input type="date" class="form-control" name="prazo" id="prazo">
+                                    </div>
+                                </div>
+                                <div class="mb-0">
+                                    <label class="form-label">Endereço de Entrega <span style="color:#dc2626">*</span></label>
+                                    <textarea class="form-control" rows="2" name="endereco" id="endereco"
+                                              placeholder="Rua, número, bairro, cidade — CEP" required></textarea>
+                                </div>
+                            </div>
                         </div>
 
-                    </div>
+                        <!-- Arquivos -->
+                        <div class="card-secao">
+                            <div class="card-secao-header">
+                                <div class="card-secao-icon"><i class="bi bi-cloud-upload"></i></div>
+                                <h4>Arquivo 3D <span style="color:var(--cinza-texto);font-weight:400;font-size:.85rem;">(opcional)</span></h4>
+                            </div>
+                            <div class="card-secao-body">
+                                <div class="dropzone" id="dropzone">
+                                    <i class="bi bi-file-earmark-code dropzone-icone"></i>
+                                    <div class="dropzone-texto">
+                                        <p>Arraste o arquivo ou clique para selecionar</p>
+                                        <small>Formatos aceitos: STL, OBJ</small>
+                                    </div>
+                                    <input type="file" id="arquivo_3d" name="arquivo_3d" accept=".stl,.obj">
+                                </div>
+                                <div id="listaArquivos" class="mt-3"></div>
+                            </div>
+                        </div>
 
-                    <div class="card shadow-sm mb-4">
-
-                        <div class="card-body">
-
-                            <div class="d-flex justify-content-between align-items-center mb-4">
-
-                                <h4 class="mb-0">
-                                    Partes Personalizadas
-                                </h4>
-
-                                <button
-                                    type="button"
-                                    class="btn btn-primary"
-                                    id="btnAdicionarParte"
-                                >
-                                    <i class="bi bi-plus-circle me-1"></i>
-                                    Adicionar Parte
+                        <!-- Partes -->
+                        <div class="card-secao">
+                            <div class="card-secao-header">
+                                <div class="card-secao-icon"><i class="bi bi-layers"></i></div>
+                                <h4>Partes Personalizadas <span style="color:#dc2626;font-size:.8rem;">*</span></h4>
+                                <button type="button" class="btn btn-primary btn-sm ms-auto" id="btnAdicionarParte">
+                                    <i class="bi bi-plus-circle me-1"></i>Adicionar Parte
                                 </button>
-
                             </div>
-
-                            <div id="containerPartes"></div>
-
+                            <div class="card-secao-body">
+                                <p style="font-size:.85rem;color:var(--cinza-texto);margin-bottom:1rem;">
+                                    Defina materiais, cores e acabamentos para cada parte do seu objeto.
+                                </p>
+                                <div id="containerPartes"></div>
+                            </div>
                         </div>
 
-                    </div>
-
-                    <div class="card shadow-sm mb-4">
-
-                        <div class="card-body">
-
-                            <h4 class="mb-4">
-                                Observações Extras
-                            </h4>
-
-                            <textarea
-                                class="form-control"
-                                rows="4"
-                                name="observacoes"
-                                id="observacoes"
-                                placeholder="Informações adicionais para o fabricante..."
-                            ></textarea>
-
+                        <!-- Observações -->
+                        <div class="card-secao">
+                            <div class="card-secao-header">
+                                <div class="card-secao-icon"><i class="bi bi-chat-text"></i></div>
+                                <h4>Observações Extras</h4>
+                            </div>
+                            <div class="card-secao-body">
+                                <textarea class="form-control" rows="3" name="observacoes" id="observacoes"
+                                          placeholder="Informações adicionais, referências ou dúvidas para o fabricante..."></textarea>
+                            </div>
                         </div>
 
-                    </div>
+                        <!-- Alerta -->
+                        <div id="mensagensFormulario" class="alert d-none mb-3"></div>
 
-                    <div
-                        id="mensagensFormulario"
-                        class="alert alert-danger d-none mb-4"
-                    ></div>
+                        <!-- Confirmação e envio -->
+                        <div class="card-secao">
+                            <div class="card-secao-body">
+                                <div class="form-check mb-4">
+                                    <input class="form-check-input" type="checkbox" id="confirmacaoPedido" required>
+                                    <label class="form-check-label" for="confirmacaoPedido">
+                                        Confirmo que as informações enviadas estão corretas e autorizo o envio ao fabricante.
+                                    </label>
+                                </div>
+                                <div class="d-flex justify-content-end gap-3 flex-wrap">
+                                    <a href="index.php?rota=listagem-maker" class="btn btn-outline-secondary">
+                                        <i class="bi bi-arrow-left me-1"></i>Cancelar
+                                    </a>
+                                    <button type="submit" class="btn btn-primary btn-enviar" id="btnEnviarPedido">
+                                        <i class="bi bi-send me-2"></i>Enviar Pedido
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
 
-                    <div class="form-check mb-4">
-
-                        <input
-                            class="form-check-input"
-                            type="checkbox"
-                            id="confirmacaoPedido"
-                            required
-                        >
-
-                        <label class="form-check-label" for="confirmacaoPedido">
-
-                            Confirmo que as informações enviadas estão corretas.
-
-                        </label>
-
-                    </div>
-
-                    <div class="d-flex justify-content-end gap-3">
-
-                        <a
-                            href="index.php?rota=listagem-maker"
-                            class="btn btn-outline-secondary"
-                        >
-                            Cancelar
-                        </a>
-
-                        <button
-                            type="submit"
-                            class="btn btn-primary"
-                            id="btnEnviarPedido"
-                        >
-                            <i class="bi bi-send me-2"></i>
-                            Enviar Pedido
-                        </button>
-
-                    </div>
-
-                </form>
+                    </form>
+                </div>
 
             </div>
-
         </div>
-
     </main>
 
+    <!-- TEMPLATE PARTE -->
     <template id="templateParte">
-
-        <div class="parte-card card mb-3">
-
-            <div class="card-body">
-
-                <div class="d-flex justify-content-between mb-3">
-
-                    <h5 class="mb-0 titulo-parte">
-                        Parte Personalizada
-                    </h5>
-
-                    <button
-                        type="button"
-                        class="btn btn-sm btn-danger btn-remover-parte"
-                    >
-                        <i class="bi bi-trash"></i>
-                    </button>
-
-                </div>
-
-                <div class="mb-3">
-
-                    <label class="form-label">
-                        Nome da Parte
-                    </label>
-
-                    <input
-                        type="text"
-                        class="form-control nome-parte"
-                        placeholder="Ex: Cabeça, Base, Corpo..."
-                        required
-                    >
-
-                </div>
-
-                <div class="mb-3">
-
-                    <label class="form-label">
-                        Descrição
-                    </label>
-
-                    <textarea
-                        class="form-control descricao-parte"
-                        rows="3"
-                        placeholder="Descreva esta parte..."
-                        required
-                    ></textarea>
-
-                </div>
-
-                <div class="row">
-
-                    <div class="col-md-3 mb-3">
-
-                        <label class="form-label">
-                            Material
-                        </label>
-
-                        <select
-                            class="form-select material-parte"
-                            required
-                        >
-
-                            <option value="">
-                                Selecione
-                            </option>
-
-                        </select>
-
-                    </div>
-
-                    <div class="col-md-3 mb-3">
-
-                        <label class="form-label">
-                            Cor
-                        </label>
-
-                        <input
-                            type="text"
-                            class="form-control cor-parte"
-                            placeholder="Ex: Rosa, Preto Fosco..."
-                            required
-                        >
-
-                    </div>
-
-                    <div class="col-md-3 mb-3">
-
-                        <label class="form-label">
-                            Acabamento
-                        </label>
-
-                        <select class="form-select acabamento-parte">
-
-                            <option value="">
-                                Selecione
-                            </option>
-
-                            <option value="fosco">
-                                Fosco
-                            </option>
-
-                            <option value="brilhante">
-                                Brilhante
-                            </option>
-
-                            <option value="lixado">
-                                Lixado
-                            </option>
-
-                            <option value="pintado">
-                                Pintado
-                            </option>
-
-                        </select>
-
-                    </div>
-
-                    <div class="col-md-3 mb-3">
-
-                        <label class="form-label">
-                            Quantidade
-                        </label>
-
-                        <input
-                            type="number"
-                            class="form-control quantidade-parte"
-                            min="1"
-                            value="1"
-                            required
-                        >
-
-                    </div>
-
-                </div>
-
+        <div class="parte-card">
+            <div class="parte-header">
+                <h5>
+                    <span class="parte-numero">1</span>
+                    Parte Personalizada
+                </h5>
+                <button type="button" class="btn-remover-parte">
+                    <i class="bi bi-trash me-1"></i>Remover
+                </button>
             </div>
-
+            <div class="parte-body">
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Nome da Parte <span style="color:#dc2626">*</span></label>
+                        <input type="text" class="form-control nome-parte" placeholder="Ex: Cabeça, Base, Corpo...">
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Material <span style="color:#dc2626">*</span></label>
+                        <select class="form-select material-parte"></select>
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Descrição <span style="color:#dc2626">*</span></label>
+                    <textarea class="form-control descricao-parte" rows="2" placeholder="Descreva esta parte..."></textarea>
+                </div>
+                <div class="row">
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label">Cor <span style="color:#dc2626">*</span></label>
+                        <input type="text" class="form-control cor-parte" placeholder="Ex: Rosa, Preto Fosco...">
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label">Acabamento</label>
+                        <select class="form-select acabamento-parte">
+                            <option value="">Selecione</option>
+                            <option value="fosco">Fosco</option>
+                            <option value="brilhante">Brilhante</option>
+                            <option value="lixado">Lixado</option>
+                            <option value="pintado">Pintado</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label">Quantidade</label>
+                        <input type="number" class="form-control quantidade-parte" min="1" value="1">
+                    </div>
+                </div>
+            </div>
         </div>
-
     </template>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="../app/controllers/usuario/js/verif.js"></script>
     <script src="../app/controllers/usuario/js/novo_pedido.js"></script>
-    
 </body>
 </html>
-

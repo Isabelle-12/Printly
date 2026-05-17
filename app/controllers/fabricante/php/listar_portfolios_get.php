@@ -16,34 +16,28 @@
     try {
         $sql = "
             SELECT 
-                u.id AS maker_id,
+                u.id              AS maker_id,
                 u.nome,
                 u.cidade,
                 u.estado,
                 u.foto_perfil,
                 u.disponivel_para_pedidos,
-
-                ROUND(AVG(a.nota), 1) AS media_nota,
-                COUNT(DISTINCT a.id) AS total_avaliacoes,
-                COUNT(DISTINCT pm.id) AS total_fotos
-
+                f.nome_empresa,
+                f.foto_empresa,
+                ROUND(AVG(a.nota), 1)   AS media_nota,
+                COUNT(DISTINCT a.id)    AS total_avaliacoes,
+                COUNT(DISTINCT pm.id)   AS total_fotos
             FROM usuarios u
-
-            LEFT JOIN avaliacoes a ON a.maker_id = u.id
-            LEFT JOIN portfolio_maker pm ON pm.maker_id = u.id
-
-            WHERE u.tipo_perfil = 'MAKER'
-            AND u.status = 'ATIVO'
-            AND u.status_fabricante = 'APROVADO'
-
-            GROUP BY 
-                u.id,
-                u.nome,
-                u.cidade,
-                u.estado,
-                u.foto_perfil,
-                u.disponivel_para_pedidos
-
+            INNER JOIN fabricantes f ON f.usuario_id = u.id
+            LEFT JOIN  avaliacoes a   ON a.maker_id  = u.id
+            LEFT JOIN  portfolio_maker pm ON pm.maker_id = u.id
+            WHERE u.tipo_perfil        = 'MAKER'
+            AND u.status             = 'ATIVO'
+            AND u.status_fabricante  = 'APROVADO'
+            GROUP BY
+                u.id, u.nome, u.cidade, u.estado,
+                u.foto_perfil, u.disponivel_para_pedidos,
+                f.nome_empresa, f.foto_empresa
             ORDER BY total_avaliacoes DESC, media_nota DESC
         ";
 
@@ -56,7 +50,8 @@
         }
 
         foreach ($makers as &$maker) {
-            // Fotos do portfólio
+
+            // Fotos do portfólio (máx 4 para preview no card)
             $stmt = $conexao->prepare("
                 SELECT id, titulo, caminho_imagem
                 FROM portfolio_maker
@@ -69,7 +64,7 @@
             $maker['fotos'] = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
             $stmt->close();
 
-            // Materiais
+            // Materiais disponíveis
             $stmt2 = $conexao->prepare("
                 SELECT tipo_material
                 FROM materiais_maker
@@ -83,11 +78,13 @@
             $stmt2->close();
         }
 
-        echo json_encode(['sucesso' => true, 'makers' => $makers]);
+        echo json_encode(
+            ['sucesso' => true, 'makers' => $makers],
+            JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES
+        );
 
     } catch (Exception $e) {
         http_response_code(500);
         echo json_encode(['sucesso' => false, 'mensagem' => $e->getMessage()]);
     }
-
 ?>

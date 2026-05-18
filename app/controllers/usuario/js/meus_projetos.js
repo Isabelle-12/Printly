@@ -1,8 +1,10 @@
 
 // Instâncias dos Modais do Bootstrap
+// No topo do arquivo meus_projetos.js
 let modalDetalhes;
 let modalEditar;
 let listaProjetosGlobal = [];
+filtroAtual = "TODOS"; // Adicione ou garanta que esta linha existe
 
 document.addEventListener("DOMContentLoaded", () => {
     modalDetalhes = new bootstrap.Modal(document.getElementById('modalProjeto'));
@@ -54,33 +56,30 @@ function carregarProjetos() {
 
 function filtrarProjetos(statusFiltro) {
     const container = document.getElementById('cardsProjetos');
-    container.innerHTML = ''; // Limpa o container anterior
+    if (!container) return; // Segurança caso o ID mude no HTML
+    
+    container.innerHTML = ''; 
 
-    // Filtra o array baseado no botão/categoria selecionada
     const projetosFiltrados = listaProjetosGlobal.filter(p => {
+        // Garanta que a comparação ignore maiúsculas/minúsculas se necessário
         return statusFiltro === "TODOS" || p.status_solicitacao === statusFiltro;
     });
 
     if (projetosFiltrados.length === 0) {
-        container.innerHTML = `
-            <div class="empty-state">
-                <i class="bi bi-folder-x fs-1 text-muted"></i>
-                <h5 class="mt-3">Nenhum projeto encontrado</h5>
-                <p class="text-muted">Não há solicitações neste status.</p>
-            </div>`;
+        // ... (seu código de empty state)
         return;
     }
 
-    // Renderiza cada card dinamicamente
     projetosFiltrados.forEach(projeto => {
         const card = document.createElement('div');
         card.className = 'card';
         
-        // Mapeia classes de estilo e formata o texto do status
         const classeStatus = obterClasseStatus(projeto.status_solicitacao);
         const nomeStatusFormatado = projeto.status_solicitacao.replace(/_/g, ' ');
 
-        const imagemCapa = projeto.imagem_capa ? projeto.imagem_capa : '/Printly/assets/img/default.png';
+        // AJUSTE AQUI: O seu PHP enviou como 'caminho_arquivo' (ou imagem_capa se você mudou o PHP)
+        // Use o nome exato que está no SELECT do seu PHP
+        const imagemCapa = projeto.caminho_arquivo || '/Printly/assets/img/default.png';
 
         card.innerHTML = `
             <div class="card-imagem">
@@ -88,44 +87,24 @@ function filtrarProjetos(statusFiltro) {
                 <span class="status ${classeStatus}">${nomeStatusFormatado}</span>
             </div>
             <div class="card-header">
-                <div class="card-icon">
-                    <i class="bi bi-box-seam"></i>
-                </div>
+                <div class="card-icon"><i class="bi bi-box-seam"></i></div>
                 <h5>${projeto.nome_projeto}</h5>
             </div>
             <div class="card-body">
                 <p class="desc">${projeto.descricao ? projeto.descricao.substring(0, 90) + '...' : 'Sem descrição.'}</p>
                 <div class="informacoes">
-                    <span><i class="bi bi-layers me-1"></i> Formato: ${projeto.formato}</span>
-                    <span><i class="bi bi-hash me-1"></i> Qtd: ${projeto.quantidade}x</span>
-                    <span><i class="bi bi-calendar3 me-1"></i> Criado em: ${formatarData(projeto.data_solicitacao)}</span>
+                    <span><i class="bi bi-layers"></i> Formato: ${projeto.formato}</span>
+                    <span><i class="bi bi-hash"></i> Qtd: ${projeto.quantidade}x</span>
+                    <span><i class="bi bi-calendar3"></i> ${formatarData(projeto.data_solicitacao)}</span>
                 </div>
-                
-                ${projeto.motivo_recusa ? `
-                    <div class="feedback-maker">
-                        <strong><i class="bi bi-chat-left-dots"></i> Motivo/Feedback:</strong><br>${projeto.motivo_recusa}
-                    </div>
-                ` : ''}
-
                 <div class="acoes">
-                    <button type="button" onclick="verDetalhes(${projeto.id})">
-                        <i class="bi bi-eye"></i> Detalhes
-                    </button>
-                    ${projeto.status_solicitacao === 'AGUARDANDO_CONFIRMACAO' || projeto.status_solicitacao === 'NEGADO' ? `
-                        <button type="button" class="btn-dark" onclick="abrirEditar(${projeto.id})">
-                            <i class="bi bi-pencil"></i> Editar
-                        </button>
-                        <button type="button" class="btn-danger" onclick="excluirProjeto(${projeto.id})">
-                            <i class="bi bi-trash"></i>
-                        </button>
-                    ` : ''}
+                    <button type="button" onclick="verDetalhes(${projeto.id})">Detalhes</button>
                 </div>
             </div>
         `;
         container.appendChild(card);
     });
 }
-
 /* ==========================================================================
    2. DETALHES DO PROJETO (MODAL VISUALIZAR)
    ========================================================================== */
@@ -370,13 +349,13 @@ function excluirProjeto(id) {
 
 // Procure por esta função lá no final do arquivo e mude para "obter":
 function obterClasseStatus(status) {
+    // Certifique-se que o status que vem do banco é exatamente igual a essas strings
     switch (status) {
         case 'AGUARDANDO_CONFIRMACAO': return 'analise';
         case 'ACEITO': return 'aceito';
         case 'EM_PRODUCAO': return 'producao';
         case 'CONCLUIDO': return 'concluido';
         case 'NEGADO': return 'negado';
-        case 'BLOQUEADO': return 'bloqueado';
         default: return 'bloqueado';
     }
 }

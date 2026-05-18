@@ -1,12 +1,10 @@
 document.addEventListener("DOMContentLoaded", () => {
     carregarPedidosPendentes();
-    carregarPedidosAceitos(); // Carrega a nova lista de andamento/concluídos ao abrir a página
+    carregarPedidosAceitos();
 });
 
-// Variável global para guardar qual pedido está sendo analisado no modal
 let pedidoAtualId = null;
 
-// 1. CARREGA OS CARDS ROXOS (PENDENTES) NA TELA
 async function carregarPedidosPendentes() {
     const container = document.getElementById("lista-pedidos-pendentes");
     if (!container) return;
@@ -49,12 +47,11 @@ async function carregarPedidosPendentes() {
         });
 
     } catch (erro) {
-        console.error("Erro ao buscar pedidos:", erro);
+        console.error(erro);
         container.innerHTML = '<p class="text-danger">Erro de conexão ao carregar os pedidos.</p>';
     }
 }
 
-// 2. ABRE O MODAL COM OS DETALHES DO PEDIDO (COM TRAVAS DE SEGURANÇA)
 async function verDetalhes(id_pedido) {
     pedidoAtualId = id_pedido;
 
@@ -69,7 +66,6 @@ async function verDetalhes(id_pedido) {
 
         const pedido = dados;
 
-        // Mapeia todos os elementos do HTML
         const elId = document.getElementById('modal-pedido-id');
         const elNome = document.getElementById('modal-nome-projeto');
         const elCliente = document.getElementById('modal-cliente-nome');
@@ -79,25 +75,28 @@ async function verDetalhes(id_pedido) {
         const elInputValor = document.getElementById('modal-input-valor');
         const elInputPrazo = document.getElementById('modal-input-prazo');
 
-        // Preenche apenas o que ele encontrar (evita erro de null!)
         if (elId) elId.innerText = pedido.id;
         if (elNome) elNome.innerText = pedido.nome_projeto;
         if (elCliente) elCliente.innerText = pedido.cliente_nome;
         if (elMaterial) elMaterial.innerText = pedido.material_escolhido || 'Não informado';
 
-        // Caminho do link ajustado para voltar até a raiz e ler a pasta uploads
-        if (elLink) elLink.href = `../../../../${pedido.arquivo_caminho}`;
+        if (elLink) {
+            const base_url = window.location.origin;
+            const path_projeto = window.location.pathname.split('/app/')[0];
+            elLink.href = `${base_url}${path_projeto}/${pedido.arquivo_caminho}`;
+
+            const nomeArquivo = pedido.arquivo_caminho.split('/').pop();
+            elLink.setAttribute('download', nomeArquivo);
+        }
 
         if (elValorSugerido) {
             const valorSugerido = parseFloat(pedido.valor_total).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
             elValorSugerido.innerText = valorSugerido;
         }
 
-        // Preenche os inputs para alteração do preço/prazo
         if (elInputValor) elInputValor.value = parseFloat(pedido.valor_total).toFixed(2);
         if (elInputPrazo) elInputPrazo.value = "5";
 
-        // Reseta visibilidade das áreas de recusa do modal
         const areaRecusa = document.getElementById('area-recusa');
         const botoesAcao = document.getElementById('botoes-acao-modal');
         const motivoRecusa = document.getElementById('motivo-recusa');
@@ -106,12 +105,11 @@ async function verDetalhes(id_pedido) {
         if (botoesAcao) botoesAcao.style.display = 'flex';
         if (motivoRecusa) motivoRecusa.value = '';
 
-        // Abre o Modal na tela
         const modal = new bootstrap.Modal(document.getElementById('modalAnalisarPedido'));
         modal.show();
 
     } catch (erro) {
-        console.error("Erro ao carregar detalhes:", erro);
+        console.error(erro);
         alert("Erro ao processar os detalhes do pedido no navegador.");
     }
 }
@@ -122,7 +120,6 @@ function mostrarAreaRecusa() {
     document.getElementById('area-recusa').style.display = 'block';
 }
 
-// 4. ENVIA O ACEITE DO PEDIDO COM PREÇO E PRAZO ALTERADOS
 async function confirmarAceite() {
     const precoFinal = document.getElementById('modal-input-valor').value;
     const prazoDias = document.getElementById('modal-input-prazo').value;
@@ -149,20 +146,17 @@ async function confirmarAceite() {
         if (resultado.status === "ok") {
             alert(resultado.mensagem);
             bootstrap.Modal.getInstance(document.getElementById('modalAnalisarPedido')).hide();
-
-            // Recarrega as duas listas dinamicamente sem dar F5
             carregarPedidosPendentes();
             carregarPedidosAceitos();
         } else {
             alert("Erro: " + resultado.mensagem);
         }
     } catch (erro) {
-        console.error("Erro ao aceitar pedido:", erro);
+        console.error(erro);
         alert("Erro de conexão ao aceitar o pedido.");
     }
 }
 
-// 5. ENVIA A RECUSA DO PEDIDO COM O MOTIVO
 async function confirmarRecusa() {
     const motivo = document.getElementById('motivo-recusa').value;
 
@@ -187,19 +181,16 @@ async function confirmarRecusa() {
         if (resultado.status === "ok") {
             alert(resultado.mensagem);
             bootstrap.Modal.getInstance(document.getElementById('modalAnalisarPedido')).hide();
-
-            // Recarrega a lista de pendentes (como o pedido foi negado, ele não vai para a lista de aceitos)
             carregarPedidosPendentes();
         } else {
             alert("Erro: " + resultado.mensagem);
         }
     } catch (erro) {
-        console.error("Erro ao recusar pedido:", erro);
+        console.error(erro);
         alert("Erro de conexão ao recusar o pedido.");
     }
 }
 
-// 6. CARREGA OS PEDIDOS EM ANDAMENTO OU CONCLUÍDOS
 async function carregarPedidosAceitos() {
     const container = document.getElementById("lista-pedidos-aceitos");
     if (!container) return;
@@ -223,7 +214,6 @@ async function carregarPedidosAceitos() {
         retorno.data.forEach(pedido => {
             const valorFormatado = parseFloat(pedido.valor_total).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
 
-            // Configura dinamicamente as cores das bordas e dos badges baseado no status
             let corBadge = "bg-primary";
             let corBorda = "border-primary";
             let statusTexto = pedido.status;
@@ -242,7 +232,6 @@ async function carregarPedidosAceitos() {
                 statusTexto = "Aceito";
             }
 
-            // Trata a data de prazo vinda do banco
             let prazoTexto = "Não definido";
             if (pedido.prazo_pedido) {
                 const data = new Date(pedido.prazo_pedido);
@@ -266,7 +255,7 @@ async function carregarPedidosAceitos() {
         });
 
     } catch (erro) {
-        console.error("Erro ao buscar pedidos aceitos:", erro);
+        console.error(erro);
         container.innerHTML = '<p class="text-danger">Erro de conexão ao carregar o histórico.</p>';
     }
 }

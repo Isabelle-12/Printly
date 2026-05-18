@@ -7,7 +7,8 @@
     <title>Painel do Fabricante</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700&family=DM+Sans:wght@400;500&display=swap"
+        rel="stylesheet">
 
     <style>
         :root {
@@ -55,7 +56,7 @@
         }
 
         .navbar .nav-link {
-            color: rgba(255,255,255,0.82) !important;
+            color: rgba(255, 255, 255, 0.82) !important;
             font-size: 0.9rem;
             font-weight: 500;
             padding: 0.45rem 0.9rem !important;
@@ -65,14 +66,14 @@
 
         .navbar .nav-link:hover,
         .navbar .nav-link.active {
-            background: rgba(255,255,255,0.18);
+            background: rgba(255, 255, 255, 0.18);
             color: #fff !important;
         }
 
         #sair {
-            background: rgba(255,255,255,0.12);
-            color: rgba(255,255,255,0.82);
-            border: 1px solid rgba(255,255,255,0.2);
+            background: rgba(255, 255, 255, 0.12);
+            color: rgba(255, 255, 255, 0.82);
+            border: 1px solid rgba(255, 255, 255, 0.2);
             border-radius: 8px;
             padding: 0.35rem 0.75rem;
             font-size: 0.9rem;
@@ -80,7 +81,7 @@
         }
 
         #sair:hover {
-            background: rgba(255,255,255,0.22);
+            background: rgba(255, 255, 255, 0.22);
             color: #fff;
         }
 
@@ -161,11 +162,6 @@
             font-size: 0.9rem;
         }
 
-        /* ── Notificações ───────────────────────────────── */
-        #minhas-notificacoes p {
-            font-size: 0.9rem;
-        }
-
         /* ── Page header ────────────────────────────────── */
         .page-header {
             display: flex;
@@ -188,18 +184,9 @@
             color: var(--printly-muted);
             margin: 2px 0 0;
         }
-
-        /* ── Responsive ─────────────────────────────────── */
-        @media (max-width: 576px) {
-            .card-header {
-                padding: 0.75rem 1rem;
-            }
-            .card-body {
-                padding: 1rem;
-            }
-        }
     </style>
 </head>
+
 <body data-acesso="MAKER,ADMIN">
 
     <nav class="navbar navbar-expand-lg navbar-dark">
@@ -249,7 +236,6 @@
 
     <div class="container mt-4">
 
-        <!-- Banner de anúncios — IDs preservados -->
         <div id="banner-anuncios" class="d-none">
             <div class="alert alert-warning alert-dismissible fade show mb-3" role="alert">
                 <strong id="banner-titulo"></strong> &mdash; <span id="banner-mensagem"></span>
@@ -258,7 +244,6 @@
             </div>
         </div>
 
-        <!-- Header da página -->
         <div class="page-header">
             <div>
                 <h4>Painel do Fabricante</h4>
@@ -266,7 +251,6 @@
             </div>
         </div>
 
-        <!-- Card Meus Pedidos -->
         <div class="card">
             <div class="card-header">
                 <div class="card-icon">
@@ -275,11 +259,12 @@
                 <h5>Meus Pedidos</h5>
             </div>
             <div class="card-body">
-                <p class="text-muted">Conteúdo da página do usuário aqui.</p>
+                <div id="lista-pedidos-pendentes">
+                    <p class="text-muted">Carregando pedidos...</p>
+                </div>
             </div>
         </div>
 
-        <!-- Card Minhas Notificações -->
         <div class="card">
             <div class="card-header">
                 <div class="card-icon">
@@ -296,9 +281,65 @@
 
     </div>
 
+    <div class="modal fade" id="modalAnalisarPedido" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header bg-dark text-white">
+                    <h5 class="modal-title">Analisar Pedido #<span id="modal-pedido-id"></span></h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                        aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <h6 class="fw-bold border-bottom pb-2">Detalhes do Projeto</h6>
+                    <p><strong>Projeto:</strong> <span id="modal-nome-projeto"></span></p>
+                    <p><strong>Cliente:</strong> <span id="modal-cliente-nome"></span></p>
+                    <p><strong>Material Solicitado:</strong> <span id="modal-material"></span></p>
+
+                    <div class="row g-3 mt-2 p-3 border rounded bg-light text-dark">
+                        <div class="col-md-6">
+                            <label for="modal-input-valor" class="form-label fw-bold">Preço Final Cobrado (R$):</label>
+                            <input type="number" step="0.01" min="0.00" class="form-control" id="modal-input-valor"
+                                placeholder="0.00">
+                            <small class="text-muted">Sugestão do sistema: <span
+                                    id="modal-valor-sugerido"></span></small>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="modal-input-prazo" class="form-label fw-bold">Prazo de Produção (em
+                                dias):</label>
+                            <input type="number" min="1" class="form-control" id="modal-input-prazo"
+                                placeholder="Ex: 5">
+                            <small class="text-muted">Defina o tempo estimado de entrega.</small>
+                        </div>
+                    </div>
+
+                    <div class="alert alert-secondary mt-3">
+                        <i class="bi bi-file-earmark-arrow-down"></i> <strong>Arquivo 3D:</strong>
+                        <a href="#" id="modal-link-arquivo" target="_blank" class="alert-link">Baixar Arquivo para
+                            Análise</a>
+                    </div>
+
+                    <div id="area-recusa" class="mt-4 p-3 border rounded bg-light" style="display: none;">
+                        <label for="motivo-recusa" class="form-label fw-bold text-danger">Motivo da Recusa:</label>
+                        <textarea class="form-control" id="motivo-recusa" rows="3"
+                            placeholder="Explique ao cliente por que não será possível produzir..."></textarea>
+                        <button class="btn btn-danger mt-2 w-100" onclick="confirmarRecusa()">Confirmar Recusa</button>
+                    </div>
+                </div>
+
+                <div class="modal-footer" id="botoes-acao-modal">
+                    <button type="button" class="btn btn-outline-danger" onclick="mostrarAreaRecusa()">Negar
+                        Pedido</button>
+                    <button type="button" class="btn btn-success" onclick="confirmarAceite()">Aceitar Pedido</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="../app/controllers/admin/js/notificacoes.js"></script>
     <script src="../app/controllers/usuario/js/verif.js"></script>
+    <script src="../app/controllers/fabricante/js/fabricante_painel_pedidos.js"></script>
+    <script src="../app/controllers/admin/js/notificacoes.js"></script>
 
 </body>
 

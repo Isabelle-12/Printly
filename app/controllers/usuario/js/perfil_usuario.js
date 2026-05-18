@@ -30,8 +30,8 @@ document.addEventListener("DOMContentLoaded", async () => {
         if (fotoPerfil) {
             fotoPerfil.src = usuario.foto_perfil
                 ? "../" + usuario.foto_perfil
-                : "/img/perfil-padrao.jpg";
-        }
+                : "img/perfil-padrao.jpg";
+        }   
 
         setTexto("perfilNome", usuario.nome, "Nome não informado");
         setTexto("perfilTipo", usuario.tipo_perfil, "Perfil não informado");

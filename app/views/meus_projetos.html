@@ -5,11 +5,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Meus Projetos - Printly</title>
-    <!-- CSS mantido para consistência visual -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
 
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
     <style>
         :root {
             --printly-primary: #412746;
@@ -25,8 +26,14 @@
             --printly-radius: 12px;
         }
 
+        /* =========================
+        RESET / BASE
+        ========================= */
+
         * {
             box-sizing: border-box;
+            margin: 0;
+            padding: 0;
         }
 
         body {
@@ -34,25 +41,41 @@
             font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
             color: var(--printly-text);
             min-height: 100vh;
+            overflow-x: hidden;
         }
 
-        /* ── Navbar ── */
+        img {
+            max-width: 100%;
+            display: block;
+        }
+
+        /* =========================
+        CONTAINER
+        ========================= */
+
+        .container {
+            max-width: 1200px;
+        }
+
+        /* =========================
+        NAVBAR
+        ========================= */
+
         .navbar {
-            background: linear-gradient(135deg, var(--printly-primary) 0%, var(--printly-primary-dark) 100%) !important;
+            background: linear-gradient(
+                135deg,
+                var(--printly-primary) 0%,
+                var(--printly-primary-dark) 100%
+            ) !important;
             padding: 0.75rem 0;
             box-shadow: 0 2px 16px rgba(229, 70, 216, 0.25);
-            border-bottom: none;
         }
 
         .navbar-brand {
             font-family: 'Syne', sans-serif;
             font-weight: 700;
             font-size: 1.4rem;
-            letter-spacing: -0.5px;
             color: #fff !important;
-            display: flex;
-            align-items: center;
-            gap: 8px;
         }
 
         .navbar .nav-link {
@@ -61,7 +84,7 @@
             font-weight: 500;
             padding: 0.45rem 0.9rem !important;
             border-radius: 8px;
-            transition: background 0.18s, color 0.18s;
+            transition: 0.2s;
         }
 
         .navbar .nav-link:hover,
@@ -70,18 +93,12 @@
             color: #fff !important;
         }
 
-        .container {
-            max-width: 1200px;
-        }
-
+        /* botão sair */
         #sair {
             background: rgba(255,255,255,0.12);
             color: rgba(255,255,255,0.82);
             border: 1px solid rgba(255,255,255,0.2);
             border-radius: 8px;
-            padding: 0.35rem 0.75rem;
-            font-size: 0.9rem;
-            transition: background 0.18s;
         }
 
         #sair:hover {
@@ -89,11 +106,14 @@
             color: #fff;
         }
 
-        /* ── Page header ── */
+        /* =========================
+        HEADER
+        ========================= */
+
         .page-header {
             display: flex;
-            align-items: center;
             justify-content: space-between;
+            align-items: center;
             margin-bottom: 1.5rem;
             padding-bottom: 1rem;
             border-bottom: 1px solid var(--printly-border);
@@ -101,18 +121,16 @@
 
         .page-header h4 {
             font-weight: 700;
-            font-size: 1.2rem;
-            color: var(--printly-text);
-            margin: 0;
         }
 
         .page-header p {
-            font-size: 0.85rem;
             color: var(--printly-muted);
-            margin: 2px 0 0;
         }
 
-        /* ── Filtros ── */
+        /* =========================
+        FILTROS
+        ========================= */
+
         .filtros {
             display: flex;
             flex-wrap: wrap;
@@ -126,10 +144,10 @@
             color: var(--printly-primary);
             padding: 7px 16px;
             border-radius: 8px;
-            cursor: pointer;
             font-weight: 600;
             font-size: 0.85rem;
-            transition: background 0.18s, color 0.18s;
+            cursor: pointer;
+            transition: 0.2s;
             box-shadow: var(--printly-shadow);
         }
 
@@ -139,34 +157,37 @@
             color: #fff;
         }
 
-        /* ── Grid de cards ── */
+        /* =========================
+        GRID
+        ========================= */
+
         .cards-container {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
             gap: 1.25rem;
         }
 
-        /* ── Card base ── */
+        /* =========================
+        CARD
+        ========================= */
+
         .card {
+            background: var(--printly-surface);
             border: 1px solid var(--printly-border);
             border-radius: var(--printly-radius);
             box-shadow: var(--printly-shadow);
-            background: var(--printly-surface);
-            margin-bottom: 0;
             overflow: hidden;
-            transition: box-shadow 0.2s, transform 0.2s;
+            transition: 0.2s;
         }
 
         .card:hover {
-            box-shadow: 0 4px 24px rgba(229, 70, 176, 0.13);
             transform: translateY(-3px);
         }
 
-        /* ── Imagem do card ── */
+        /* imagem */
         .card-imagem {
             position: relative;
             height: 200px;
-            overflow: hidden;
             background: var(--printly-light);
         }
 
@@ -176,7 +197,7 @@
             object-fit: cover;
         }
 
-        /* ── Badge de status ── */
+        /* status */
         .status {
             position: absolute;
             top: 12px;
@@ -188,14 +209,14 @@
             color: #fff;
         }
 
-        .analise   { background: #f59e0b; }
-        .aceito    { background: #10b981; }
-        .producao  { background: #3b82f6; }
+        .analise { background: #f59e0b; }
+        .aceito { background: #10b981; }
+        .producao { background: #3b82f6; }
         .concluido { background: #059669; }
-        .negado    { background: #ef4444; }
+        .negado { background: #ef4444; }
         .bloqueado { background: #6b7280; }
 
-        /* ── Card header (igual ao painel) ── */
+        /* header card */
         .card-header {
             background: var(--printly-light);
             border-bottom: 1px solid var(--printly-border);
@@ -207,13 +228,12 @@
 
         .card-header h5 {
             margin: 0;
-            font-size: 0.975rem;
-            font-weight: 600;
+            font-size: 1rem;
+            font-weight: 700;
             color: var(--printly-primary);
-            letter-spacing: -0.2px;
         }
 
-        .card-header .card-icon {
+        .card-icon {
             width: 30px;
             height: 30px;
             border-radius: 8px;
@@ -221,38 +241,35 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            flex-shrink: 0;
         }
 
-        .card-header .card-icon i {
+        .card-icon i {
             color: #fff;
-            font-size: 0.85rem;
         }
 
-        /* ── Card body ── */
+        /* body */
         .card-body {
             padding: 1.25rem;
+            word-break: break-word;
         }
 
         .card-body p.desc {
             color: var(--printly-muted);
             font-size: 0.9rem;
-            margin: 0 0 14px;
-            line-height: 1.5;
+            margin-bottom: 14px;
         }
 
-        /* ── Informações ── */
         .informacoes {
             display: flex;
             flex-direction: column;
             gap: 6px;
             margin-bottom: 16px;
-            color: var(--printly-primary-dark);
-            font-weight: 500;
             font-size: 0.88rem;
+            font-weight: 500;
+            color: var(--printly-primary-dark);
         }
 
-        /* ── Feedback ── */
+        /* feedback */
         .feedback-maker {
             background: #fff0f0;
             border-left: 4px solid #ef4444;
@@ -263,7 +280,7 @@
             font-size: 0.88rem;
         }
 
-        /* ── Ações ── */
+        /* ações */
         .acoes {
             display: flex;
             flex-wrap: wrap;
@@ -272,137 +289,483 @@
 
         .acoes button {
             flex: 1;
-            min-width: 70px;
             border: none;
             padding: 9px 10px;
             border-radius: 8px;
-            cursor: pointer;
             font-weight: 600;
             font-size: 0.85rem;
-            transition: background 0.18s, transform 0.15s;
+            cursor: pointer;
             background: var(--printly-primary);
             color: #fff;
+            transition: 0.2s;
         }
 
         .acoes button:hover {
             background: var(--printly-primary-dark);
-            transform: scale(1.03);
         }
 
-        .acoes button.btn-danger {
+        .acoes .btn-danger {
             background: #ef4444;
         }
 
-        .acoes button.btn-danger:hover {
+        .acoes .btn-danger:hover {
             background: #dc2626;
         }
 
-        /* ── Responsivo ── */
+        /* =========================
+        MODAL (CORRIGIDO)
+        ========================= */
+
+        .modal-content {
+            border-radius: 18px;
+            border: none;
+            overflow: hidden;
+        }
+
+        .modal-header {
+            background: var(--printly-light);
+            border-bottom: 1px solid var(--printly-border);
+        }
+
+        .modal-title {
+            font-weight: 700;
+            color: var(--printly-primary);
+        }
+
+        /* CORREÇÃO PRINCIPAL DO SCROLL */
+        .modal-dialog-scrollable .modal-content {
+            max-height: 90vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .modal-body {
+            overflow-y: auto;
+            max-height: 70vh;
+            padding-bottom: 1rem;
+        }
+
+        .modal-footer {
+            position: sticky;
+            bottom: 0;
+            background: #fff;
+            z-index: 2;
+            border-top: 1px solid var(--printly-border);
+        }
+
+        /* =========================
+        TIMELINE
+        ========================= */
+
+        .timeline {
+            position: relative;
+            padding-left: 30px;
+            margin-top: 20px;
+        }
+
+        .timeline::before {
+            content: "";
+            position: absolute;
+            left: 10px;
+            top: 0;
+            width: 3px;
+            height: 100%;
+            background: var(--printly-border);
+        }
+
+        .timeline-item {
+            position: relative;
+            margin-bottom: 24px;
+        }
+
+        .timeline-item::before {
+            content: "";
+            position: absolute;
+            left: -24px;
+            top: 4px;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: #c4c4c4;
+        }
+
+        .timeline-item.ativo::before { background: #3b82f6; }
+        .timeline-item.concluido::before { background: #10b981; }
+
+        /* =========================
+        PROGRESSO
+        ========================= */
+
+        .progress {
+            height: 10px;
+            border-radius: 999px;
+        }
+
+        .progress-bar {
+            background: linear-gradient(
+                90deg,
+                var(--printly-primary),
+                var(--printly-primary-dark)
+            );
+        }
+
+        /* =========================
+        PARTES
+        ========================= */
+
+        .parte-card {
+            border: 1px solid var(--printly-border);
+            border-radius: 10px;
+            padding: 12px;
+            margin-bottom: 12px;
+            background: #fff;
+        }
+
+        /* =========================
+        EMPTY STATE
+        ========================= */
+
+        .empty-state {
+            grid-column: 1/-1;
+            text-align: center;
+            padding: 70px 20px;
+            background: #fff;
+            border-radius: 16px;
+            border: 1px dashed var(--printly-border);
+        }
+
+        /* =========================
+        RESPONSIVO
+        ========================= */
+
         @media (max-width: 576px) {
+
             .cards-container {
                 grid-template-columns: 1fr;
             }
-            .card-header {
-                padding: 0.75rem 1rem;
-            }
-            .card-body {
-                padding: 1rem;
-            }
+
             .acoes {
                 flex-direction: column;
             }
+
             .acoes button {
                 width: 100%;
             }
+
+            .modal-body {
+                max-height: 65vh;
+            }
         }
     </style>
+
 </head>
 
 <body data-acesso="CLIENTE,ADMIN">
 
     <nav class="navbar navbar-expand-lg navbar-dark">
+
         <div class="container">
-            <a class="navbar-brand" href="index.php?rota=usuario-painel">Printly</a>
+
+            <a class="navbar-brand" href="index.php?rota=usuario-painel">
+                Printly
+            </a>
+
             <div class="collapse navbar-collapse">
+
                 <ul class="navbar-nav ms-auto">
-                     <li class="nav-item">
+
+                    <li class="nav-item">
                         <a class="nav-link" href="index.php?rota=visualizador3D">
-                            <i class="bi bi-box me-1"></i>Visualizador 3D
+                            <i class="bi bi-box me-1"></i>
+                            Visualizador 3D
                         </a>
                     </li>
+
                     <li class="nav-item">
                         <a class="nav-link" href="index.php?rota=perfil-usuario">
-                            <i class="bi bi-person-circle me-1"></i>Perfil
+                            <i class="bi bi-person-circle me-1"></i>
+                            Perfil
                         </a>
                     </li>
+
                     <li class="nav-item">
-                        <a class="nav-link">
-                            <i class="bi bi-grid me-1"></i>Painel do Usuário
-                        </a>
-                    </li>
-                    <li class="nav-item" id="projetos">
                         <a class="nav-link active" href="index.php?rota=meus_projetos">
-                            <i class="bi bi-journal me-1"></i>Meus Projetos
+                            <i class="bi bi-journal me-1"></i>
+                            Meus Projetos
                         </a>
                     </li>
-                    <li class="nav-item" id="projetos">
+
+                    <li class="nav-item">
                         <a class="nav-link" href="index.php?rota=listagem-maker">
-                            <i class="bi bi-journal me-1"></i>Fabricantes
+                            <i class="bi bi-people me-1"></i>
+                            Fabricantes
                         </a>
                     </li>
-                
-                       <li class="nav-item ms-2">
+
+                    <li class="nav-item ms-2">
                         <button class="btn btn-sm" type="button" id="sair">
                             <i class="bi bi-door-open"></i>
                         </button>
                     </li>
 
                 </ul>
+
             </div>
+
         </div>
+
     </nav>
 
     <div class="container mt-4">
-        <div class="page-header mb-4">
-            <h4>Meus Projetos</h4>
-            <p class="text-muted small">Gerencie suas solicitações de impressão 3D</p>
-        </div>
 
-        <!-- Filtros (Pode ser implementado no JS futuramente) -->
-        <div class="filtros mb-4 d-flex flex-wrap gap-2">
-            <button class="btn btn-sm btn-dark ativo">Todos</button>
-            <button class="btn btn-sm btn-outline-secondary" data-status="AGUARDANDO_CONFIRMACAO">Em análise</button>
-            <button class="btn btn-sm btn-outline-secondary" data-status="ACEITO">Aceitos</button>
-            <button class="btn btn-sm btn-outline-secondary" data-status="CONCLUIDO">Concluídos</button>
-        </div>
+        <div class="page-header">
 
-        <!-- CONTAINER ONDE O JS IRÁ INJETAR OS CARDS -->
-        <div class="cards-container">
-            <div class="text-center w-100 py-5">
-                <div class="spinner-border text-primary" role="status"></div>
-                <p class="mt-2">Carregando seus projetos...</p>
+            <div>
+
+                <h4>Meus Projetos</h4>
+
+                <p>
+                    Gerencie suas solicitações de impressão 3D
+                </p>
+
             </div>
+
         </div>
+
+        <!-- FILTROS -->
+
+        <div class="filtros">
+
+            <button class="btn btn-dark ativo" data-status="TODOS">
+                Todos
+            </button>
+
+            <button class="btn btn-outline-secondary" data-status="AGUARDANDO_CONFIRMACAO">
+                Em análise
+            </button>
+
+            <button class="btn btn-outline-secondary" data-status="ACEITO">
+                Aceitos
+            </button>
+
+            <button class="btn btn-outline-secondary" data-status="EM_PRODUCAO">
+                Em produção
+            </button>
+
+            <button class="btn btn-outline-secondary" data-status="CONCLUIDO">
+                Concluídos
+            </button>
+
+            <button class="btn btn-outline-secondary" data-status="NEGADO">
+                Negados
+            </button>
+
+            <button class="btn btn-outline-secondary" data-status="BLOQUEADO">
+                Bloqueados
+            </button>
+
+        </div>
+
+        <!-- CARDS -->
+
+        <div class="cards-container" id="cardsProjetos">
+
+            <div class="text-center w-100 py-5">
+
+                <div class="spinner-border text-primary"></div>
+
+                <p class="mt-2">
+                    Carregando seus projetos...
+                </p>
+
+            </div>
+
+        </div>
+
     </div>
 
+    <!-- MODAL -->
+
+    <div class="modal fade" id="modalProjeto" tabindex="-1">
+
+        <div class="modal-dialog modal-xl modal-dialog-scrollable">
+
+            <div class="modal-content">
+
+                <div class="modal-header">
+
+                    <h5 class="modal-title">
+                        Detalhes do Projeto
+                    </h5>
+
+                    <button
+                        type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal">
+                    </button>
+
+                </div>
+
+                <div
+                    class="modal-body"
+                    id="conteudoModalProjeto">
+
+                    <div class="text-center py-5">
+
+                        <div class="spinner-border text-primary"></div>
+
+                        <p class="mt-3">
+                            Carregando detalhes...
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+    <!-- MODAL EDITAR PROJETO -->
+    
+    <div class="modal fade" id="modalEditarProjeto" tabindex="-1">
+
+        <div class="modal-dialog modal-xl modal-dialog-scrollable modal-fullscreen-sm-down">
+
+            <div class="modal-content">
+
+                <div class="modal-header">
+                    <h5 class="modal-title">Editar Projeto</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+
+                <form id="formEditarProjeto" enctype="multipart/form-data">
+
+                    <div class="modal-body">
+
+                        <input type="hidden" id="editar_id" name="id">
+
+                        <div class="mb-3">
+                            <label>Nome</label>
+                            <input type="text" class="form-control" id="editar_nome" name="nome_projeto">
+                        </div>
+
+                        <div class="mb-3">
+                            <label>Descrição</label>
+                            <textarea class="form-control" id="editar_descricao" name="descricao"></textarea>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label>Formato</label>
+                                <select class="form-select" id="editar_formato" name="formato">
+                                    <option>STL</option>
+                                    <option>OBJ</option>
+                                </select>
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label>Quantidade</label>
+                                <input type="number" class="form-control" id="editar_quantidade" name="quantidade">
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label>Arquivo 3D</label>
+                            <input type="file" class="form-control" id="editar_arquivo" name="arquivo">
+                        </div>
+
+                        <div class="mb-3">
+                            <label>Imagem</label>
+                            <input type="file" class="form-control" id="editar_imagem" name="imagem_capa">
+                        </div>
+
+                        <img id="previewImagemProjeto"
+                            src="/Printly/assets/img/default.png"
+                            class="img-fluid rounded mb-3">
+
+                        <hr>
+
+                        <h5>Partes</h5>
+
+                        <button type="button"
+                                class="btn btn-dark btn-sm mb-3"
+                                onclick="adicionarParteProjeto()">
+                            + Adicionar Parte
+                        </button>
+
+                        <div id="containerPartesProjeto"></div>
+
+                        <div id="editarMensagem"></div>
+                        
+
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                            Cancelar
+                        </button>
+
+                        <button type="submit" class="btn btn-dark">
+                            Salvar Alterações
+                        </button>
+                    </div>
+
+                </form>
+
+            </div>
+
+        </div>
+
+    </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    
-    
 
     <script>
-        // Lógica simples para trocar a classe 'ativo' nos botões de filtro
+
+        let filtroAtual = "TODOS";
+
         document.querySelectorAll('.filtros button').forEach(btn => {
-            btn.addEventListener('click', function() {
-                document.querySelector('.filtros .ativo').classList.replace('btn-dark', 'btn-outline-secondary');
-                document.querySelector('.filtros .ativo').classList.remove('ativo');
-                
+
+            btn.addEventListener('click', function () {
+
+                document
+                    .querySelector('.filtros .ativo')
+                    .classList.remove('ativo');
+
+                document
+                    .querySelectorAll('.filtros button')
+                    .forEach(b => {
+
+                        b.classList.remove('btn-dark');
+                        b.classList.add('btn-outline-secondary');
+
+                    });
+
                 this.classList.add('ativo');
-                this.classList.replace('btn-outline-secondary', 'btn-dark');
+
+                this.classList.remove('btn-outline-secondary');
+
+                this.classList.add('btn-dark');
+
+                filtroAtual = this.dataset.status;
+
+                if (typeof filtrarProjetos === 'function') {
+
+                    filtrarProjetos(filtroAtual);
+
+                }
+
             });
+
         });
+
     </script>
-    
+
     <script src="../app/controllers/usuario/js/meus_projetos.js"></script>
+
     <script src="../app/controllers/usuario/js/verif.js"></script>
+
 </body>
+
 </html>

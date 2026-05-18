@@ -1,6 +1,24 @@
+// Base aponta para a raiz do projeto (um nível acima de public/)
+const BASE_URL = '/Printly/';
+
+// Fotos do portfólio e perfil: banco salva "assets/uploads/..."
+// A pasta assets/ está na raiz do projeto: Printly/assets/
+function montarUrl(caminho) {
+    if (!caminho) return null;
+    if (caminho.startsWith('http') || caminho.startsWith('/Printly')) return caminho;
+    return BASE_URL + caminho;
+}
+
+// Foto de perfil: banco salva "assets/uploads/perfis/perfil_6_xxx.png"
+// mesma lógica de montarUrl
+function montarUrlPerfil(caminho) {
+    if (!caminho) return null;
+    if (caminho.startsWith('http') || caminho.startsWith('/Printly')) return caminho;
+    return BASE_URL + caminho;
+}
+
 document.addEventListener('DOMContentLoaded', () => {
     carregarPortfolios();
-    
     const inputBusca = document.getElementById('input-busca');
     if (inputBusca) inputBusca.addEventListener('input', () => filtrarCards(inputBusca.value));
 });
@@ -45,14 +63,20 @@ function renderizarCards(makers) {
     grid.innerHTML = makers.map(criarCardHTML).join('');
 }
 
+function avatarFallback(inicial) {
+    return `<div class="maker-avatar avatar-inicial">${inicial}</div>`;
+}
+
 function criarCardHTML(maker) {
     const fotos = maker.fotos && maker.fotos.length > 0 ? maker.fotos : [];
+    const inicial = maker.nome.charAt(0).toUpperCase();
+
     const galeriaHTML = fotos.length > 0
         ? `<div class="card-galeria" data-total="${Math.min(fotos.length, 4)}">
             ${fotos.slice(0, 4).map((f, i) => `
                 <div class="galeria-item ${i === 0 ? 'galeria-destaque' : ''}">
-                    <img src="${f.caminho_imagem}" alt="${f.titulo}" loading="lazy"
-                         onerror="this.parentElement.classList.add('img-erro')">
+                    <img src="${montarUrl(f.caminho_imagem)}" alt="${f.titulo}" loading="lazy"
+                         onerror="this.parentElement.style.background='var(--rosa-claro)'">
                     ${fotos.length > 4 && i === 3 ? `<div class="galeria-mais">+${fotos.length - 4}</div>` : ''}
                 </div>`).join('')}
            </div>`
@@ -68,9 +92,11 @@ function criarCardHTML(maker) {
         ? maker.materiais.map(m => `<span class="badge-material">${m}</span>`).join('')
         : '<span class="sem-material">Nenhum material cadastrado</span>';
 
-    const fotoHTML = maker.foto_perfil
-        ? `<img src="${maker.foto_perfil}" alt="${maker.nome}" class="maker-avatar">`
-        : `<div class="maker-avatar avatar-inicial">${maker.nome.charAt(0).toUpperCase()}</div>`;
+    const urlPerfil = montarUrlPerfil(maker.foto_perfil);
+    const fotoHTML  = urlPerfil
+        ? `<img src="${urlPerfil}" alt="${maker.nome}" class="maker-avatar"
+               onerror="this.replaceWith((() => { const d = document.createElement('div'); d.className='maker-avatar avatar-inicial'; d.textContent='${inicial}'; return d; })()">`
+        : avatarFallback(inicial);
 
     return `
         <div class="maker-card" data-id="${maker.maker_id}">
@@ -111,7 +137,7 @@ function gerarEstrelas(nota) {
     const n = parseFloat(nota) || 0;
     return Array.from({ length: 5 }, (_, i) => {
         if (i < Math.floor(n)) return '<span class="estrela cheia">★</span>';
-        if (i < n) return '<span class="estrela meia">★</span>';
+        if (i < n)             return '<span class="estrela meia">★</span>';
         return '<span class="estrela vazia">☆</span>';
     }).join('');
 }
@@ -144,23 +170,25 @@ document.getElementById('modalPortfolio').addEventListener('click', e => {
 });
 
 function renderizarModalPortfolio(data) {
-    const maker      = data.maker;
-    const fotos      = data.fotos      || [];
-    const materiais  = data.materiais  || [];
+    const maker       = data.maker;
+    const fotos       = data.fotos       || [];
+    const materiais   = data.materiais   || [];
     const impressoras = data.impressoras || [];
 
-    const avatarHTML = maker.foto_perfil
-        ? `<img src="${maker.foto_perfil}" class="maker-avatar" style="width:72px;height:72px;">`
-        : `<div class="maker-avatar avatar-inicial" style="width:72px;height:72px;font-size:1.6rem;">${(maker.nome_empresa || maker.nome)?.charAt(0) || 'M'}</div>`;
+    const inicial    = (maker.nome_empresa || maker.nome)?.charAt(0) || 'M';
+    const urlPerfil  = montarUrlPerfil(maker.foto_perfil);
+    const avatarHTML = urlPerfil
+        ? `<img src="${urlPerfil}" class="maker-avatar" style="width:72px;height:72px;"
+               onerror="this.replaceWith((() => { const d=document.createElement('div'); d.className='maker-avatar avatar-inicial'; d.style.cssText='width:72px;height:72px;font-size:1.6rem;'; d.textContent='${inicial}'; return d; })()">`
+        : `<div class="maker-avatar avatar-inicial" style="width:72px;height:72px;font-size:1.6rem;">${inicial}</div>`;
 
-    /* Galeria */
     const galeriaHTML = fotos.length > 0
         ? `<div class="modal-galeria">
             ${fotos.map(f => `
                 <div class="modal-galeria-item">
-                    <img src="${f.caminho_imagem}" alt="${f.titulo}" loading="lazy"
-                         onerror="this.src=''">
-                    ${f.titulo    ? `<p class="mg-titulo">${f.titulo}</p>` : ''}
+                    <img src="${montarUrl(f.caminho_imagem)}" alt="${f.titulo}" loading="lazy"
+                         onerror="this.parentElement.style.display='none'">
+                    ${f.titulo    ? `<p class="mg-titulo">${f.titulo}</p>`  : ''}
                     ${f.descricao ? `<p class="mg-desc">${f.descricao}</p>` : ''}
                 </div>`).join('')}
            </div>`
@@ -172,7 +200,6 @@ function renderizarModalPortfolio(data) {
                <span>Sem fotos cadastradas</span>
            </div>`;
 
-    /* Materiais */
     const materiaisHTML = materiais.length > 0
         ? `<div class="modal-tabela">
             ${materiais.map(m => `
@@ -183,7 +210,6 @@ function renderizarModalPortfolio(data) {
            </div>`
         : `<p class="sem-material">Nenhum material cadastrado.</p>`;
 
-    /* Impressoras */
     const tipoIcone = { FDM: '🖨️', SLS: '🔬', SLA: '💡', DLP: '📽️' };
     const impressorasHTML = impressoras.length > 0
         ? `<div class="modal-impressoras">
@@ -201,90 +227,57 @@ function renderizarModalPortfolio(data) {
                     </div>
                     <div class="imp-detalhes">
                         <span><i class="bi bi-box"></i> Vol. máx.: <strong>${imp.volume_maximo_cm3 ? Number(imp.volume_maximo_cm3).toLocaleString('pt-BR') + ' cm³' : '—'}</strong></span>
-                        <span><i class="bi bi-stack"></i> Quantidade: <strong>${imp.quantidade || 1}</strong></span>
+                        <span><i class="bi bi-stack"></i> Qtd.: <strong>${imp.quantidade || 1}</strong></span>
                     </div>
                 </div>`).join('')}
            </div>`
         : `<p class="sem-material">Nenhuma impressora cadastrada.</p>`;
 
-    /* Info empresa */
     const infoHTML = `
         <div class="modal-info-grid">
-            ${maker.nome_empresa    ? `<div class="mig-item"><span class="mig-label">Empresa</span><span>${maker.nome_empresa}</span></div>` : ''}
-            ${maker.email_comercial ? `<div class="mig-item"><span class="mig-label">E-mail comercial</span><span>${maker.email_comercial}</span></div>` : ''}
-            ${maker.telefone_comercial ? `<div class="mig-item"><span class="mig-label">Telefone</span><span>${maker.telefone_comercial}</span></div>` : ''}
-            ${maker.endereco_empresa ? `<div class="mig-item"><span class="mig-label">Endereço</span><span>${maker.endereco_empresa}</span></div>` : ''}
+            ${maker.nome_empresa       ? `<div class="mig-item"><span class="mig-label">Empresa</span><span>${maker.nome_empresa}</span></div>`            : ''}
+            ${maker.email_comercial    ? `<div class="mig-item"><span class="mig-label">E-mail comercial</span><span>${maker.email_comercial}</span></div>` : ''}
+            ${maker.telefone_comercial ? `<div class="mig-item"><span class="mig-label">Telefone</span><span>${maker.telefone_comercial}</span></div>`       : ''}
+            ${maker.endereco_empresa   ? `<div class="mig-item"><span class="mig-label">Endereço</span><span>${maker.endereco_empresa}</span></div>`         : ''}
         </div>`;
 
     document.getElementById('conteudoPortfolio').innerHTML = `
         <style>
-            /* ── estilos internos do modal ── */
-            .perfil-topo { display:flex; align-items:center; gap:16px; margin-bottom:1.25rem; }
-            .perfil-topo h2 { font-size:1.3rem; font-weight:700; color:var(--roxo-escuro); margin:0; }
-            .perfil-topo p  { font-size:.85rem; color:var(--cinza-texto); margin:2px 0 0; }
-            .estrelas-modal { font-size:1rem; }
-            .modal-secao { margin-bottom:1.75rem; }
-            .modal-secao h4 {
-                font-size:.8rem; font-weight:700; letter-spacing:.08em;
-                text-transform:uppercase; color:var(--roxo-medio);
-                margin-bottom:.75rem; padding-bottom:.4rem;
-                border-bottom:1px solid var(--cinza-borda);
-            }
-            /* galeria */
-            .modal-galeria {
-                display:grid;
-                grid-template-columns:repeat(auto-fill, minmax(180px,1fr));
-                gap:10px;
-            }
-            .modal-galeria-item { border-radius:10px; overflow:hidden; background:var(--rosa-claro); }
-            .modal-galeria-item img { width:100%; height:150px; object-fit:cover; display:block; }
-            .mg-titulo { font-size:.8rem; font-weight:600; color:var(--roxo-escuro); padding:6px 8px 2px; }
-            .mg-desc   { font-size:.75rem; color:var(--cinza-texto); padding:0 8px 8px; }
-            /* tabela materiais */
-            .modal-tabela { display:flex; flex-direction:column; gap:6px; }
-            .modal-tabela-row {
-                display:flex; align-items:center; justify-content:space-between;
-                padding:8px 12px; background:var(--rosa-claro);
-                border-radius:8px; border:1px solid var(--cinza-borda);
-            }
-            .mt-nome  { font-size:.88rem; font-weight:500; color:var(--roxo-escuro); display:flex; align-items:center; gap:8px; }
-            .mt-preco { font-size:.88rem; font-weight:700; color:var(--roxo-medio); }
-            .mt-preco small { font-weight:400; color:var(--cinza-texto); font-size:.75rem; }
-            /* impressoras */
-            .modal-impressoras { display:flex; flex-direction:column; gap:10px; }
-            .imp-card {
-                border:1px solid var(--cinza-borda); border-radius:10px;
-                overflow:hidden;
-            }
-            .imp-topo {
-                display:flex; align-items:center; gap:12px;
-                padding:10px 14px; background:var(--rosa-claro);
-            }
-            .imp-icone { font-size:1.5rem; flex-shrink:0; }
-            .imp-modelo { font-size:.9rem; font-weight:600; color:var(--roxo-escuro); margin:0; }
-            .imp-tipo   { font-size:.75rem; color:var(--cinza-texto); margin:0; }
-            .imp-status {
-                margin-left:auto; font-size:.7rem; font-weight:600;
-                padding:3px 10px; border-radius:20px; white-space:nowrap;
-            }
-            .imp-status.disp  { background:#dcfce7; color:#16a34a; }
-            .imp-status.manut { background:#fee2e2; color:#dc2626; }
-            .imp-detalhes {
-                display:flex; gap:1.5rem; padding:8px 14px;
-                font-size:.8rem; color:var(--cinza-texto);
-            }
-            .imp-detalhes strong { color:var(--roxo-escuro); }
-            /* info grid */
-            .modal-info-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
-            .mig-item { display:flex; flex-direction:column; gap:2px; }
-            .mig-label { font-size:.72rem; font-weight:600; text-transform:uppercase; letter-spacing:.05em; color:var(--roxo-claro); }
-            .mig-item span:last-child { font-size:.88rem; color:var(--roxo-escuro); }
-            @media(max-width:600px){ .modal-info-grid{ grid-template-columns:1fr; } }
+            .perfil-topo{display:flex;align-items:center;gap:16px;margin-bottom:1.25rem}
+            .perfil-topo h2{font-size:1.3rem;font-weight:700;color:var(--roxo-escuro);margin:0}
+            .perfil-topo p{font-size:.85rem;color:var(--cinza-texto);margin:2px 0 0}
+            .estrelas-modal{font-size:1rem}
+            .modal-secao{margin-bottom:1.75rem}
+            .modal-secao h4{font-size:.8rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--roxo-medio);margin-bottom:.75rem;padding-bottom:.4rem;border-bottom:1px solid var(--cinza-borda)}
+            .modal-galeria{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:10px}
+            .modal-galeria-item{border-radius:10px;overflow:hidden;background:var(--rosa-claro)}
+            .modal-galeria-item img{width:100%;height:150px;object-fit:cover;display:block}
+            .mg-titulo{font-size:.8rem;font-weight:600;color:var(--roxo-escuro);padding:6px 8px 2px}
+            .mg-desc{font-size:.75rem;color:var(--cinza-texto);padding:0 8px 8px}
+            .modal-tabela{display:flex;flex-direction:column;gap:6px}
+            .modal-tabela-row{display:flex;align-items:center;justify-content:space-between;padding:8px 12px;background:var(--rosa-claro);border-radius:8px;border:1px solid var(--cinza-borda)}
+            .mt-nome{font-size:.88rem;font-weight:500;color:var(--roxo-escuro);display:flex;align-items:center;gap:8px}
+            .mt-preco{font-size:.88rem;font-weight:700;color:var(--roxo-medio)}
+            .mt-preco small{font-weight:400;color:var(--cinza-texto);font-size:.75rem}
+            .modal-impressoras{display:flex;flex-direction:column;gap:10px}
+            .imp-card{border:1px solid var(--cinza-borda);border-radius:10px;overflow:hidden}
+            .imp-topo{display:flex;align-items:center;gap:12px;padding:10px 14px;background:var(--rosa-claro)}
+            .imp-icone{font-size:1.5rem;flex-shrink:0}
+            .imp-modelo{font-size:.9rem;font-weight:600;color:var(--roxo-escuro);margin:0}
+            .imp-tipo{font-size:.75rem;color:var(--cinza-texto);margin:0}
+            .imp-status{margin-left:auto;font-size:.7rem;font-weight:600;padding:3px 10px;border-radius:20px;white-space:nowrap}
+            .imp-status.disp{background:#dcfce7;color:#16a34a}
+            .imp-status.manut{background:#fee2e2;color:#dc2626}
+            .imp-detalhes{display:flex;gap:1.5rem;padding:8px 14px;font-size:.8rem;color:var(--cinza-texto)}
+            .imp-detalhes strong{color:var(--roxo-escuro)}
+            .modal-info-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+            .mig-item{display:flex;flex-direction:column;gap:2px}
+            .mig-label{font-size:.72rem;font-weight:600;text-transform:uppercase;letter-spacing:.05em;color:var(--roxo-claro)}
+            .mig-item span:last-child{font-size:.88rem;color:var(--roxo-escuro)}
+            @media(max-width:600px){.modal-info-grid{grid-template-columns:1fr}}
         </style>
 
         <div style="padding:24px;">
-
-            <!-- TOPO -->
             <div class="perfil-topo">
                 ${avatarHTML}
                 <div>
@@ -305,37 +298,31 @@ function renderizarModalPortfolio(data) {
 
             <hr style="margin-bottom:1.5rem;border-color:var(--cinza-borda);">
 
-            <!-- INFORMAÇÕES DA EMPRESA -->
             ${(maker.nome_empresa || maker.email_comercial || maker.telefone_comercial || maker.endereco_empresa) ? `
             <div class="modal-secao">
                 <h4><i class="bi bi-building"></i> Informações da Empresa</h4>
                 ${infoHTML}
             </div>` : ''}
 
-            <!-- GALERIA -->
             <div class="modal-secao">
                 <h4><i class="bi bi-images"></i> Galeria (${fotos.length} foto${fotos.length !== 1 ? 's' : ''})</h4>
                 ${galeriaHTML}
             </div>
 
-            <!-- MATERIAIS -->
             <div class="modal-secao">
                 <h4><i class="bi bi-layers"></i> Materiais que Imprime</h4>
                 ${materiaisHTML}
             </div>
 
-            <!-- IMPRESSORAS -->
             <div class="modal-secao">
                 <h4><i class="bi bi-printer"></i> Impressoras (${impressoras.length})</h4>
                 ${impressorasHTML}
             </div>
 
-            <!-- BOTÃO PEDIDO -->
             <div style="display:flex;justify-content:flex-end;margin-top:.5rem;">
                 <a href="index.php?rota=realizar-pedido&maker_id=${maker.maker_id}" class="btn-ver-perfil" style="width:auto;padding:10px 28px;">
                     <i class="bi bi-send"></i> Realizar Pedido
                 </a>
             </div>
-
         </div>`;
 }

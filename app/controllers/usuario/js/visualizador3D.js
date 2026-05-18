@@ -7,8 +7,8 @@ import { OBJLoader } from 'https://cdn.jsdelivr.net/npm/three@0.160.0/examples/j
 // ─────────────────────────────────────────────
 // Constantes
 // ─────────────────────────────────────────────
-const TAMANHO_MAXIMO_MB = 100;
-const TAMANHO_MAXIMO_BYTES = TAMANHO_MAXIMO_MB * 2048 * 2048;
+const TAMANHO_MAXIMO_MB = 80;
+const TAMANHO_MAXIMO_BYTES = TAMANHO_MAXIMO_MB * 1024 * 1024;
 const FORMATOS_ACEITOS = ['stl', 'obj'];
 
 // ─────────────────────────────────────────────

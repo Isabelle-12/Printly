@@ -34,6 +34,11 @@
             font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
             color: var(--printly-text);
             min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        body > .container {
+            flex: 1;
         }
 
         /* ── Navbar ─────────────────────────────────────── */
@@ -429,6 +434,7 @@
         <div class="container">
             <ul class="navbar-nav flex-row flex-wrap gap-1">
                 <li class="nav-item"><a class="nav-link" href="index.php?rota=fabricante-painel"><i class="bi bi-tools me-1"></i>Painel do Fabricante</a></li>
+                <li class="nav-item"><a class="nav-link" href="index.php?rota=gerenciar-projetos"><i class="bi bi-journal-check me-1"></i>Gerenciar Projetos</a></li>
                 <li class="nav-item"><a class="nav-link" href="index.php?rota=perfil-fabricante"><i class="bi bi-person-circle me-1"></i>Perfil</a></li>
                 <li class="nav-item"><a class="nav-link" href="index.php?rota=visualizador3F"><i class="bi bi-box me-1"></i>Visualizador 3D</a></li>
                 <li class="nav-item" id="adminLink" style="display:none"><a class="nav-link" href="index.php?rota=admin-usuarios"><i class="bi bi-people me-1"></i>Usuários</a></li>
@@ -466,11 +472,6 @@
                     <p class="text-muted">Carregando pedidos...</p>
                 </div>
             </div>
-        </div>
-        <h4 class="fw-bold text-secondary mb-3"><i class="bi bi-gear-wide-connected"></i> Pedidos em Andamento /
-            Concluídos</h4>
-        <div id="lista-pedidos-aceitos">
-            <p class="text-muted">Carregando pedidos...</p>
         </div>
     </div>
 
@@ -555,7 +556,6 @@
                     <div class="footer-title">Ferramentas</div>
                     <ul class="footer-links">
                         <li><a href="index.php?rota=visualizador3D"><i class="bi bi-box"></i>Visualizador 3D</a></li>
-                        <li><a href="index.php?rota=solicitar-maker"><i class="bi bi-printer"></i>Seja um Maker</a></li>
                     </ul>
                 </div>
                 <div class="col-lg-4 col-md-6">

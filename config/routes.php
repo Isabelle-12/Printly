@@ -25,4 +25,5 @@ return [
     'meus_projetos'             => __DIR__ . '/../app/views/meus_projetos.html',
     'listagem-maker'           => __DIR__ . '/../app/views/portfolio_makers.html',
     'realizar-pedido'          => __DIR__ . '/../app/views/novo_pedido.html',
+    'gerenciar-projetos'       => __DIR__ . '/../app/views/gerenciar_projetos.html',
 ];

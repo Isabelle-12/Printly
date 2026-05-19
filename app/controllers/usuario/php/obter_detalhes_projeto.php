@@ -1,93 +1,113 @@
 <?php
 session_start();
 header('Content-Type: application/json');
-
-ini_set('display_errors', 0); // Mude para 1 se quiser ver o erro exato no Console > Network
-error_reporting(E_ALL);
+ini_set('display_errors', 0);
+error_reporting(0);
 
 require_once(__DIR__ . '/../../../../config/conexao.php');
 
 $retorno = ['status' => 'erro', 'mensagem' => ''];
 
 if (!isset($_SESSION['id'])) {
-    $retorno['mensagem'] = 'Usuário não autenticado';
-    echo json_encode($retorno);
+    echo json_encode(['status' => 'erro', 'mensagem' => 'Usuário não autenticado']);
     exit;
 }
 
-// Detalhes geralmente vêm via GET: obter_detalhes.php?id=123
-$pedidoId = isset($_GET['id']) ? intval($_GET['id']) : 0;
+$pedidoId  = isset($_GET['id']) ? intval($_GET['id']) : 0;
+$usuarioId = (int)$_SESSION['id'];
 
 if ($pedidoId <= 0) {
-    $retorno['mensagem'] = 'ID do projeto inválido';
-    echo json_encode($retorno);
+    echo json_encode(['status' => 'erro', 'mensagem' => 'ID inválido']);
     exit;
 }
 
 try {
-    $usuarioId = $_SESSION['id'];
-
-    // SQL Ajustado para as colunas REAIS da sua view_pedidos_completos
-    $sqlProjeto = "
-        SELECT 
+    /* ── DADOS PRINCIPAIS via view ── */
+    $sql = "
+        SELECT
             id,
+            projeto_id,
             nome_projeto,
             descricao,
             formato,
-            status AS status_solicitacao,
+            status          AS status_solicitacao,
             quantidade,
+            valor_total,
+            prazo_pedido,
+            motivo_recusa   AS feedback_maker,
+            arquivo_caminho,
             volume_estimado_cm3,
             peso_estimado_gramas,
-            arquivo_caminho AS caminho_arquivo,
-            motivo_recusa AS feedback_maker 
+            maker_nome,
+            maker_email,
+            maker_cidade,
+            maker_estado
         FROM view_pedidos_completos
-        WHERE id = ?
-        AND cliente_id = ?
+        WHERE id = ? AND cliente_id = ?
         LIMIT 1
     ";
+    $stmt = $conexao->prepare($sql);
+    $stmt->bind_param('ii', $pedidoId, $usuarioId);
+    $stmt->execute();
+    $projeto = $stmt->get_result()->fetch_assoc();
+    $stmt->close();
 
-    $stmtProjeto = $conexao->prepare($sqlProjeto);
-    $stmtProjeto->bind_param("ii", $pedidoId, $usuarioId);
-    $stmtProjeto->execute();
-    $projeto = $stmtProjeto->get_result()->fetch_assoc();
-
+    /* fallback: busca direto em projetos (projeto sem pedido ainda) */
     if (!$projeto) {
-        // Se não achou na view de pedidos, pode ser um projeto que ainda não virou pedido
-        // Vamos buscar na tabela projetos direto
-        $sqlAvulso = "SELECT id, nome_projeto, descricao, formato, status as status_solicitacao, 
-                             arquivo_caminho as caminho_arquivo, volume_estimado_cm3, peso_estimado_gramas 
-                      FROM projetos WHERE id = ? AND cliente_id = ?";
-        $stmtAvulso = $conexao->prepare($sqlAvulso);
-        $stmtAvulso->bind_param("ii", $pedidoId, $usuarioId);
-        $stmtAvulso->execute();
-        $projeto = $stmtAvulso->get_result()->fetch_assoc();
-        
-        if (!$projeto) {
-            throw new Exception("Projeto não encontrado ou acesso negado.");
-        }
+        $sql2 = "
+            SELECT
+                id, id AS projeto_id,
+                nome_projeto, descricao, formato, status AS status_solicitacao,
+                quantidade, arquivo_caminho, volume_estimado_cm3, peso_estimado_gramas
+            FROM projetos
+            WHERE id = ? AND cliente_id = ?
+            LIMIT 1
+        ";
+        $stmt2 = $conexao->prepare($sql2);
+        $stmt2->bind_param('ii', $pedidoId, $usuarioId);
+        $stmt2->execute();
+        $projeto = $stmt2->get_result()->fetch_assoc();
+        $stmt2->close();
+        if (!$projeto) throw new Exception('Projeto não encontrado ou acesso negado.');
     }
 
-    // Buscar Partes (tabela partes_pedido)
-    $sqlPartes = "SELECT id, nome AS nome_parte, descricao, material, cor, quantidade AS infill 
-                  FROM partes_pedido WHERE pedido_id = ?";
-    $stmtPartes = $conexao->prepare($sqlPartes);
-    $stmtPartes->bind_param("i", $pedidoId);
-    $stmtPartes->execute();
-    $projeto['partes'] = $stmtPartes->get_result()->fetch_all(MYSQLI_ASSOC);
+    /* ── PARTES DO PEDIDO ── */
+    $stmtP = $conexao->prepare("
+        SELECT id, nome AS nome_parte, descricao, material, cor,
+               quantidade, custo_estimado
+        FROM partes_pedido
+        WHERE pedido_id = ?
+        ORDER BY id ASC
+    ");
+    $stmtP->bind_param('i', $pedidoId);
+    $stmtP->execute();
+    $projeto['partes'] = $stmtP->get_result()->fetch_all(MYSQLI_ASSOC);
+    $stmtP->close();
 
-    // Buscar Histórico
-    $sqlHist = "SELECT status_anterior, status_novo, mensagem_publica, data_hora 
-                FROM historico_status_pedido WHERE pedido_id = ? ORDER BY data_hora ASC";
-    $stmtHist = $conexao->prepare($sqlHist);
-    $stmtHist->bind_param("i", $pedidoId);
-    $stmtHist->execute();
-    $projeto['historico_real'] = $stmtHist->get_result()->fetch_all(MYSQLI_ASSOC);
+    /* ── HISTÓRICO DE STATUS ── */
+    $stmtH = $conexao->prepare("
+        SELECT
+            h.status_anterior,
+            h.status_novo,
+            h.observacao,
+            h.mensagem_publica,
+            h.data_hora,
+            u.nome AS alterado_por_nome
+        FROM historico_status_pedido h
+        LEFT JOIN usuarios u ON u.id = h.alterado_por
+        WHERE h.pedido_id = ?
+        ORDER BY h.data_hora ASC
+    ");
+    $stmtH->bind_param('i', $pedidoId);
+    $stmtH->execute();
+    $projeto['historico_real'] = $stmtH->get_result()->fetch_all(MYSQLI_ASSOC);
+    $stmtH->close();
 
-    $retorno['status'] = 'sucesso';
+    $retorno['status']  = 'sucesso';
     $retorno['projeto'] = $projeto;
 
 } catch (Exception $e) {
     $retorno['mensagem'] = $e->getMessage();
 }
 
-echo json_encode($retorno);
+echo json_encode($retorno, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);

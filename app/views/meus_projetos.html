@@ -1,61 +1,30 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Meus Projetos - Printly</title>
-
+    <title>Meus Projetos — Printly</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
-
     <link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
     <style>
-        :root {
-            --printly-primary: #412746;
-            --printly-primary-dark: #7a3077;
-            --printly-accent: #5a0a61;
-            --printly-light: #f0cef5;
-            --printly-surface: #ffffff;
-            --printly-bg: #fff5fe;
-            --printly-text: #7e1b7e;
-            --printly-muted: #9e939e;
-            --printly-border: #c2b9c28c;
-            --printly-shadow: 0 2px 12px rgba(229, 70, 181, 0.08);
-            --printly-radius: 12px;
-        }
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    :root{
+        --printly-primary: #412746;
+        --printly-primary-dark: #7a3077;
+        --pp:#412746;--ppd:#7a3077;--pl:#f0cef5;--ps:#ffffff;
+        --pb:#fff5fe;--pt:#7e1b7e;--pm:#9e939e;--pbd:#c2b9c28c;
+        --psh:0 2px 12px rgba(229,70,181,.08);--pr:12px;
+        --printly-surface: #ffffff;
+        --printly-muted: #9e939e;
+        --printly-border: #c2b9c28c;
+        --printly-shadow: 0 2px 12px rgba(229, 70, 181, 0.08);
+        --printly-radius: 12px;
+        --rm:#6b3fa0;--rc:#a66dd4;--roc:#f3e8ff;--cb:#e5d9f2;
+    }
+    body{background:var(--pb);font-family:'DM Sans','Segoe UI',system-ui,sans-serif;color:var(--pt);min-height:100vh}
 
-        /* =========================
-        RESET / BASE
-        ========================= */
-
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-
-        body {
-            background-color: var(--printly-bg);
-            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-            color: var(--printly-text);
-            min-height: 100vh;
-            overflow-x: hidden;
-            display: flex;
-            flex-direction: column;
-        }
-
-        body > .container {
-            flex: 1;
-        }
-
-        img {
-            max-width: 100%;
-            display: block;
-        }
-
-        /* =========================
+    /* =========================
         CONTAINER
         ========================= */
 
@@ -112,358 +81,80 @@
             color: #fff;
         }
 
-        /* =========================
-        HEADER
-        ========================= */
 
-        .page-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1.5rem;
-            padding-bottom: 1rem;
-            border-bottom: 1px solid var(--printly-border);
-        }
+    /* HEADER */
+    .page-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem;padding-bottom:1rem;border-bottom:1px solid var(--pbd);flex-wrap:wrap;gap:12px}
+    .page-header h4{font-family:'Syne',sans-serif;font-weight:700;font-size:1.3rem;color:var(--pt);margin:0}
+    .page-header p{font-size:.85rem;color:var(--pm);margin:2px 0 0}
+    .btn-novo{background:linear-gradient(135deg,var(--rm),var(--pp));color:#fff;border:none;border-radius:10px;padding:9px 18px;font-size:.88rem;font-weight:600;text-decoration:none;display:flex;align-items:center;gap:6px;transition:.18s}
+    .btn-novo:hover{opacity:.9;color:#fff;transform:translateY(-1px)}
 
-        .page-header h4 {
-            font-weight: 700;
-        }
+    /* FILTROS */
+    .filtros{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:1.5rem}
+    .btn-filtro{background:var(--ps);border:1.5px solid var(--pbd);color:var(--pp);padding:6px 16px;border-radius:20px;cursor:pointer;font-weight:600;font-size:.82rem;transition:.18s;white-space:nowrap}
+    .btn-filtro:hover{border-color:var(--rm);color:var(--rm)}
+    .btn-filtro.ativo{background:var(--pp);color:#fff;border-color:var(--pp)}
 
-        .page-header p {
-            color: var(--printly-muted);
-        }
+    /* GRID */
+    .cards-container{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:1.25rem;align-items:start}
 
-        /* =========================
-        FILTROS
-        ========================= */
+    /* CARD */
+    .projeto-card{background:var(--ps);border:1px solid var(--pbd);border-radius:var(--pr);box-shadow:var(--psh);overflow:hidden;transition:box-shadow .2s,transform .2s;display:flex;flex-direction:column}
+    .projeto-card:hover{box-shadow:0 6px 24px rgba(229,70,176,.15);transform:translateY(-3px)}
+    .card-capa{position:relative;height:175px;overflow:hidden;background:var(--pl);display:flex;align-items:center;justify-content:center}
+    .card-capa img{width:100%;height:100%;object-fit:cover}
+    .card-capa.sem-capa{background:linear-gradient(135deg,var(--pl),var(--roc))}
+    .card-capa.sem-capa::after{content:'\F3D7';font-family:'bootstrap-icons';font-size:3rem;color:var(--rc);opacity:.35}
+    .badge-status{position:absolute;top:12px;right:12px;padding:4px 12px;border-radius:20px;font-size:.72rem;font-weight:700;color:#fff;display:flex;align-items:center;gap:5px;box-shadow:0 2px 8px rgba(0,0,0,.2)}
+    .st-analise{background:#f59e0b}.st-aceito{background:#10b981}.st-producao{background:#3b82f6}
+    .st-concluido{background:#059669}.st-negado{background:#ef4444}.st-bloqueado{background:#6b7280}
 
-        .filtros {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-            margin-bottom: 1.5rem;
-        }
+    .card-conteudo{padding:1.1rem;display:flex;flex-direction:column;gap:10px;flex:1}
+    .card-titulo{font-family:'Syne',sans-serif;font-size:.95rem;font-weight:700;color:var(--pp);margin:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .card-desc{font-size:.83rem;color:var(--pm);margin:0;line-height:1.5}
+    .card-infos{display:flex;flex-direction:column;gap:5px}
+    .info-item{font-size:.82rem;color:var(--pt);display:flex;align-items:center;gap:6px}
+    .info-item i{color:var(--rc);font-size:.85rem;flex-shrink:0}
+    .info-item strong{color:var(--pp)}
+    .feedback-maker{background:#fff0f0;border-left:3px solid #ef4444;padding:8px 12px;border-radius:0 8px 8px 0;color:#991b1b;font-size:.82rem;line-height:1.4}
+    .card-acoes{display:flex;flex-wrap:wrap;gap:6px;margin-top:auto;padding-top:4px}
+    .btn-acao{flex:1;min-width:60px;border:none;padding:8px 6px;border-radius:8px;cursor:pointer;font-weight:600;font-size:.8rem;transition:.18s;display:flex;align-items:center;justify-content:center;gap:5px}
+    .btn-ver{background:var(--pp);color:#fff}.btn-ver:hover{background:var(--ppd);color:#fff}
+    .btn-chat{background:var(--pl);color:var(--pp)}.btn-chat:hover{background:#e0b8f0}
+    .btn-editar{background:var(--roc);color:var(--rm)}.btn-editar:hover{background:#e8d5ff}
+    .btn-excluir{background:#fff0f0;color:#dc2626}.btn-excluir:hover{background:#fee2e2;color:#991b1b}
+    .btn-feedback{background:#fefce8;color:#ca8a04}.btn-feedback:hover{background:#fef9c3}
 
-        .filtros button {
-            background: var(--printly-surface);
-            border: 1px solid var(--printly-border);
-            color: var(--printly-primary);
-            padding: 7px 16px;
-            border-radius: 8px;
-            font-weight: 600;
-            font-size: 0.85rem;
-            cursor: pointer;
-            transition: 0.2s;
-            box-shadow: var(--printly-shadow);
-        }
+    /* ESTADOS */
+    .estado-loading,.estado-vazio{grid-column:1/-1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;padding:4rem 0;color:var(--pm);font-size:.95rem;text-align:center}
+    .estado-vazio i{font-size:3rem;opacity:.4;color:var(--rc)}
+    .spinner-custom{width:36px;height:36px;border:3px solid var(--cb);border-top-color:var(--rm);border-radius:50%;animation:spin .8s linear infinite}
+    @keyframes spin{to{transform:rotate(360deg)}}
+    .btn-novo-projeto{background:linear-gradient(135deg,var(--rm),var(--pp));color:#fff;border:none;border-radius:10px;padding:10px 20px;font-size:.88rem;font-weight:600;text-decoration:none;display:inline-flex;align-items:center;gap:6px;transition:.18s}
+    .btn-novo-projeto:hover{opacity:.9;color:#fff}
 
-        .filtros button:hover,
-        .filtros button.ativo {
-            background: var(--printly-primary);
-            color: #fff;
-        }
+    /* MODAL */
+    .modal-content{border-radius:18px;border:none;overflow:hidden}
+    .modal-header{background:var(--pl);border-bottom:1px solid var(--pbd)}
+    .modal-title{font-weight:700;color:var(--pp);font-family:'Syne',sans-serif}
+    .modal-body{overflow-y:auto;max-height:72vh;padding-bottom:1rem}
+    .modal-footer{background:#fff;border-top:1px solid var(--pbd)}
 
-        /* =========================
-        GRID
-        ========================= */
+    /* PARTES EDITAR */
+    .parte-card-dinamico{border:1px solid var(--cb);border-radius:10px;overflow:hidden;margin-bottom:10px}
+    .pcd-header{display:flex;justify-content:space-between;align-items:center;padding:8px 14px;background:var(--pl);font-weight:600;font-size:.85rem;color:var(--pp)}
+    .pcd-header button{background:none;border:1px solid #fecaca;color:#dc2626;border-radius:6px;padding:2px 8px;cursor:pointer;transition:.15s;font-size:.8rem}
+    .pcd-header button:hover{background:#fee2e2}
+    .pcd-body{padding:12px 14px}
 
-        .cards-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-            gap: 1.25rem;
-        }
-
-        /* =========================
-        CARD
-        ========================= */
-
-        .card {
-            background: var(--printly-surface);
-            border: 1px solid var(--printly-border);
-            border-radius: var(--printly-radius);
-            box-shadow: var(--printly-shadow);
-            overflow: hidden;
-            transition: 0.2s;
-        }
-
-        .card:hover {
-            transform: translateY(-3px);
-        }
-
-        /* imagem */
-        .card-imagem {
-            position: relative;
-            height: 200px;
-            background: var(--printly-light);
-        }
-
-        .card-imagem img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        /* status */
-        .status {
-            position: absolute;
-            top: 12px;
-            right: 12px;
-            padding: 5px 13px;
-            border-radius: 999px;
-            font-size: 0.78rem;
-            font-weight: 700;
-            color: #fff;
-        }
-
-        .analise { background: #f59e0b; }
-        .aceito { background: #10b981; }
-        .producao { background: #3b82f6; }
-        .concluido { background: #059669; }
-        .negado { background: #ef4444; }
-        .bloqueado { background: #6b7280; }
-
-        /* header card */
-        .card-header {
-            background: var(--printly-light);
-            border-bottom: 1px solid var(--printly-border);
-            padding: 0.85rem 1.25rem;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .card-header h5 {
-            margin: 0;
-            font-size: 1rem;
-            font-weight: 700;
-            color: var(--printly-primary);
-        }
-
-        .card-icon {
-            width: 30px;
-            height: 30px;
-            border-radius: 8px;
-            background: var(--printly-primary);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .card-icon i {
-            color: #fff;
-        }
-
-        /* body */
-        .card-body {
-            padding: 1.25rem;
-            word-break: break-word;
-        }
-
-        .card-body p.desc {
-            color: var(--printly-muted);
-            font-size: 0.9rem;
-            margin-bottom: 14px;
-        }
-
-        .informacoes {
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-            margin-bottom: 16px;
-            font-size: 0.88rem;
-            font-weight: 500;
-            color: var(--printly-primary-dark);
-        }
-
-        /* feedback */
-        .feedback-maker {
-            background: #fff0f0;
-            border-left: 4px solid #ef4444;
-            padding: 10px 12px;
-            border-radius: 0 8px 8px 0;
-            margin-bottom: 14px;
-            color: #991b1b;
-            font-size: 0.88rem;
-        }
-
-        /* ações */
-        .acoes {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-        }
-
-        .acoes button {
-            flex: 1;
-            border: none;
-            padding: 9px 10px;
-            border-radius: 8px;
-            font-weight: 600;
-            font-size: 0.85rem;
-            cursor: pointer;
-            background: var(--printly-primary);
-            color: #fff;
-            transition: 0.2s;
-        }
-
-        .acoes button:hover {
-            background: var(--printly-primary-dark);
-        }
-
-        .acoes .btn-danger {
-            background: #ef4444;
-        }
-
-        .acoes .btn-danger:hover {
-            background: #dc2626;
-        }
-
-        /* =========================
-        MODAL (CORRIGIDO)
-        ========================= */
-
-        .modal-content {
-            border-radius: 18px;
-            border: none;
-            overflow: hidden;
-        }
-
-        .modal-header {
-            background: var(--printly-light);
-            border-bottom: 1px solid var(--printly-border);
-        }
-
-        .modal-title {
-            font-weight: 700;
-            color: var(--printly-primary);
-        }
-
-        /* CORREÇÃO PRINCIPAL DO SCROLL */
-        .modal-dialog-scrollable .modal-content {
-            max-height: 90vh;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .modal-body {
-            overflow-y: auto;
-            max-height: 70vh;
-            padding-bottom: 1rem;
-        }
-
-        .modal-footer {
-            position: sticky;
-            bottom: 0;
-            background: #fff;
-            z-index: 2;
-            border-top: 1px solid var(--printly-border);
-        }
-
-        /* =========================
-        TIMELINE
-        ========================= */
-
-        .timeline {
-            position: relative;
-            padding-left: 30px;
-            margin-top: 20px;
-        }
-
-        .timeline::before {
-            content: "";
-            position: absolute;
-            left: 10px;
-            top: 0;
-            width: 3px;
-            height: 100%;
-            background: var(--printly-border);
-        }
-
-        .timeline-item {
-            position: relative;
-            margin-bottom: 24px;
-        }
-
-        .timeline-item::before {
-            content: "";
-            position: absolute;
-            left: -24px;
-            top: 4px;
-            width: 16px;
-            height: 16px;
-            border-radius: 50%;
-            background: #c4c4c4;
-        }
-
-        .timeline-item.ativo::before { background: #3b82f6; }
-        .timeline-item.concluido::before { background: #10b981; }
-
-        /* =========================
-        PROGRESSO
-        ========================= */
-
-        .progress {
-            height: 10px;
-            border-radius: 999px;
-        }
-
-        .progress-bar {
-            background: linear-gradient(
-                90deg,
-                var(--printly-primary),
-                var(--printly-primary-dark)
-            );
-        }
-
-        /* =========================
-        PARTES
-        ========================= */
-
-        .parte-card {
-            border: 1px solid var(--printly-border);
-            border-radius: 10px;
-            padding: 12px;
-            margin-bottom: 12px;
-            background: #fff;
-        }
-
-        /* =========================
-        EMPTY STATE
-        ========================= */
-
-        .empty-state {
-            grid-column: 1/-1;
-            text-align: center;
-            padding: 70px 20px;
-            background: #fff;
-            border-radius: 16px;
-            border: 1px dashed var(--printly-border);
-        }
-
-        /* =========================
-        RESPONSIVO
-        ========================= */
-
-        @media (max-width: 576px) {
-
-            .cards-container {
-                grid-template-columns: 1fr;
-            }
-
-            .acoes {
-                flex-direction: column;
-            }
-
-            .acoes button {
-                width: 100%;
-            }
-
-            .modal-body {
-                max-height: 65vh;
-            }
-        }
-
-        /* ===== SINO DE NOTIFICACOES ===== */
+    @media(max-width:576px){
+        .cards-container{grid-template-columns:1fr}
+        .page-header{flex-direction:column;align-items:flex-start}
+        .card-acoes{flex-direction:column}
+        .btn-acao{width:100%}
+        .modal-body{max-height:65vh}
+    }
+    /* ===== SINO DE NOTIFICACOES ===== */
         .sino-wrapper {
             position: relative;
             display: inline-flex;
@@ -673,12 +364,10 @@
             gap: 5px;
         }
     </style>
-
 </head>
-
 <body data-acesso="CLIENTE,ADMIN">
 
-        <nav class="navbar navbar-expand-lg navbar-dark">
+    <nav class="navbar navbar-expand-lg navbar-dark">
         <div class="container">
             <a class="navbar-brand" href="index.php?rota=usuario-painel">Printly</a>
             <div class="collapse navbar-collapse">
@@ -721,208 +410,103 @@
     <div class="container mt-4">
 
         <div class="page-header">
-
             <div>
-
                 <h4>Meus Projetos</h4>
-
-                <p>
-                    Gerencie suas solicitações de impressão 3D
-                </p>
-
+                <p>Gerencie suas solicitações de impressão 3D</p>
             </div>
-
+            <a href="index.php?rota=listagem-maker" class="btn-novo">
+                <i class="bi bi-plus-circle"></i> Nova Solicitação
+            </a>
         </div>
-
-        <!-- FILTROS -->
 
         <div class="filtros">
-
-            <button class="btn btn-dark ativo" data-status="TODOS">
-                Todos
-            </button>
-
-            <button class="btn btn-outline-secondary" data-status="AGUARDANDO_CONFIRMACAO">
-                Em análise
-            </button>
-
-            <button class="btn btn-outline-secondary" data-status="ACEITO">
-                Aceitos
-            </button>
-
-            <button class="btn btn-outline-secondary" data-status="EM_PRODUCAO">
-                Em produção
-            </button>
-
-            <button class="btn btn-outline-secondary" data-status="CONCLUIDO">
-                Concluídos
-            </button>
-
-            <button class="btn btn-outline-secondary" data-status="NEGADO">
-                Negados
-            </button>
-
-            <button class="btn btn-outline-secondary" data-status="BLOQUEADO">
-                Bloqueados
-            </button>
-
+            <button class="btn-filtro ativo" data-status="TODOS">Todos</button>
+            <button class="btn-filtro" data-status="AGUARDANDO_CONFIRMACAO">Em análise</button>
+            <button class="btn-filtro" data-status="ACEITO">Aceitos</button>
+            <button class="btn-filtro" data-status="EM_PRODUCAO">Em produção</button>
+            <button class="btn-filtro" data-status="CONCLUIDO">Concluídos</button>
+            <button class="btn-filtro" data-status="NEGADO">Negados</button>
         </div>
 
-        <!-- CARDS -->
-
-        <div class="cards-container" id="cardsProjetos">
-
-            <div class="text-center w-100 py-5">
-
-                <div class="spinner-border text-primary"></div>
-
-                <p class="mt-2">
-                    Carregando seus projetos...
-                </p>
-
-            </div>
-
-        </div>
+        <div class="cards-container" id="cardsProjetos"></div>
 
     </div>
 
-    <!-- MODAL -->
-
+    <!-- MODAL DETALHES -->
     <div class="modal fade" id="modalProjeto" tabindex="-1">
-
         <div class="modal-dialog modal-xl modal-dialog-scrollable">
-
             <div class="modal-content">
-
                 <div class="modal-header">
-
-                    <h5 class="modal-title">
-                        Detalhes do Projeto
-                    </h5>
-
-                    <button
-                        type="button"
-                        class="btn-close"
-                        data-bs-dismiss="modal">
-                    </button>
-
-                </div>
-
-                <div
-                    class="modal-body"
-                    id="conteudoModalProjeto">
-
-                    <div class="text-center py-5">
-
-                        <div class="spinner-border text-primary"></div>
-
-                        <p class="mt-3">
-                            Carregando detalhes...
-                        </p>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-        </div>
-
-    </div>
-    <!-- MODAL EDITAR PROJETO -->
-    
-    <div class="modal fade" id="modalEditarProjeto" tabindex="-1">
-
-        <div class="modal-dialog modal-xl modal-dialog-scrollable modal-fullscreen-sm-down">
-
-            <div class="modal-content">
-
-                <div class="modal-header">
-                    <h5 class="modal-title">Editar Projeto</h5>
+                    <h5 class="modal-title"><i class="bi bi-box-seam me-2"></i>Detalhes do Projeto</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
-
-                <form id="formEditarProjeto" enctype="multipart/form-data">
-
-                    <div class="modal-body">
-
-                        <input type="hidden" id="editar_id" name="id">
-
-                        <div class="mb-3">
-                            <label>Nome</label>
-                            <input type="text" class="form-control" id="editar_nome" name="nome_projeto">
-                        </div>
-
-                        <div class="mb-3">
-                            <label>Descrição</label>
-                            <textarea class="form-control" id="editar_descricao" name="descricao"></textarea>
-                        </div>
-
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <label>Formato</label>
-                                <select class="form-select" id="editar_formato" name="formato">
-                                    <option>STL</option>
-                                    <option>OBJ</option>
-                                </select>
-                            </div>
-
-                            <div class="col-md-6 mb-3">
-                                <label>Quantidade</label>
-                                <input type="number" class="form-control" id="editar_quantidade" name="quantidade">
-                            </div>
-                        </div>
-
-                        <div class="mb-3">
-                            <label>Arquivo 3D</label>
-                            <input type="file" class="form-control" id="editar_arquivo" name="arquivo">
-                        </div>
-
-                        <div class="mb-3">
-                            <label>Imagem</label>
-                            <input type="file" class="form-control" id="editar_imagem" name="imagem_capa">
-                        </div>
-
-                        <img id="previewImagemProjeto"
-                            src="/Printly/assets/img/default.png"
-                            class="img-fluid rounded mb-3">
-
-                        <hr>
-
-                        <h5>Partes</h5>
-
-                        <button type="button"
-                                class="btn btn-dark btn-sm mb-3"
-                                onclick="adicionarParteProjeto()">
-                            + Adicionar Parte
-                        </button>
-
-                        <div id="containerPartesProjeto"></div>
-
-                        <div id="editarMensagem"></div>
-                        
-
+                <div class="modal-body" id="conteudoModalProjeto">
+                    <div class="text-center py-5">
+                        <div class="spinner-border text-primary"></div>
+                        <p class="mt-3">Carregando...</p>
                     </div>
-
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                            Cancelar
-                        </button>
-
-                        <button type="submit" class="btn btn-dark">
-                            Salvar Alterações
-                        </button>
-                    </div>
-
-                </form>
-
+                </div>
             </div>
-
         </div>
-
     </div>
 
-    <footer class="printly-footer">
+    <!-- MODAL EDITAR -->
+    <div class="modal fade" id="modalEditarProjeto" tabindex="-1">
+        <div class="modal-dialog modal-xl modal-dialog-scrollable modal-fullscreen-sm-down">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title"><i class="bi bi-pencil-square me-2"></i>Editar Projeto</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <form id="formEditarProjeto" enctype="multipart/form-data">
+                    <div class="modal-body">
+                        <input type="hidden" id="editar_id" name="editar_id">
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Nome do Projeto</label>
+                            <input type="text" class="form-control" id="editar_nome" name="editar_nome" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Descrição</label>
+                            <textarea class="form-control" id="editar_descricao" name="editar_descricao" rows="3"></textarea>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-bold">Formato</label>
+                                <select class="form-select" id="editar_formato" name="formato">
+                                    <option value="STL">STL</option>
+                                    <option value="OBJ">OBJ</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-bold">Quantidade</label>
+                                <input type="number" class="form-control" id="editar_quantidade" name="quantidade" min="1">
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Arquivo 3D <span class="text-muted fw-normal">(opcional)</span></label>
+                            <input type="file" class="form-control" id="editar_arquivo" name="arquivo" accept=".stl,.obj">
+                        </div>
+                        <hr>
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h6 class="mb-0 fw-bold" style="color:var(--pp)">Partes Personalizadas</h6>
+                            <button type="button" class="btn btn-sm btn-outline-secondary" onclick="adicionarParteProjeto()">
+                                <i class="bi bi-plus-circle me-1"></i>Adicionar Parte
+                            </button>
+                        </div>
+                        <div id="containerPartesProjeto"></div>
+                        <div id="editarMensagem"></div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="submit" class="btn btn-dark">
+                            <i class="bi bi-check-lg me-1"></i>Salvar Alterações
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+     <footer class="printly-footer">
         <div class="container">
             <div class="row g-4">
                 <div class="col-lg-4 col-md-6">
@@ -967,7 +551,7 @@
         </div>
     </footer>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
 
     <script>
 
@@ -1010,13 +594,8 @@
 
     </script>
 
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="../app/controllers/usuario/js/meus_projetos.js"></script>
-
     <script src="../app/controllers/usuario/js/verif.js"></script>
-
-    <script src="../app/controllers/usuario/js/status_maker.js"></script>
-    <script src="../app/controllers/usuario/js/sino_notif.js"></script>
-
 </body>
-
 </html>

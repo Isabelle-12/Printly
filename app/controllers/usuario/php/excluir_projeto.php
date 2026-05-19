@@ -1,8 +1,8 @@
 <?php
 session_start();
-header('Content-Type: application/json');
+header('Content-Type: application/json; charset=utf-8');
 
-// Desative em produção, mas mantenha 1 agora para debugar se necessário
+// Desative em produção, mas mantenha 0 agora para evitar vazamentos no JSON
 ini_set('display_errors', 0); 
 error_reporting(0);
 
@@ -10,44 +10,66 @@ require_once(__DIR__ . '/../../../../config/conexao.php');
 
 $retorno = ['status' => 'erro', 'mensagem' => ''];
 
-if (!isset($_SESSION['id'])) {
-    echo json_encode(['status' => 'erro', 'mensagem' => 'Usuário não autenticado']);
+/*
+=========================
+VALIDAR E ADAPTAR SESSÃO
+=========================
+*/
+if (!isset($_SESSION['email']) || !isset($_SESSION['id'])) {
+    $retorno['mensagem'] = 'Sessão expirada ou usuário não autenticado.';
+    echo json_encode($retorno, JSON_UNESCAPED_UNICODE);
     exit;
+}
+
+// Sincroniza dinamicamente a chave exigida pelo ecossistema Printly
+if (!isset($_SESSION['usuario_email'])) {
+    $_SESSION['usuario_email'] = $_SESSION['email'];
 }
 
 // Lê o JSON enviado pelo JavaScript
 $dados = json_decode(file_get_contents("php://input"), true);
 
 if (!isset($dados['id'])) {
-    echo json_encode(['status' => 'erro', 'mensagem' => 'ID do projeto não recebido']);
+    $retorno['mensagem'] = 'ID do projeto não recebido.';
+    echo json_encode($retorno, JSON_UNESCAPED_UNICODE);
     exit;
 }
 
 try {
-    $usuarioId = $_SESSION['id'];
+    $usuarioId = (int)$_SESSION['id']; // ID numérico vindo do login legado
     $projetoId = intval($dados['id']);
 
-    // 1. Verificar se o projeto pertence ao cliente e se pode ser excluído
-    // No seu banco a coluna é cliente_id
+    /*
+    ==================================================
+    1. VERIFICAR PROPRIEDADE E TRAVA DE SEGURANÇA
+    ==================================================
+    */
     $sqlBusca = "SELECT id, status FROM projetos WHERE id = ? AND cliente_id = ? LIMIT 1";
     $stmtBusca = $conexao->prepare($sqlBusca);
     $stmtBusca->bind_param("ii", $projetoId, $usuarioId);
     $stmtBusca->execute();
     $projeto = $stmtBusca->get_result()->fetch_assoc();
+    $stmtBusca->close();
 
     if (!$projeto) {
-        throw new Exception("Projeto não encontrado ou você não tem permissão.");
+        throw new Exception("Projeto não encontrado ou você não tem permissão para excluí-lo.");
     }
 
-    // 2. Bloquear exclusão se já houver pedido vinculado (Segurança)
-    if ($projeto['status'] === 'COM_PEDIDO' || $projeto['status'] === 'CONCLUIDO') {
-        throw new Exception("Este projeto possui pedidos vinculados e não pode ser removido.");
+    // Bloquear exclusão se o projeto já passou da fase de rascunho/solicitação inicial
+    $statusAtual = strtoupper(trim($projeto['status']));
+    if ($statusAtual === 'COM_PEDIDO' || $statusAtual === 'EM_PRODUCAO' || $statusAtual === 'CONCLUIDO') {
+        throw new Exception("Este projeto possui ordens de serviço vinculadas em andamento e não pode ser removido.");
     }
 
     $conexao->begin_transaction();
 
-    // 3. O seu banco já tem ON DELETE CASCADE em várias tabelas, 
-    // mas vamos garantir a limpeza de rascunhos aqui se necessário.
+    /*
+    ==================================================
+    2. EXECUÇÃO DA EXCLUSÃO (Cascateamento controlado)
+    ==================================================
+    Mesmo que o seu banco possua ON DELETE CASCADE, fazemos a remoção limpa
+    do registro pai na tabela projetos.
+    */
     $sqlDel = "DELETE FROM projetos WHERE id = ? AND cliente_id = ?";
     $stmtDel = $conexao->prepare($sqlDel);
     $stmtDel->bind_param("ii", $projetoId, $usuarioId);
@@ -58,12 +80,17 @@ try {
         $retorno['status'] = 'sucesso';
         $retorno['mensagem'] = 'Projeto removido com sucesso!';
     } else {
-        throw new Exception("Não foi possível excluir o registro.");
+        throw new Exception("Não foi possível excluir o registro do banco de dados.");
     }
+    $stmtDel->close();
 
 } catch (Exception $e) {
-    if (isset($conexao)) $conexao->rollback();
+    if (isset($conexao) && $conexao->ping()) {
+        $conexao->rollback();
+    }
+    error_log("Erro em excluir_projeto.php: " . $e->getMessage());
+    $retorno['status'] = 'erro';
     $retorno['mensagem'] = $e->getMessage();
 }
 
-echo json_encode($retorno);
+echo json_encode($retorno, JSON_UNESCAPED_UNICODE);

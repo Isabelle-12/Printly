@@ -1,6 +1,6 @@
 <?php
 session_start();
-header('Content-Type: application/json');
+header('Content-Type: application/json; charset=utf-8');
 ini_set('display_errors', 0);
 error_reporting(0);
 
@@ -8,16 +8,28 @@ require_once(__DIR__ . '/../../../../config/conexao.php');
 
 $retorno = ['status' => 'erro', 'mensagem' => ''];
 
-if (!isset($_SESSION['id'])) {
-    echo json_encode(['status' => 'erro', 'mensagem' => 'Usuário não autenticado']);
+/*
+=========================
+VALIDAR E ADAPTAR SESSÃO
+=========================
+*/
+if (!isset($_SESSION['email']) || !isset($_SESSION['id'])) {
+    $retorno['mensagem'] = 'Usuário não autenticado';
+    echo json_encode($retorno, JSON_UNESCAPED_UNICODE);
     exit;
 }
 
+// Sincroniza dinamicamente a chave exigida pelo ecossistema Printly
+if (!isset($_SESSION['usuario_email'])) {
+    $_SESSION['usuario_email'] = $_SESSION['email'];
+}
+
 $pedidoId  = isset($_GET['id']) ? intval($_GET['id']) : 0;
-$usuarioId = (int)$_SESSION['id'];
+$usuarioId = (int)$_SESSION['id']; // Usa o ID nativo gerado pelo login.php
 
 if ($pedidoId <= 0) {
-    echo json_encode(['status' => 'erro', 'mensagem' => 'ID inválido']);
+    $retorno['mensagem'] = 'ID do projeto inválido';
+    echo json_encode($retorno, JSON_UNESCAPED_UNICODE);
     exit;
 }
 
@@ -47,6 +59,10 @@ try {
         LIMIT 1
     ";
     $stmt = $conexao->prepare($sql);
+    if (!$stmt) {
+        throw new Exception('Erro ao preparar consulta principal.');
+    }
+    
     $stmt->bind_param('ii', $pedidoId, $usuarioId);
     $stmt->execute();
     $projeto = $stmt->get_result()->fetch_assoc();
@@ -64,11 +80,18 @@ try {
             LIMIT 1
         ";
         $stmt2 = $conexao->prepare($sql2);
+        if (!$stmt2) {
+            throw new Exception('Erro ao preparar consulta de fallback.');
+        }
+        
         $stmt2->bind_param('ii', $pedidoId, $usuarioId);
         $stmt2->execute();
         $projeto = $stmt2->get_result()->fetch_assoc();
         $stmt2->close();
-        if (!$projeto) throw new Exception('Projeto não encontrado ou acesso negado.');
+        
+        if (!$projeto) {
+            throw new Exception('Projeto não encontrado ou acesso negado.');
+        }
     }
 
     /* ── PARTES DO PEDIDO ── */
@@ -79,10 +102,14 @@ try {
         WHERE pedido_id = ?
         ORDER BY id ASC
     ");
-    $stmtP->bind_param('i', $pedidoId);
-    $stmtP->execute();
-    $projeto['partes'] = $stmtP->get_result()->fetch_all(MYSQLI_ASSOC);
-    $stmtP->close();
+    if ($stmtP) {
+        $stmtP->bind_param('i', $pedidoId);
+        $stmtP->execute();
+        $projeto['partes'] = $stmtP->get_result()->fetch_all(MYSQLI_ASSOC);
+        $stmtP->close();
+    } else {
+        $projeto['partes'] = [];
+    }
 
     /* ── HISTÓRICO DE STATUS ── */
     $stmtH = $conexao->prepare("
@@ -98,15 +125,23 @@ try {
         WHERE h.pedido_id = ?
         ORDER BY h.data_hora ASC
     ");
-    $stmtH->bind_param('i', $pedidoId);
-    $stmtH->execute();
-    $projeto['historico_real'] = $stmtH->get_result()->fetch_all(MYSQLI_ASSOC);
-    $stmtH->close();
+    if ($stmtH) {
+        $stmtH->bind_param('i', $pedidoId);
+        $stmtH->execute();
+        $projeto['historico_real'] = $stmtH->get_result()->fetch_all(MYSQLI_ASSOC);
+        $stmtH->close();
+    } else {
+        $projeto['historico_real'] = [];
+    }
 
+    // Resposta de sucesso sincronizada com o front-end
     $retorno['status']  = 'sucesso';
     $retorno['projeto'] = $projeto;
+    unset($retorno['mensagem']); // Remove a mensagem vazia em caso de sucesso
 
 } catch (Exception $e) {
+    error_log("Erro em obter_detalhes_projeto.php: " . $e->getMessage());
+    $retorno['status'] = 'erro';
     $retorno['mensagem'] = $e->getMessage();
 }
 

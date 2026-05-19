@@ -16,24 +16,28 @@ $retorno = [
 
 /*
 =========================
-VALIDAR SESSÃO
+VALIDAR E ADAPTAR SESSÃO
 =========================
 */
-if (!isset($_SESSION['id'])) {
+if (!isset($_SESSION['email']) || !isset($_SESSION['id'])) {
     $retorno['mensagem'] = 'Usuário não autenticado';
     echo json_encode($retorno);
     exit;
 }
 
+// Sincroniza a chave exigida pelo sistema Printly sem alterar o login.php
+if (!isset($_SESSION['usuario_email'])) {
+    $_SESSION['usuario_email'] = $_SESSION['email'];
+}
+
 try {
-    $usuarioId = $_SESSION['id'];
+    // Como o login já fornece o ID, usamos direto para maior performance
+    $usuarioId = (int)$_SESSION['id'];
 
     /*
     =========================
     QUERY PRINCIPAL
     =========================
-    Ajustado com ALIASES (AS) para fornecer as chaves exatas que o renderizador
-    de cards do seu arquivo JavaScript 'meus_projetos.js' espera ler.
     */
     $sql = "
         SELECT
@@ -50,7 +54,7 @@ try {
             motivo_recusa,
             maker_nome,
             total_partes,
-            arquivo_caminho AS arquivo_caminho
+            arquivo_caminho
         FROM view_pedidos_completos
         WHERE cliente_id = ?
         ORDER BY data_solicitacao DESC
@@ -72,17 +76,20 @@ try {
         $projetos[] = $row;
     }
 
+    $stmt->close();
+
     /*
     =========================
     RETORNO SINCRONIZADO
     =========================
     */
-    $retorno['status'] = 'sucesso'; // Alinhado com dados.status === 'sucesso'
+    $retorno['status'] = 'sucesso';
     $retorno['mensagem'] = 'Projetos listados com sucesso';
-    $retorno['projetos'] = $projetos; // Injetado direto na raiz como 'projetos'
+    $retorno['projetos'] = $projetos;
 
 } catch (Exception $e) {
-    error_log($e->getMessage());
+    error_log("Erro em meus_projetos_get.php: " . $e->getMessage());
+    $retorno['status'] = 'erro';
     $retorno['mensagem'] = 'Erro interno no servidor ao carregar listagem.';
 }
 

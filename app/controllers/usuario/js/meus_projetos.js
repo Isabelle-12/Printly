@@ -16,15 +16,17 @@ const STATUS_CONFIG = {
     NEGADO:                 { texto: 'Negado',       classe: 'negado',    icone: 'bi-x-circle'        },
     CANCELADO:              { texto: 'Cancelado',    classe: 'bloqueado', icone: 'bi-slash-circle'    },
 };
+
 function getStatus(s) {
-    return STATUS_CONFIG[s] || { texto: 'Aguardando', classe: 'analise', icone: 'bi-clock' };
+    const statusChave = (s || '').toUpperCase().trim();
+    return STATUS_CONFIG[statusChave] || { texto: 'Aguardando', classe: 'analise', icone: 'bi-clock' };
 }
 
-/* ── BOTÕES POR STATUS (conforme especificação HU24) ── */
+/* ── BOTÕES POR STATUS (HU24) ── */
 function getBotoes(p) {
     const id  = p.id;
-    const pId = p.projeto_id;
-    const s   = p.status;
+    // Capta a propriedade correta (priorizando status_solicitacao) e padroniza em maiúsculo
+    const s   = (p.status_solicitacao || p.status || '').toUpperCase().trim(); 
 
     const Ver     = `<button class="btn-acao btn-ver"      onclick="verDetalhes(${id})"><i class="bi bi-eye"></i> Ver</button>`;
     const Chat    = `<button class="btn-acao btn-chat"     onclick="abrirChat(${id})"><i class="bi bi-chat"></i> Chat</button>`;
@@ -36,7 +38,7 @@ function getBotoes(p) {
         AGUARDANDO_CONFIRMACAO: [Chat, Ver, Editar, Excluir],
         ARQUIVO_VALIDADO:       [Chat, Ver, Editar, Excluir],
         ACEITO:                 [Chat, Ver, Editar],
-        EM_PRODUCAO:            [Ver],
+        EM_PRODUCAO:            [Ver, Chat],
         CONCLUIDO:              [Chat, Ver, Avaliar],
         NEGADO:                 [Chat, Ver, Editar, Excluir],
         CANCELADO:              [Chat, Ver, Editar, Excluir],
@@ -46,9 +48,9 @@ function getBotoes(p) {
 
 /* ── CRIAR CARD ── */
 function criarCard(p) {
-    const cfg  = getStatus(p.status);
-    const data = p.data_solicitacao
-        ? new Date(p.data_solicitacao).toLocaleDateString('pt-BR') : '—';
+    const statusReal = p.status_solicitacao || p.status;
+    const cfg  = getStatus(statusReal);
+    const data = p.data_solicitacao ? new Date(p.data_solicitacao).toLocaleDateString('pt-BR') : '—';
     const urlCapa = montarUrlCapa(p.arquivo_caminho);
 
     const imgHTML = urlCapa
@@ -74,7 +76,7 @@ function criarCard(p) {
         : '';
 
     return `
-        <div class="projeto-card" data-status="${p.status}">
+        <div class="projeto-card" data-status="${statusReal}">
             <div class="card-capa ${!urlCapa ? 'sem-capa' : ''}">
                 ${imgHTML}
                 <span class="badge-status st-${cfg.classe}">
@@ -96,17 +98,22 @@ let todosProjetos = [];
 let modalDetalhes, modalEditar;
 
 document.addEventListener('DOMContentLoaded', () => {
-    modalDetalhes = new bootstrap.Modal(document.getElementById('modalProjeto'));
-    modalEditar   = new bootstrap.Modal(document.getElementById('modalEditarProjeto'));
+    const elDetalhes = document.getElementById('modalProjeto');
+    const elEditar = document.getElementById('modalEditarProjeto');
+    
+    if (elDetalhes) modalDetalhes = new bootstrap.Modal(elDetalhes);
+    if (elEditar) modalEditar = new bootstrap.Modal(elEditar);
 
     carregarProjetos();
 
-    document.getElementById('formEditarProjeto')
-        ?.addEventListener('submit', salvarAlteracoesProjeto);
+    document.getElementById('formEditarProjeto')?.addEventListener('submit', salvarAlteracoesProjeto);
+    document.getElementById('btnAdicionarParteDinamica')?.addEventListener('click', () => adicionarParteProjeto());
 });
 
 async function carregarProjetos() {
     const container = document.getElementById('cardsProjetos');
+    if (!container) return;
+
     container.innerHTML = `
         <div class="estado-loading">
             <div class="spinner-custom"></div>
@@ -132,6 +139,10 @@ async function carregarProjetos() {
         }
 
         todosProjetos = retorno.projetos;
+        
+        // ── DEBUG LOG SOLICITADO ──
+        console.log("Projetos vindos do PHP:", todosProjetos);
+
         renderizarCards(todosProjetos);
 
     } catch (err) {
@@ -146,6 +157,8 @@ async function carregarProjetos() {
 
 function renderizarCards(lista) {
     const container = document.getElementById('cardsProjetos');
+    if (!container) return;
+
     if (lista.length === 0) {
         container.innerHTML = `
             <div class="estado-vazio">
@@ -161,18 +174,25 @@ function renderizarCards(lista) {
 function filtrarProjetos(status) {
     const filtrados = status === 'TODOS'
         ? todosProjetos
-        : todosProjetos.filter(p => p.status === status);
+        : todosProjetos.filter(p => {
+            const sReal = (p.status_solicitacao || p.status || '').toUpperCase().trim();
+            return sReal === status.toUpperCase().trim();
+          });
     renderizarCards(filtrados);
 }
 
-/* ── DETALHES (HU24 - Critério 2) ── */
+/* ── DETALHES ── */
 async function verDetalhes(pedidoId) {
-    document.getElementById('conteudoModalProjeto').innerHTML = `
+    const containerModal = document.getElementById('conteudoModalProjeto');
+    if (!containerModal) return;
+
+    containerModal.innerHTML = `
         <div class="text-center py-5">
             <div class="spinner-border text-primary"></div>
             <p class="mt-3">Carregando detalhes...</p>
         </div>`;
-    modalDetalhes.show();
+    
+    if (modalDetalhes) modalDetalhes.show();
 
     try {
         const res     = await fetch(`../app/controllers/usuario/php/obter_detalhes_projeto.php?id=${pedidoId}`);
@@ -181,7 +201,7 @@ async function verDetalhes(pedidoId) {
         if (retorno.status !== 'sucesso') throw new Error(retorno.mensagem);
 
         const p       = retorno.projeto;
-        const cfg     = getStatus(p.status_solicitacao);
+        const cfg     = getStatus(p.status_solicitacao || p.status);
         const urlCapa = montarUrlCapa(p.arquivo_caminho || p.imagem_capa);
 
         /* ── PARTES ── */
@@ -228,12 +248,13 @@ async function verDetalhes(pedidoId) {
             { chave: 'EM_PRODUCAO',            label: 'Em produção'        },
             { chave: 'CONCLUIDO',              label: 'Concluído'          },
         ];
-        const idxAtual  = etapas.findIndex(e => e.chave === p.status_solicitacao);
-        const progresso = p.status_solicitacao === 'NEGADO' || p.status_solicitacao === 'CANCELADO'
+        const currentStatus = p.status_solicitacao || p.status;
+        const idxAtual  = etapas.findIndex(e => e.chave === currentStatus);
+        const progresso = currentStatus === 'NEGADO' || currentStatus === 'CANCELADO'
             ? 0
             : Math.max(0, Math.round(((idxAtual + 1) / etapas.length) * 100));
 
-        const timelineHTML = (p.status_solicitacao === 'NEGADO' || p.status_solicitacao === 'CANCELADO')
+        const timelineHTML = (currentStatus === 'NEGADO' || currentStatus === 'CANCELADO')
             ? `<div class="alert alert-danger d-flex align-items-center gap-2">
                 <i class="bi bi-x-octagon fs-4"></i>
                 <div><strong>Pedido ${cfg.texto}</strong>${p.feedback_maker ? `<br><small>${p.feedback_maker}</small>` : ''}</div>
@@ -254,7 +275,7 @@ async function verDetalhes(pedidoId) {
                </div>`;
 
         /* ── RENDER FINAL ── */
-        document.getElementById('conteudoModalProjeto').innerHTML = `
+        containerModal.innerHTML = `
             <style>
                 .detalhe-parte{border:1px solid #e5d9f2;border-radius:10px;overflow:hidden;margin-bottom:10px}
                 .dp-header{display:flex;justify-content:space-between;align-items:center;padding:8px 14px;background:#f3e8ff}
@@ -290,18 +311,16 @@ async function verDetalhes(pedidoId) {
             </style>
 
             <div class="row g-4">
-                <!-- COLUNA ESQUERDA -->
                 <div class="col-md-5">
                     <div class="secao-detalhe">
                         <div style="height:200px;background:#f3e8ff;border-radius:12px;overflow:hidden;display:flex;align-items:center;justify-content:center;">
                             ${urlCapa
-                                ? `<img src="${urlCapa}" style="width:100%;height:100%;object-fit:cover;" onerror="this.parentElement.innerHTML='<i class=\'bi bi-box\' style=\'font-size:3rem;color:#a66dd4;opacity:.4\'></i>'">`
+                                ? `<img src="${urlCapa}" style="width:100%;height:100%;object-fit:cover;" onerror="this.parentElement.innerHTML='<i class=\\'bi bi-box\\' style=\'font-size:3rem;color:#a66dd4;opacity:.4\'></i>'">`
                                 : `<i class="bi bi-box" style="font-size:3rem;color:#a66dd4;opacity:.4"></i>`}
                         </div>
                     </div>
 
                     <div class="secao-detalhe">
-                        <h6><i class="bi bi-info-circle me-1"></i>Informações</h6>
                         <div class="info-grid">
                             <div class="info-grid-item"><span class="ig-label">Formato</span><span class="ig-valor">${p.formato || '—'}</span></div>
                             <div class="info-grid-item"><span class="ig-label">Quantidade</span><span class="ig-valor">${p.quantidade || '—'}</span></div>
@@ -316,7 +335,6 @@ async function verDetalhes(pedidoId) {
                     </a>` : ''}
                 </div>
 
-                <!-- COLUNA DIREITA -->
                 <div class="col-md-7">
                     <div class="secao-detalhe">
                         <h6><i class="bi bi-file-text me-1"></i>Descrição</h6>
@@ -341,18 +359,17 @@ async function verDetalhes(pedidoId) {
             </div>`;
 
     } catch (err) {
-        document.getElementById('conteudoModalProjeto').innerHTML =
-            `<div class="alert alert-danger">${err.message}</div>`;
+        containerModal.innerHTML = `<div class="alert alert-danger">${err.message}</div>`;
     }
 }
 
 /* ── EDITAR ── */
 function abrirEditar(pedidoId) {
-    const p = todosProjetos.find(x => x.id == pedidoId);
+    const p = todosProjetos.find(x => x.id == Number(pedidoId));
     if (!p) return;
 
-    // Bloquear edição se em produção
-    if (p.status === 'EM_PRODUCAO' || p.status === 'CONCLUIDO') {
+    const statusReal = (p.status_solicitacao || p.status || '').toUpperCase().trim();
+    if (statusReal === 'EM_PRODUCAO' || statusReal === 'CONCLUIDO') {
         alert('Este projeto está em produção e não pode ser editado.');
         return;
     }
@@ -365,9 +382,11 @@ function abrirEditar(pedidoId) {
     document.getElementById('editarMensagem').innerHTML = '';
     document.getElementById('containerPartesProjeto').innerHTML = '';
 
-    modalEditar.show();
+    // Remove classes antigas de validação ao abrir o modal para um novo projeto
+    document.getElementById('formEditarProjeto')?.classList.remove('was-validated');
 
-    // Carrega partes existentes
+    if (modalEditar) modalEditar.show();
+
     fetch(`../app/controllers/usuario/php/obter_detalhes_projeto.php?id=${pedidoId}`)
         .then(r => r.json())
         .then(d => {
@@ -381,20 +400,21 @@ function abrirEditar(pedidoId) {
 
 function adicionarParteProjeto(nome = '', cor = '', material = 'PLA', qtd = 1) {
     const container = document.getElementById('containerPartesProjeto');
-    const idx = container.children.length;
+    if (!container) return;
+    
     const div = document.createElement('div');
     div.className = 'parte-card-dinamico';
     div.innerHTML = `
         <div class="pcd-header">
-            <span>Parte ${idx + 1}</span>
-            <button type="button" onclick="this.closest('.parte-card-dinamico').remove()">
+            <span class="titulo-parte">Parte</span>
+            <button type="button" class="btn btn-sm text-danger btn-remover-parte">
                 <i class="bi bi-trash"></i>
             </button>
         </div>
         <div class="pcd-body row g-2">
             <div class="col-md-4">
                 <label class="form-label">Nome</label>
-                <input type="text" class="form-control form-control-sm" name="partes_nomes[]" value="${nome}" placeholder="Ex: Cabeça">
+                <input type="text" class="form-control form-control-sm" name="partes_nomes[]" value="${nome}" placeholder="Ex: Cabeça" required>
             </div>
             <div class="col-md-3">
                 <label class="form-label">Material</label>
@@ -406,38 +426,95 @@ function adicionarParteProjeto(nome = '', cor = '', material = 'PLA', qtd = 1) {
             </div>
             <div class="col-md-3">
                 <label class="form-label">Cor</label>
-                <input type="text" class="form-control form-control-sm" name="partes_cores[]" value="${cor}" placeholder="Ex: Preto">
+                <input type="text" class="form-control form-control-sm" name="partes_cores[]" value="${cor}" placeholder="Ex: Preto" required>
             </div>
             <div class="col-md-2">
                 <label class="form-label">Qtd</label>
                 <input type="number" class="form-control form-control-sm" name="partes_quantidades[]" value="${qtd}" min="1">
             </div>
         </div>`;
+
+    div.querySelector('.btn-remover-parte').addEventListener('click', () => {
+        div.remove();
+        reindexarPartes();
+    });
+
     container.appendChild(div);
+    reindexarPartes();
 }
 
+function reindexarPartes() {
+    const titulos = document.querySelectorAll('#containerPartesProjeto .titulo-parte');
+    titulos.forEach((span, index) => {
+        span.textContent = `Parte ${index + 1}`;
+    });
+}
+
+/* ── SALVAR ALTERAÇÕES (ATUALIZADO HU28) ── */
 async function salvarAlteracoesProjeto(e) {
     e.preventDefault();
-    const form = document.getElementById('formEditarProjeto');
-    const fd   = new FormData(form);
-    fd.set('editar_id',       document.getElementById('editar_id').value);
-    fd.set('editar_nome',     document.getElementById('editar_nome').value);
-    fd.set('editar_descricao',document.getElementById('editar_descricao').value);
+    
+    const form = this; // O próprio formulário que disparou o evento
+    const msgContainer = document.getElementById('editarMensagem');
+    if (!form || !msgContainer) return;
+
+    // Adiciona a classe visual do Bootstrap para destacar os campos corretos/incorretos
+    form.classList.add('was-validated');
+
+    // Validação nativa do HTML5 acionada pelo Bootstrap (Critério de Aceite 3)
+    if (!form.checkValidity()) {
+        msgContainer.innerHTML = `
+            <div class="alert alert-warning mt-3 d-flex align-items-center">
+                <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                <div>Por favor, preencha todos os campos obrigatórios destacados.</div>
+            </div>`;
+        return;
+    }
+
+    // Feedback visual de carregamento no botão Submit (UX)
+    const btnSalvar = form.querySelector('button[type="submit"]');
+    const textoOriginal = btnSalvar.innerHTML;
+    btnSalvar.disabled = true;
+    btnSalvar.innerHTML = `<span class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span> Salvando...`;
+
+    // FormData garante o tráfego correto de arquivos binários (arquivos 3D) e dados textuais (Critério de Aceite 1)
+    const fd = new FormData(form);
 
     try {
-        const res     = await fetch('../app/controllers/usuario/php/editar_projeto.php', { method:'POST', body:fd });
+        const res     = await fetch('../app/controllers/usuario/php/editar_projeto.php', { method: 'POST', body: fd });
         const retorno = await res.json();
+
         if (retorno.status === 'sucesso') {
-            document.getElementById('editarMensagem').innerHTML =
-                `<div class="alert alert-success mt-3">${retorno.mensagem}</div>`;
-            setTimeout(() => { modalEditar.hide(); carregarProjetos(); }, 1200);
+            msgContainer.innerHTML = `
+                <div class="alert alert-success mt-3 d-flex align-items-center">
+                    <i class="bi bi-check-circle-fill me-2"></i>
+                    <div>${retorno.mensagem}</div>
+                </div>`;
+            
+            setTimeout(() => {
+                if (modalEditar) modalEditar.hide();
+                form.classList.remove('was-validated'); // Limpa o estado visual para a próxima abertura
+                carregarProjetos(); // Recarrega a listagem de cards atualizada do servidor
+            }, 1500);
+
         } else {
-            document.getElementById('editarMensagem').innerHTML =
-                `<div class="alert alert-danger mt-3">${retorno.mensagem}</div>`;
+            // Exibe mensagem caso o PHP rejeite (Ex: Tentativa de editar projeto em produção - Critério 2)
+            msgContainer.innerHTML = `
+                <div class="alert alert-danger mt-3 d-flex align-items-center">
+                    <i class="bi bi-exclamation-octagon-fill me-2"></i>
+                    <div>${retorno.mensagem}</div>
+                </div>`;
         }
     } catch (err) {
-        document.getElementById('editarMensagem').innerHTML =
-            `<div class="alert alert-danger mt-3">Erro de conexão.</div>`;
+        msgContainer.innerHTML = `
+            <div class="alert alert-danger mt-3 d-flex align-items-center">
+                <i class="bi bi-wifi-off me-2"></i>
+                <div>Erro de conexão com o servidor. Tente novamente.</div>
+            </div>`;
+    } finally {
+        // Devolve o estado e o texto original ao botão de submit
+        btnSalvar.disabled = false;
+        btnSalvar.innerHTML = textoOriginal;
     }
 }
 
@@ -448,11 +525,11 @@ async function excluirProjeto(pedidoId) {
         const res     = await fetch('../app/controllers/usuario/php/excluir_projeto.php', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ id: pedidoId })
+            body: JSON.stringify({ id: Number(pedidoId) })
         });
         const retorno = await res.json();
         if (retorno.status !== 'sucesso') throw new Error(retorno.mensagem);
-        todosProjetos = todosProjetos.filter(p => p.id != pedidoId);
+        todosProjetos = todosProjetos.filter(p => p.id != Number(pedidoId));
         renderizarCards(todosProjetos);
     } catch (err) {
         alert('Erro ao excluir: ' + err.message);

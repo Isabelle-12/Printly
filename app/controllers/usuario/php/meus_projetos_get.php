@@ -50,7 +50,7 @@ try {
             motivo_recusa,
             maker_nome,
             total_partes,
-            arquivo_caminho AS imagem_capa
+            arquivo_caminho AS arquivo_caminho
         FROM view_pedidos_completos
         WHERE cliente_id = ?
         ORDER BY data_solicitacao DESC

@@ -32,7 +32,7 @@
             max-width: 1200px;
         }
 
-        /* =========================
+    /* =========================
         NAVBAR
         ========================= */
 
@@ -146,6 +146,16 @@
     .pcd-header button{background:none;border:1px solid #fecaca;color:#dc2626;border-radius:6px;padding:2px 8px;cursor:pointer;transition:.15s;font-size:.8rem}
     .pcd-header button:hover{background:#fee2e2}
     .pcd-body{padding:12px 14px}
+
+    /* FEEDBACK DE VALIDAÇÃO CUSTOMIZADO */
+    .was-validated .form-control:invalid, .was-validated .form-select:invalid {
+        border-color: #dc2626 !important;
+    }
+    .invalid-feedback {
+        font-size: 0.78rem;
+        color: #dc2626;
+        margin-top: 4px;
+    }
 
     @media(max-width:576px){
         .cards-container{grid-template-columns:1fr}
@@ -399,7 +409,7 @@
                 <li class="nav-item"><a class="nav-link" href="index.php?rota=usuario-painel"><i class="bi bi-grid me-1"></i>Painel</a></li>
                 <li class="nav-item"><a class="nav-link" href="index.php?rota=perfil-usuario"><i class="bi bi-person-circle me-1"></i>Perfil</a></li>
                 <li class="nav-item"><a class="nav-link" href="index.php?rota=visualizador3D"><i class="bi bi-box me-1"></i>Visualizador 3D</a></li>
-                <li class="nav-item"><a class="nav-link" href="index.php?rota=meus_projetos" class="nav-link active"><i class="bi bi-journal me-1"></i>Meus Projetos</a></li>
+                <li class="nav-item"><a class="nav-link active" href="index.php?rota=meus_projetos"><i class="bi bi-journal me-1"></i>Meus Projetos</a></li>
                 <li class="nav-item"><a class="nav-link" href="index.php?rota=listagem-maker"><i class="bi bi-people me-1"></i>Fabricantes</a></li>
                 <li class="nav-item" id="painelM" style="display:none"><a class="nav-link" href="index.php?rota=fabricante-painel"><i class="bi bi-tools me-1"></i>Painel do Fabricante</a></li>
             </ul>
@@ -432,7 +442,6 @@
 
     </div>
 
-    <!-- MODAL DETALHES -->
     <div class="modal fade" id="modalProjeto" tabindex="-1">
         <div class="modal-dialog modal-xl modal-dialog-scrollable">
             <div class="modal-content">
@@ -450,7 +459,6 @@
         </div>
     </div>
 
-    <!-- MODAL EDITAR -->
     <div class="modal fade" id="modalEditarProjeto" tabindex="-1">
         <div class="modal-dialog modal-xl modal-dialog-scrollable modal-fullscreen-sm-down">
             <div class="modal-content">
@@ -458,34 +466,43 @@
                     <h5 class="modal-title"><i class="bi bi-pencil-square me-2"></i>Editar Projeto</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
-                <form id="formEditarProjeto" enctype="multipart/form-data">
+                <form id="formEditarProjeto" enctype="multipart/form-data" class="needs-validation" novalidate>
                     <div class="modal-body">
                         <input type="hidden" id="editar_id" name="editar_id">
+                        
                         <div class="mb-3">
                             <label class="form-label fw-bold">Nome do Projeto</label>
-                            <input type="text" class="form-control" id="editar_nome" name="editar_nome" required>
+                            <input type="text" class="form-control" id="editar_nome" name="editar_nome" required placeholder="Digite o nome do projeto">
+                            <div class="invalid-feedback">O nome do projeto é um campo obrigatório.</div>
                         </div>
+                        
                         <div class="mb-3">
                             <label class="form-label fw-bold">Descrição</label>
-                            <textarea class="form-control" id="editar_descricao" name="editar_descricao" rows="3"></textarea>
+                            <textarea class="form-control" id="editar_descricao" name="editar_descricao" rows="3" placeholder="Insira detalhes sobre o projeto ou orientações adicionais"></textarea>
                         </div>
+                        
                         <div class="row">
                             <div class="col-md-6 mb-3">
                                 <label class="form-label fw-bold">Formato</label>
-                                <select class="form-select" id="editar_formato" name="formato">
+                                <select class="form-select" id="editar_formato" name="formato" required>
                                     <option value="STL">STL</option>
                                     <option value="OBJ">OBJ</option>
                                 </select>
+                                <div class="invalid-feedback">Selecione um formato de arquivo válido.</div>
                             </div>
                             <div class="col-md-6 mb-3">
                                 <label class="form-label fw-bold">Quantidade</label>
-                                <input type="number" class="form-control" id="editar_quantidade" name="quantidade" min="1">
+                                <input type="number" class="form-control" id="editar_quantidade" name="quantidade" min="1" required value="1">
+                                <div class="invalid-feedback">A quantidade deve ser de no mínimo 1 unidade.</div>
                             </div>
                         </div>
+                        
                         <div class="mb-3">
-                            <label class="form-label fw-bold">Arquivo 3D <span class="text-muted fw-normal">(opcional)</span></label>
-                            <input type="file" class="form-control" id="editar_arquivo" name="arquivo" accept=".stl,.obj">
+                            <label class="form-label fw-bold">Substituir Arquivo 3D <span class="text-muted fw-normal">(opcional)</span></label>
+                            <input type="file" class="form-control" id="editar_arquivo" name="arquivo_3d" accept=".stl,.obj">
+                            <small class="text-muted d-block mt-1">Ao alterar o arquivo ou material, uma nova estimativa de custo será recalculada pelo sistema.</small>
                         </div>
+                        
                         <hr>
                         <div class="d-flex justify-content-between align-items-center mb-3">
                             <h6 class="mb-0 fw-bold" style="color:var(--pp)">Partes Personalizadas</h6>
@@ -506,7 +523,8 @@
             </div>
         </div>
     </div>
-     <footer class="printly-footer">
+    
+    <footer class="printly-footer">
         <div class="container">
             <div class="row g-4">
                 <div class="col-lg-4 col-md-6">
@@ -535,7 +553,7 @@
                 <div class="col-lg-4 col-md-6">
                     <div class="footer-title">Sobre o Printly</div>
                     <p style="color:rgba(255,255,255,0.5); font-size:0.82rem; line-height:1.6;">
-                        Projeto acadêmico desenvolvido para a disciplina de <em>Experiência Criativa: Projetando Soluções Computacionais</em> &mdash; Engenharia de Software.
+                        Projeto acadêmico desenvolvido para a disciplina de <em>Experiência Creativa: Projetando Soluções Computacionais</em> &mdash; Engenharia de Software.
                     </p>
                     <div style="display:flex; gap:0.5rem; flex-wrap:wrap; margin-top:0.5rem;">
                         <span class="footer-badge"><i class="bi bi-code-slash"></i>PHP &amp; JavaScript</span>
@@ -551,47 +569,28 @@
         </div>
     </footer>
 
-
-
     <script>
-
         let filtroAtual = "TODOS";
 
-        document.querySelectorAll('.filtros button').forEach(btn => {
-
+        document.querySelectorAll('.filtros .btn-filtro').forEach(btn => {
             btn.addEventListener('click', function () {
+                // Remove a classe ativo do botão que estava selecionado
+                const ativoAnterior = document.querySelector('.filtros .btn-filtro.ativo');
+                if (ativoAnterior) {
+                    ativoAnterior.classList.remove('ativo');
+                }
 
-                document
-                    .querySelector('.filtros .ativo')
-                    .classList.remove('ativo');
-
-                document
-                    .querySelectorAll('.filtros button')
-                    .forEach(b => {
-
-                        b.classList.remove('btn-dark');
-                        b.classList.add('btn-outline-secondary');
-
-                    });
-
+                // Adiciona a classe ativo no botão clicado
                 this.classList.add('ativo');
-
-                this.classList.remove('btn-outline-secondary');
-
-                this.classList.add('btn-dark');
 
                 filtroAtual = this.dataset.status;
 
+                // Executa a função externa se ela existir no escopo global
                 if (typeof filtrarProjetos === 'function') {
-
                     filtrarProjetos(filtroAtual);
-
                 }
-
             });
-
         });
-
     </script>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>

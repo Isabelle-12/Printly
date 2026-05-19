@@ -458,3 +458,7 @@ ADD COLUMN quantidade INT NOT NULL DEFAULT 1 AFTER tipo_impressora;
 -- adiciona campo de leitura na tabela notificacoes para controle de notificações não lidas no sininho
 ALTER TABLE notificacoes
 ADD COLUMN lida BOOLEAN NOT NULL DEFAULT FALSE AFTER retratada;
+
+-- expande o enum da tabela de pedidos para suportar os novos estados obrigatórios 
+ALTER TABLE pedidos
+MODIFY COLUMN status ENUM('AGUARDANDO_CONFIRMACAO','ARQUIVO_VALIDADO','ACEITO','EM_PRODUCAO','CONCLUIDO','ENTREGUE','CANCELADO','NEGADO') DEFAULT 'AGUARDANDO_CONFIRMACAO';

@@ -114,16 +114,59 @@
             justify-content: flex-end;
             margin-top: 1.5rem;
         }
+
+        /* ===== SINO DE NOTIFICACOES ===== */
+        .sino-wrapper { position: relative; display: inline-flex; align-items: center; }
+        #btn-sino { background: rgba(255,255,255,0.12); color: rgba(255,255,255,0.82); border: 1px solid rgba(255,255,255,0.2); border-radius: 8px; padding: 0.35rem 0.75rem; font-size: 0.9rem; cursor: pointer; transition: background 0.18s, color 0.18s; position: relative; display: flex; align-items: center; }
+        #btn-sino:hover, #btn-sino.sino-ativo { background: rgba(255,255,255,0.22); color: #fff; }
+        #sino-badge { display: none; position: absolute; top: -6px; right: -6px; background: #e03c6e; color: #fff; font-size: 0.65rem; font-weight: 700; border-radius: 50%; width: 18px; height: 18px; align-items: center; justify-content: center; border: 2px solid var(--printly-primary, #412746); z-index: 10; }
+        #sino-dropdown { display: none; position: absolute; top: calc(100% + 10px); right: 0; width: 320px; background: #fff; border: 1px solid rgba(194,185,194,0.55); border-radius: 12px; box-shadow: 0 8px 32px rgba(65,39,70,0.15); z-index: 1050; overflow: hidden; }
+        #sino-dropdown.sino-aberto { display: block; }
+        .sino-header { padding: 0.75rem 1rem; font-family: 'Syne', sans-serif; font-weight: 700; font-size: 0.9rem; color: #412746; border-bottom: 1px solid rgba(194,185,194,0.4); background: #f0cef5; }
+        #sino-lista { list-style: none; margin: 0; padding: 0; max-height: 340px; overflow-y: auto; }
+        .sino-item { padding: 0.75rem 1rem; border-bottom: 1px solid rgba(194,185,194,0.3); cursor: default; }
+        .sino-item:last-child { border-bottom: none; }
+        .sino-nao-lida { background: #fdf4ff; }
+        .sino-item-titulo { font-weight: 600; font-size: 0.85rem; color: #412746; margin-bottom: 2px; }
+        .sino-item-msg { font-size: 0.8rem; color: #5a3a5a; margin-bottom: 3px; }
+        .sino-item-data { font-size: 0.72rem; color: #9e939e; }
+        .sino-vazio { padding: 1.25rem 1rem; text-align: center; color: #9e939e; font-size: 0.85rem; list-style: none; }
+        /* ===== SUB-NAVBAR ===== */
+        .sub-navbar { background: rgba(65,39,70,0.92); border-bottom: 1px solid rgba(255,255,255,0.08); padding: 0.25rem 0; }
+        .sub-navbar .nav-link { color: rgba(255,255,255,0.75) !important; font-size: 0.82rem; font-weight: 500; padding: 0.3rem 0.85rem !important; border-radius: 6px; transition: background 0.15s, color 0.15s; }
+        .sub-navbar .nav-link:hover, .sub-navbar .nav-link.active { background: rgba(255,255,255,0.14); color: #fff !important; }
     </style>
 </head>
 
 <body data-acesso="ADMIN">
 
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark-custom">
+        <nav class="navbar navbar-expand-lg navbar-dark">
         <div class="container">
-            <a class="navbar-brand" href="index.php?rota=home">Printly</a>
+            <a class="navbar-brand" href="index.php?rota=admin-usuarios">Printly</a>
+            <div class="collapse navbar-collapse">
+                <ul class="navbar-nav ms-auto align-items-center gap-2">
+                    <li class="nav-item">
+                        <div class="sino-wrapper">
+                            <button id="btn-sino" title="Notificações"><i class="bi bi-bell"></i><span id="sino-badge"></span></button>
+                            <div id="sino-dropdown"><div class="sino-header"><i class="bi bi-bell me-2"></i>Notificações</div><ul id="sino-lista"></ul></div>
+                        </div>
+                    </li>
+                    <li class="nav-item ms-1"><button class="btn btn-sm" type="button" id="sair"><i class="bi bi-door-open"></i></button></li>
+                </ul>
+            </div>
         </div>
     </nav>
+    <nav class="sub-navbar navbar-expand-lg">
+        <div class="container">
+            <ul class="navbar-nav flex-row flex-wrap gap-1">
+                <li class="nav-item"><a class="nav-link" href="index.php?rota=admin-notificacoes"><i class="bi bi-bell me-1"></i>Notificações</a></li>
+                <li class="nav-item"><a class="nav-link" href="index.php?rota=admin-usuarios"><i class="bi bi-people me-1"></i>Usuários</a></li>
+                <li class="nav-item"><a class="nav-link" href="index.php?rota=usuario-painel"><i class="bi bi-grid me-1"></i>Painel do Usuário</a></li>
+                <li class="nav-item"><a class="nav-link" href="index.php?rota=fabricante-painel"><i class="bi bi-tools me-1"></i>Painel do Fabricante</a></li>
+            </ul>
+        </div>
+    </nav>
+
 
     <div class="container mt-4">
         <div class="d-flex align-items-center mb-4">
@@ -197,5 +240,6 @@
     <script src="../app/controllers/usuario/js/verif.js" defer></script>
     <script src="../app/controllers/admin/js/cadastro_administrador.js" defer></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../app/controllers/usuario/js/sino_notif.js"></script>
 </body>
-</html> 
+</html>

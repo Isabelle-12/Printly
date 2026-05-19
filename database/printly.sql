@@ -454,3 +454,7 @@ ADD COLUMN tipo_impressora VARCHAR(20) NULL AFTER modelo;
 -- adiciona a quantidade de impressoras com as mesmas especificações
 ALTER TABLE impressoras
 ADD COLUMN quantidade INT NOT NULL DEFAULT 1 AFTER tipo_impressora;
+
+-- adiciona campo de leitura na tabela notificacoes para controle de notificações não lidas no sininho
+ALTER TABLE notificacoes
+ADD COLUMN lida BOOLEAN NOT NULL DEFAULT FALSE AFTER retratada;

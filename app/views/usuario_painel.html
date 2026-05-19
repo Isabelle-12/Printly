@@ -33,6 +33,11 @@
             font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
             color: var(--printly-text);
             min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        body > .container {
+            flex: 1;
         }
 
         .navbar {
@@ -191,69 +196,269 @@
                 padding: 1rem;
             }
         }
+
+        /* ===== SINO DE NOTIFICACOES ===== */
+        .sino-wrapper {
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+        }
+        #btn-sino {
+            background: rgba(255,255,255,0.12);
+            color: rgba(255,255,255,0.82);
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 8px;
+            padding: 0.35rem 0.75rem;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: background 0.18s, color 0.18s;
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+        #btn-sino:hover, #btn-sino.sino-ativo {
+            background: rgba(255,255,255,0.22);
+            color: #fff;
+        }
+        #sino-badge {
+            display: none;
+            position: absolute;
+            top: -6px;
+            right: -6px;
+            background: #e03c6e;
+            color: #fff;
+            font-size: 0.65rem;
+            font-weight: 700;
+            border-radius: 50%;
+            width: 18px;
+            height: 18px;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid var(--printly-primary, #412746);
+            z-index: 10;
+        }
+        #sino-dropdown {
+            display: none;
+            position: absolute;
+            top: calc(100% + 10px);
+            right: 0;
+            width: 320px;
+            background: #fff;
+            border: 1px solid rgba(194,185,194,0.55);
+            border-radius: 12px;
+            box-shadow: 0 8px 32px rgba(65,39,70,0.15);
+            z-index: 1050;
+            overflow: hidden;
+        }
+        #sino-dropdown.sino-aberto { display: block; }
+        .sino-header {
+            padding: 0.75rem 1rem;
+            font-family: 'Syne', sans-serif;
+            font-weight: 700;
+            font-size: 0.9rem;
+            color: #412746;
+            border-bottom: 1px solid rgba(194,185,194,0.4);
+            background: #f0cef5;
+        }
+        #sino-lista {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            max-height: 340px;
+            overflow-y: auto;
+        }
+        .sino-item {
+            padding: 0.75rem 1rem;
+            border-bottom: 1px solid rgba(194,185,194,0.3);
+            cursor: default;
+        }
+        .sino-item:last-child { border-bottom: none; }
+        .sino-nao-lida { background: #fdf4ff; }
+        .sino-item-titulo {
+            font-weight: 600;
+            font-size: 0.85rem;
+            color: #412746;
+            margin-bottom: 2px;
+        }
+        .sino-item-msg {
+            font-size: 0.8rem;
+            color: #5a3a5a;
+            margin-bottom: 3px;
+        }
+        .sino-item-data {
+            font-size: 0.72rem;
+            color: #9e939e;
+        }
+        .sino-vazio {
+            padding: 1.25rem 1rem;
+            text-align: center;
+            color: #9e939e;
+            font-size: 0.85rem;
+            list-style: none;
+        }
+
+        /* ===== SUB-NAVBAR ===== */
+        .sub-navbar {
+            background: rgba(65,39,70,0.92);
+            border-bottom: 1px solid rgba(255,255,255,0.08);
+            padding: 0.25rem 0;
+        }
+        .sub-navbar .container {
+            display: flex;
+            align-items: center;
+        }
+        #wrap-btn-maker {
+            margin-left: auto;
+            display: flex;
+            align-items: center;
+        }
+        #btn-solicitar-maker:hover {
+            background: rgba(255,255,255,0.25) !important;
+        }
+        .sub-navbar .nav-link {
+            color: rgba(255,255,255,0.75) !important;
+            font-size: 0.82rem;
+            font-weight: 500;
+            padding: 0.3rem 0.85rem !important;
+            border-radius: 6px;
+            transition: background 0.15s, color 0.15s;
+        }
+        .sub-navbar .nav-link:hover,
+        .sub-navbar .nav-link.active {
+            background: rgba(255,255,255,0.14);
+            color: #fff !important;
+        }
+
+        /* ===== FOOTER ===== */
+        .printly-footer {
+            background: linear-gradient(135deg, var(--printly-primary, #412746) 0%, #2d1a32 100%);
+            color: rgba(255,255,255,0.7);
+            padding: 3rem 0 1.5rem;
+            margin-top: 4rem;
+            font-size: 0.85rem;
+        }
+        .printly-footer .footer-brand {
+            font-family: 'Syne', sans-serif;
+            font-weight: 700;
+            font-size: 1.5rem;
+            color: #fff;
+            letter-spacing: -0.5px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 0.5rem;
+        }
+        .printly-footer .footer-brand i {
+            font-size: 1.3rem;
+            color: #e8a0f0;
+        }
+        .printly-footer .footer-tagline {
+            color: rgba(255,255,255,0.5);
+            font-size: 0.82rem;
+            margin-bottom: 1.25rem;
+        }
+        .printly-footer .footer-title {
+            color: #fff;
+            font-weight: 600;
+            font-size: 0.82rem;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            margin-bottom: 0.9rem;
+        }
+        .printly-footer .footer-links {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        .printly-footer .footer-links li {
+            margin-bottom: 0.45rem;
+        }
+        .printly-footer .footer-links a {
+            color: rgba(255,255,255,0.6);
+            text-decoration: none;
+            transition: color 0.15s;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .printly-footer .footer-links a:hover { color: #e8a0f0; }
+        .printly-footer .footer-divider {
+            border-color: rgba(255,255,255,0.1);
+            margin: 2rem 0 1.25rem;
+        }
+        .printly-footer .footer-bottom {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            color: rgba(255,255,255,0.35);
+            font-size: 0.78rem;
+        }
+        .printly-footer .footer-badge {
+            background: rgba(255,255,255,0.08);
+            border: 1px solid rgba(255,255,255,0.12);
+            border-radius: 20px;
+            padding: 0.2rem 0.75rem;
+            font-size: 0.75rem;
+            color: rgba(255,255,255,0.5);
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
     </style>
 </head>
 
 <body data-acesso="CLIENTE,ADMIN">
 
-    <nav class="navbar navbar-expand-lg navbar-dark">
+        <nav class="navbar navbar-expand-lg navbar-dark">
         <div class="container">
             <a class="navbar-brand" href="index.php?rota=usuario-painel">Printly</a>
             <div class="collapse navbar-collapse">
-                <ul class="navbar-nav ms-auto">
+                <ul class="navbar-nav ms-auto align-items-center gap-2">
                     <li class="nav-item">
-                        <a class="nav-link" href="index.php?rota=visualizador3D">
-                            <i class="bi bi-box me-1"></i>Visualizador 3D
-                        </a>
+                        <div class="sino-wrapper">
+                            <button id="btn-sino" title="Notificações">
+                                <i class="bi bi-bell"></i>
+                                <span id="sino-badge"></span>
+                            </button>
+                            <div id="sino-dropdown">
+                                <div class="sino-header"><i class="bi bi-bell me-2"></i>Notificações</div>
+                                <ul id="sino-lista"></ul>
+                            </div>
+                        </div>
                     </li>
-                    <li class="nav-item" id="notif">
-                        <a class="nav-link" href="index.php?rota=admin-notificacoes">
-                            <i class="bi bi-bell me-1"></i>Notificações
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="index.php?rota=perfil-usuario">
-                            <i class="bi bi-person-circle me-1"></i>Perfil
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link active">
-                            <i class="bi bi-grid me-1"></i>Painel do Usuário
-                        </a>
-                    </li>
-                    <li class="nav-item" id="projetos">
-                        <a class="nav-link" href="index.php?rota=meus_projetos">
-                            <i class="bi bi-journal me-1"></i>Meus Projetos
-                        </a>
-                    </li>
-                    <li class="nav-item" id="projetos">
-                        <a class="nav-link" href="index.php?rota=listagem-maker">
-                            <i class="bi bi-journal me-1"></i>Fabricantes
-                        </a>
-                    </li>
-
-                    </li>
-                    <li class="nav-item" id="painelM">
-                        <a class="nav-link" href="index.php?rota=fabricante-painel">
-                            <i class="bi bi-tools me-1"></i>Painel do Fabricante
-                        </a>
-                    </li>
-
-                    <li class="nav-item" id="usuario">
-                        <a class="nav-link" href="index.php?rota=admin-usuarios">
-                            <i class="bi bi-people me-1"></i>Usuários
-                        </a>
-                    </li>
-                       <li class="nav-item ms-2">
+                    <li class="nav-item ms-1">
                         <button class="btn btn-sm" type="button" id="sair">
                             <i class="bi bi-door-open"></i>
                         </button>
                     </li>
-
                 </ul>
             </div>
         </div>
     </nav>
+    <nav class="sub-navbar navbar-expand-lg">
+        <div class="container">
+            <ul class="navbar-nav flex-row flex-wrap gap-1" id="sub-nav-links">
+                <li class="nav-item"><a class="nav-link" href="index.php?rota=usuario-painel"><i class="bi bi-grid me-1"></i>Painel</a></li>
+                <li class="nav-item"><a class="nav-link" href="index.php?rota=perfil-usuario"><i class="bi bi-person-circle me-1"></i>Perfil</a></li>
+                <li class="nav-item"><a class="nav-link" href="index.php?rota=visualizador3D"><i class="bi bi-box me-1"></i>Visualizador 3D</a></li>
+                <li class="nav-item"><a class="nav-link" href="index.php?rota=meus_projetos"><i class="bi bi-journal me-1"></i>Meus Projetos</a></li>
+                <li class="nav-item"><a class="nav-link" href="index.php?rota=listagem-maker"><i class="bi bi-people me-1"></i>Fabricantes</a></li>
+                <li class="nav-item" id="painelM" style="display:none"><a class="nav-link" href="index.php?rota=fabricante-painel"><i class="bi bi-tools me-1"></i>Painel do Fabricante</a></li>
+            </ul>
+            <div class="ms-auto" id="wrap-btn-maker">
+                <a id="btn-solicitar-maker" href="index.php?rota=solicitar-maker"
+                   style="display:none; background:rgba(255,255,255,0.15); color:#fff; border:1px solid rgba(255,255,255,0.3); border-radius:8px; padding:0.28rem 0.9rem; font-size:0.82rem; font-weight:600; text-decoration:none; transition:background 0.15s;">
+                    <i class="bi bi-printer me-1"></i>Solicitar ser Maker
+                </a>
+                <span id="status-maker-pendente" style="display:none; color:rgba(255,255,255,0.7); font-size:0.78rem; font-style:italic;">
+                    <i class="bi bi-clock me-1"></i>Solicitação em análise
+                </span>
+            </div>
+        </div>
+    </nav>
+
 
     <div class="container mt-4">
 
@@ -287,39 +492,59 @@
             </div>
         </div>
 
-        <!-- Card Minhas Notificações -->
-        <div class="card">
-            <div class="card-header">
-                <div class="card-icon">
-                    <i class="bi bi-bell"></i>
-                </div>
-                <h5>Minhas notificações</h5>
-            </div>
-            <div class="card-body">
-                <div id="minhas-notificacoes">
-                    <p class="text-muted">Carregando...</p>
-                </div>
-            </div>
-        </div>
-
-        <!-- Card Quero ser Maker -->
-        <div class="card" id="card-virar-maker" style="display:none;">
-            <div class="card-header">
-                <div class="card-icon">
-                    <i class="bi bi-printer"></i>
-                </div>
-                <h5>Quer ser um Maker?</h5>
-            </div>
-            <div class="card-body" id="card-maker-corpo">
-            </div>
-        </div>
 
     </div>
 
+
+    <footer class="printly-footer">
+        <div class="container">
+            <div class="row g-4">
+                <div class="col-lg-4 col-md-6">
+                    <div class="footer-brand">
+                        <i class="bi bi-printer-fill"></i>Printly
+                    </div>
+                    <p class="footer-tagline">Conectando makers e clientes para transformar ideias em realidade através da impressão 3D.</p>
+                    <span class="footer-badge"><i class="bi bi-shield-check"></i>Plataforma segura</span>
+                </div>
+                <div class="col-lg-2 col-md-6 col-6">
+                    <div class="footer-title">Navegar</div>
+                    <ul class="footer-links">
+                        <li><a href="index.php?rota=usuario-painel"><i class="bi bi-grid"></i>Painel</a></li>
+                        <li><a href="index.php?rota=perfil-usuario"><i class="bi bi-person-circle"></i>Perfil</a></li>
+                        <li><a href="index.php?rota=meus_projetos"><i class="bi bi-journal"></i>Meus Projetos</a></li>
+                        <li><a href="index.php?rota=listagem-maker"><i class="bi bi-people"></i>Fabricantes</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-2 col-md-6 col-6">
+                    <div class="footer-title">Ferramentas</div>
+                    <ul class="footer-links">
+                        <li><a href="index.php?rota=visualizador3D"><i class="bi bi-box"></i>Visualizador 3D</a></li>
+                        <li><a href="index.php?rota=solicitar-maker"><i class="bi bi-printer"></i>Seja um Maker</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-4 col-md-6">
+                    <div class="footer-title">Sobre o Printly</div>
+                    <p style="color:rgba(255,255,255,0.5); font-size:0.82rem; line-height:1.6;">
+                        Projeto acadêmico desenvolvido para a disciplina de <em>Experiência Criativa: Projetando Soluções Computacionais</em> &mdash; Engenharia de Software.
+                    </p>
+                    <div style="display:flex; gap:0.5rem; flex-wrap:wrap; margin-top:0.5rem;">
+                        <span class="footer-badge"><i class="bi bi-code-slash"></i>PHP &amp; JavaScript</span>
+                        <span class="footer-badge"><i class="bi bi-database"></i>MySQL</span>
+                    </div>
+                </div>
+            </div>
+            <hr class="footer-divider">
+            <div class="footer-bottom">
+                <span>&copy; 2026 Printly &mdash; Todos os direitos reservados.</span>
+                <span>Feito com <i class="bi bi-heart-fill" style="color:#e03c6e;font-size:0.7rem;"></i> pela equipe de Engenharia de Software</span>
+            </div>
+        </div>
+    </footer>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="../app/controllers/admin/js/notificacoes.js"></script>
     <script src="../app/controllers/usuario/js/verif.js"></script>
     <script src="../app/controllers/usuario/js/status_maker.js"></script>
+    <script src="../app/controllers/usuario/js/sino_notif.js"></script>
 </body>
 
 </html>

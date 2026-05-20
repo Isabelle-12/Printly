@@ -8,33 +8,21 @@ require_once(__DIR__ . '/../../../../config/conexao.php');
 
 $retorno = ['status' => 'erro', 'mensagem' => ''];
 
-/*
-=========================
-VALIDAR E ADAPTAR SESSÃO
-=========================
-*/
 if (!isset($_SESSION['email']) || !isset($_SESSION['id'])) {
-    $retorno['mensagem'] = 'Usuário não autenticado';
-    echo json_encode($retorno, JSON_UNESCAPED_UNICODE);
+    echo json_encode(['status' => 'erro', 'mensagem' => 'Usuário não autenticado'], JSON_UNESCAPED_UNICODE);
     exit;
 }
 
-// Sincroniza dinamicamente a chave exigida pelo ecossistema Printly
-if (!isset($_SESSION['usuario_email'])) {
-    $_SESSION['usuario_email'] = $_SESSION['email'];
-}
-
 $pedidoId  = isset($_GET['id']) ? intval($_GET['id']) : 0;
-$usuarioId = (int)$_SESSION['id']; // Usa o ID nativo gerado pelo login.php
+$usuarioId = (int)$_SESSION['id'];
 
 if ($pedidoId <= 0) {
-    $retorno['mensagem'] = 'ID do projeto inválido';
-    echo json_encode($retorno, JSON_UNESCAPED_UNICODE);
+    echo json_encode(['status' => 'erro', 'mensagem' => 'ID inválido'], JSON_UNESCAPED_UNICODE);
     exit;
 }
 
 try {
-    /* ── DADOS PRINCIPAIS via view ── */
+
     $sql = "
         SELECT
             p.id,
@@ -44,97 +32,86 @@ try {
             pr.descricao,
             pr.formato,
 
-            p.status              AS status_solicitacao,
+            p.status AS status_solicitacao,
             p.quantidade,
             p.valor_total,
             p.prazo_pedido,
-            p.motivo_recusa       AS feedback_maker,
+            p.motivo_recusa AS feedback_maker,
+            p.endereco_entrega,
 
-            p.arquivo_caminho     AS imagem_capa,
-            pr.arquivo_caminho    AS arquivo_3d,
+            COALESCE(p.arquivo_caminho, pr.arquivo_caminho) AS imagem_capa,
 
+            pr.arquivo_caminho AS arquivo_3d,
             pr.volume_estimado_cm3,
             pr.peso_estimado_gramas,
 
-            m.nome                AS maker_nome,
-            m.email               AS maker_email,
-            m.cidade              AS maker_cidade,
-            m.estado              AS maker_estado
+            m.nome AS maker_nome,
+            m.email AS maker_email,
+            m.cidade AS maker_cidade,
+            m.estado AS maker_estado
 
         FROM pedidos p
+        JOIN projetos pr ON pr.id = p.projeto_id
+        JOIN usuarios c ON c.id = pr.cliente_id
+        LEFT JOIN usuarios m ON m.id = p.maker_id
 
-        JOIN projetos pr
-            ON pr.id = p.projeto_id
-
-        JOIN usuarios c
-            ON c.id = pr.cliente_id
-
-        LEFT JOIN usuarios m
-            ON m.id = p.maker_id
-
-        WHERE p.id = ?
-        AND c.id = ?
-
+        WHERE p.id = ? AND c.id = ?
         LIMIT 1
     ";
+
     $stmt = $conexao->prepare($sql);
-    if (!$stmt) {
-        throw new Exception('Erro ao preparar consulta principal.');
-    }
-    
+    if (!$stmt) throw new Exception('Erro ao preparar consulta principal.');
+
     $stmt->bind_param('ii', $pedidoId, $usuarioId);
     $stmt->execute();
     $projeto = $stmt->get_result()->fetch_assoc();
     $stmt->close();
 
-    /* fallback: busca direto em projetos (projeto sem pedido ainda) */
+    /* fallback */
     if (!$projeto) {
+
         $sql2 = "
             SELECT
                 id,
                 id AS projeto_id,
-
                 nome_projeto,
                 descricao,
                 formato,
-
-                status AS status_solicitacao,
+                'SEM_PEDIDO' AS status_solicitacao,
                 quantidade,
 
                 arquivo_caminho AS arquivo_3d,
                 NULL AS imagem_capa,
+                '' AS endereco_entrega,
 
                 volume_estimado_cm3,
                 peso_estimado_gramas
-
             FROM projetos
-            WHERE id = ?
-            AND cliente_id = ?
+            WHERE id = ? AND cliente_id = ?
             LIMIT 1
         ";
+
         $stmt2 = $conexao->prepare($sql2);
-        if (!$stmt2) {
-            throw new Exception('Erro ao preparar consulta de fallback.');
-        }
-        
+        if (!$stmt2) throw new Exception('Erro no fallback.');
+
         $stmt2->bind_param('ii', $pedidoId, $usuarioId);
         $stmt2->execute();
         $projeto = $stmt2->get_result()->fetch_assoc();
         $stmt2->close();
-        
+
         if (!$projeto) {
             throw new Exception('Projeto não encontrado ou acesso negado.');
         }
     }
 
-    /* ── PARTES DO PEDIDO ── */
+    /* PARTES */
     $stmtP = $conexao->prepare("
-        SELECT id, nome AS nome_parte, descricao, material, cor,
-               quantidade, custo_estimado
+        SELECT id, nome AS nome_parte, descricao, material, cor, quantidade, custo_estimado
         FROM partes_pedido
         WHERE pedido_id = ?
         ORDER BY id ASC
     ");
+
     if ($stmtP) {
         $stmtP->bind_param('i', $pedidoId);
         $stmtP->execute();
@@ -144,7 +121,7 @@ try {
         $projeto['partes'] = [];
     }
 
-    /* ── HISTÓRICO DE STATUS ── */
+    /* HISTÓRICO */
     $stmtH = $conexao->prepare("
         SELECT
             h.status_anterior,
@@ -158,6 +135,7 @@ try {
         WHERE h.pedido_id = ?
         ORDER BY h.data_hora ASC
     ");
+
     if ($stmtH) {
         $stmtH->bind_param('i', $pedidoId);
         $stmtH->execute();
@@ -167,13 +145,11 @@ try {
         $projeto['historico_real'] = [];
     }
 
-    // Resposta de sucesso sincronizada com o front-end
-    $retorno['status']  = 'sucesso';
+    $retorno['status'] = 'sucesso';
     $retorno['projeto'] = $projeto;
-    unset($retorno['mensagem']); // Remove a mensagem vazia em caso de sucesso
 
 } catch (Exception $e) {
-    error_log("Erro em obter_detalhes_projeto.php: " . $e->getMessage());
+    error_log("Erro obter_detalhes_projeto: " . $e->getMessage());
     $retorno['status'] = 'erro';
     $retorno['mensagem'] = $e->getMessage();
 }

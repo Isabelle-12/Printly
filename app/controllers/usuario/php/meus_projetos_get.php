@@ -37,6 +37,7 @@ try {
             p.motivo_recusa,
             p.maker_id,
             p.arquivo_caminho       AS imagem_capa,
+            p.endereco_entrega AS endereco_entrega,
 
             pr.nome_projeto,
             pr.descricao,

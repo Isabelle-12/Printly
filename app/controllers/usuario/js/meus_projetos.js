@@ -53,7 +53,7 @@ function criarCard(p) {
     const data = p.data_solicitacao ? new Date(p.data_solicitacao).toLocaleDateString('pt-BR') : '—';
 
     // CORREÇÃO 1: usa imagem_capa (campo de pedidos) e não arquivo_3d
-    const urlCapa = montarUrlCapa(p.imagem_capa);
+    const urlCapa = montarUrlCapa(p.imagem_capa || p.arquivo_caminho);
 
     const imgHTML = urlCapa
         ? `<img src="${urlCapa}" alt="${p.nome_projeto}" onerror="this.parentElement.classList.add('sem-capa');this.remove();">`
@@ -200,6 +200,7 @@ async function verDetalhes(pedidoId) {
         if (retorno.status !== 'sucesso') throw new Error(retorno.mensagem);
 
         const p       = retorno.projeto;
+        
         const cfg     = getStatus(p.status_solicitacao || p.status);
         const urlCapa = montarUrlCapa(p.imagem_capa);
 
@@ -322,8 +323,15 @@ async function verDetalhes(pedidoId) {
                             <div class="info-grid-item"><span class="ig-label">Quantidade</span><span class="ig-valor">${p.quantidade || '—'}</span></div>
                             ${p.volume_estimado_cm3 ? `<div class="info-grid-item"><span class="ig-label">Volume</span><span class="ig-valor">${parseFloat(p.volume_estimado_cm3).toFixed(1)} cm³</span></div>` : ''}
                             ${p.peso_estimado_gramas ? `<div class="info-grid-item"><span class="ig-label">Peso est.</span><span class="ig-valor">${parseFloat(p.peso_estimado_gramas).toFixed(1)} g</span></div>` : ''}
+                            ${p.endereco_entrega ? `
+                                <div class="info-grid-item">
+                                    <span class="ig-label">Endereço</span>
+                                    <span class="ig-valor">${p.endereco_entrega}</span>
+                                </div>
+                            ` : ''}
                         </div>
                     </div>
+                   
                     ${p.arquivo_3d ? `
                     <a href="${montarUrlCapa(p.arquivo_3d)}"
                     download
@@ -367,6 +375,7 @@ async function abrirEditar(pedidoId) {
         alert('Este projeto está em produção e não pode ser editado.');
         return;
     }
+    
 
     // Preenche campos básicos
     document.getElementById('editar_id').value         = p.id;
@@ -376,7 +385,17 @@ async function abrirEditar(pedidoId) {
     document.getElementById('editar_quantidade').value = p.quantidade || 1;
     document.getElementById('editarMensagem').innerHTML = '';
     document.getElementById('containerPartesProjeto').innerHTML = '';
+    document.getElementById('editar_endereco').value = p.endereco_entrega || '';
     document.getElementById('formEditarProjeto')?.classList.remove('was-validated');
+    const capa = montarUrlCapa(p.imagem_capa || p.arquivo_caminho);
+
+    const preview = document.getElementById('previewCapaProjeto');
+
+    if (preview) {
+        preview.innerHTML = capa
+            ? `<img src="${capa}" class="img-fluid rounded" style="max-height:200px;object-fit:cover;">`
+            : `<div class="text-muted">Sem imagem</div>`;
+    }
 
     // CORREÇÃO 2: busca materiais do fabricante antes de abrir o modal
     materiaisMakerAtual = [];

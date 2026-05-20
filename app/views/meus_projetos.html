@@ -480,6 +480,10 @@
                             <label class="form-label fw-bold">Descrição</label>
                             <textarea class="form-control" id="editar_descricao" name="editar_descricao" rows="3" placeholder="Insira detalhes sobre o projeto ou orientações adicionais"></textarea>
                         </div>
+                        <div class="col-12">
+                            <label>Endereço de entrega</label>
+                            <input type="text" class="form-control" id="editar_endereco" name="endereco_entrega">
+                        </div>
                         
                         <div class="row">
                             <div class="col-md-6 mb-3">
@@ -495,6 +499,27 @@
                                 <input type="number" class="form-control" id="editar_quantidade" name="quantidade" min="1" required value="1">
                                 <div class="invalid-feedback">A quantidade deve ser de no mínimo 1 unidade.</div>
                             </div>
+                        </div>
+                        <div class="mb-2">
+                            <label class="form-label fw-bold">Capa atual</label>
+                            <div id="previewCapaProjeto" style="height:160px;background:#eee;border-radius:10px;overflow:hidden;display:flex;align-items:center;justify-content:center;">
+                                <span class="text-muted">Sem imagem</span>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">
+                                Substituir Capa do Projeto (opcional)
+                            </label>
+
+                            <input type="file"
+                                class="form-control"
+                                id="editar_capa"
+                                name="imagem_capa"
+                                accept="image/png, image/jpeg, image/jpg">
+
+                            <small class="text-muted d-block mt-1">
+                                Envie uma nova imagem para substituir a capa do projeto.
+                            </small>
                         </div>
                         
                         <div class="mb-3">

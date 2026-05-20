@@ -45,7 +45,7 @@ function preencherMaker(data) {
     const foto = document.getElementById('makerFoto');
 
     foto.src = maker.foto_perfil
-        ? `/Printly/${maker.foto_perfil}`
+        ? `/Printly/${maker.foto_empresa}`
         : `https://ui-avatars.com/api/?name=${encodeURIComponent(maker.nome || 'Maker')}&background=6b3fa0&color=fff&size=128`;
        
 

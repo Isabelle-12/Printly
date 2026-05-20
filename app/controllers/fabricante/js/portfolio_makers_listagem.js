@@ -92,7 +92,7 @@ function criarCardHTML(maker) {
         ? maker.materiais.map(m => `<span class="badge-material">${m}</span>`).join('')
         : '<span class="sem-material">Nenhum material cadastrado</span>';
 
-    const urlPerfil = montarUrlPerfil(maker.foto_perfil);
+    const urlPerfil = montarUrlPerfil(maker.foto_empresa);
     const fotoHTML  = urlPerfil
         ? `<img src="${urlPerfil}" alt="${maker.nome}" class="maker-avatar"
                onerror="this.replaceWith((() => { const d = document.createElement('div'); d.className='maker-avatar avatar-inicial'; d.textContent='${inicial}'; return d; })()">`
@@ -176,7 +176,7 @@ function renderizarModalPortfolio(data) {
     const impressoras = data.impressoras || [];
 
     const inicial    = (maker.nome_empresa || maker.nome)?.charAt(0) || 'M';
-    const urlPerfil  = montarUrlPerfil(maker.foto_perfil);
+    const urlPerfil  = montarUrlPerfil(maker.foto_empresa);
     const avatarHTML = urlPerfil
         ? `<img src="${urlPerfil}" class="maker-avatar" style="width:72px;height:72px;"
                onerror="this.replaceWith((() => { const d=document.createElement('div'); d.className='maker-avatar avatar-inicial'; d.style.cssText='width:72px;height:72px;font-size:1.6rem;'; d.textContent='${inicial}'; return d; })()">`

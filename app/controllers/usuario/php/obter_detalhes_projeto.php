@@ -37,25 +37,44 @@ try {
     /* ── DADOS PRINCIPAIS via view ── */
     $sql = "
         SELECT
-            id,
-            projeto_id,
-            nome_projeto,
-            descricao,
-            formato,
-            status          AS status_solicitacao,
-            quantidade,
-            valor_total,
-            prazo_pedido,
-            motivo_recusa   AS feedback_maker,
-            arquivo_caminho,
-            volume_estimado_cm3,
-            peso_estimado_gramas,
-            maker_nome,
-            maker_email,
-            maker_cidade,
-            maker_estado
-        FROM view_pedidos_completos
-        WHERE id = ? AND cliente_id = ?
+            p.id,
+            p.projeto_id,
+
+            pr.nome_projeto,
+            pr.descricao,
+            pr.formato,
+
+            p.status              AS status_solicitacao,
+            p.quantidade,
+            p.valor_total,
+            p.prazo_pedido,
+            p.motivo_recusa       AS feedback_maker,
+
+            p.arquivo_caminho     AS imagem_capa,
+            pr.arquivo_caminho    AS arquivo_3d,
+
+            pr.volume_estimado_cm3,
+            pr.peso_estimado_gramas,
+
+            m.nome                AS maker_nome,
+            m.email               AS maker_email,
+            m.cidade              AS maker_cidade,
+            m.estado              AS maker_estado
+
+        FROM pedidos p
+
+        JOIN projetos pr
+            ON pr.id = p.projeto_id
+
+        JOIN usuarios c
+            ON c.id = pr.cliente_id
+
+        LEFT JOIN usuarios m
+            ON m.id = p.maker_id
+
+        WHERE p.id = ?
+        AND c.id = ?
+
         LIMIT 1
     ";
     $stmt = $conexao->prepare($sql);
@@ -72,11 +91,25 @@ try {
     if (!$projeto) {
         $sql2 = "
             SELECT
-                id, id AS projeto_id,
-                nome_projeto, descricao, formato, status AS status_solicitacao,
-                quantidade, arquivo_caminho, volume_estimado_cm3, peso_estimado_gramas
+                id,
+                id AS projeto_id,
+
+                nome_projeto,
+                descricao,
+                formato,
+
+                status AS status_solicitacao,
+                quantidade,
+
+                arquivo_caminho AS arquivo_3d,
+                NULL AS imagem_capa,
+
+                volume_estimado_cm3,
+                peso_estimado_gramas
+
             FROM projetos
-            WHERE id = ? AND cliente_id = ?
+            WHERE id = ?
+            AND cliente_id = ?
             LIMIT 1
         ";
         $stmt2 = $conexao->prepare($sql2);

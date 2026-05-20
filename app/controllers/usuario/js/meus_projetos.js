@@ -1,3 +1,4 @@
+
 const BASE_URL = '/Printly/';
 
 function montarUrlCapa(caminho) {
@@ -8,13 +9,13 @@ function montarUrlCapa(caminho) {
 
 /* ── STATUS CONFIG ── */
 const STATUS_CONFIG = {
-    AGUARDANDO_CONFIRMACAO: { texto: 'Em análise',   classe: 'analise',   icone: 'bi-hourglass-split' },
-    ARQUIVO_VALIDADO:       { texto: 'Em análise',   classe: 'analise',   icone: 'bi-hourglass-split' },
-    ACEITO:                 { texto: 'Aceito',       classe: 'aceito',    icone: 'bi-check-circle'    },
-    EM_PRODUCAO:            { texto: 'Em produção',  classe: 'producao',  icone: 'bi-gear'            },
-    CONCLUIDO:              { texto: 'Concluído',    classe: 'concluido', icone: 'bi-trophy'          },
-    NEGADO:                 { texto: 'Negado',       classe: 'negado',    icone: 'bi-x-circle'        },
-    CANCELADO:              { texto: 'Cancelado',    classe: 'bloqueado', icone: 'bi-slash-circle'    },
+    AGUARDANDO_CONFIRMACAO: { texto: 'Em análise',       classe: 'analise',   icone: 'bi-hourglass-split' },
+    ARQUIVO_VALIDADO:       { texto: 'Arquivo validado', classe: 'analise',   icone: 'bi-file-check'      },
+    ACEITO:                 { texto: 'Aceito',           classe: 'aceito',    icone: 'bi-check-circle'    },
+    EM_PRODUCAO:            { texto: 'Em produção',      classe: 'producao',  icone: 'bi-gear'            },
+    CONCLUIDO:              { texto: 'Concluído',        classe: 'concluido', icone: 'bi-trophy'          },
+    NEGADO:                 { texto: 'Negado',           classe: 'negado',    icone: 'bi-x-circle'        },
+    CANCELADO:              { texto: 'Cancelado',        classe: 'bloqueado', icone: 'bi-slash-circle'    },
 };
 
 function getStatus(s) {
@@ -22,11 +23,10 @@ function getStatus(s) {
     return STATUS_CONFIG[statusChave] || { texto: 'Aguardando', classe: 'analise', icone: 'bi-clock' };
 }
 
-/* ── BOTÕES POR STATUS (HU24) ── */
+/* ── BOTÕES POR STATUS ── */
 function getBotoes(p) {
-    const id  = p.id;
-    // Capta a propriedade correta (priorizando status_solicitacao) e padroniza em maiúsculo
-    const s   = (p.status_solicitacao || p.status || '').toUpperCase().trim(); 
+    const id = p.id;
+    const s  = (p.status_solicitacao || p.status || '').toUpperCase().trim();
 
     const Ver     = `<button class="btn-acao btn-ver"      onclick="verDetalhes(${id})"><i class="bi bi-eye"></i> Ver</button>`;
     const Chat    = `<button class="btn-acao btn-chat"     onclick="abrirChat(${id})"><i class="bi bi-chat"></i> Chat</button>`;
@@ -51,7 +51,9 @@ function criarCard(p) {
     const statusReal = p.status_solicitacao || p.status;
     const cfg  = getStatus(statusReal);
     const data = p.data_solicitacao ? new Date(p.data_solicitacao).toLocaleDateString('pt-BR') : '—';
-    const urlCapa = montarUrlCapa(p.arquivo_caminho);
+
+    // CORREÇÃO 1: usa imagem_capa (campo de pedidos) e não arquivo_3d
+    const urlCapa = montarUrlCapa(p.imagem_capa);
 
     const imgHTML = urlCapa
         ? `<img src="${urlCapa}" alt="${p.nome_projeto}" onerror="this.parentElement.classList.add('sem-capa');this.remove();">`
@@ -59,8 +61,7 @@ function criarCard(p) {
 
     let extras = '';
     if (p.prazo_pedido) {
-        const pr = new Date(p.prazo_pedido).toLocaleDateString('pt-BR');
-        extras += `<div class="info-item"><i class="bi bi-calendar-check"></i> Prazo: <strong>${pr}</strong></div>`;
+        extras += `<div class="info-item"><i class="bi bi-calendar-check"></i> Prazo: <strong>${new Date(p.prazo_pedido).toLocaleDateString('pt-BR')}</strong></div>`;
     }
     if (p.valor_total && parseFloat(p.valor_total) > 0) {
         const vl = parseFloat(p.valor_total).toLocaleString('pt-BR', { minimumFractionDigits: 2 });
@@ -93,23 +94,25 @@ function criarCard(p) {
         </div>`;
 }
 
-/* ── CARREGAR PROJETOS ── */
+/* ── ESTADO GLOBAL ── */
 let todosProjetos = [];
 let modalDetalhes, modalEditar;
+let materiaisMakerAtual = []; // CORREÇÃO 2: guarda materiais do maker do pedido atual
 
 document.addEventListener('DOMContentLoaded', () => {
     const elDetalhes = document.getElementById('modalProjeto');
-    const elEditar = document.getElementById('modalEditarProjeto');
-    
+    const elEditar   = document.getElementById('modalEditarProjeto');
+
     if (elDetalhes) modalDetalhes = new bootstrap.Modal(elDetalhes);
-    if (elEditar) modalEditar = new bootstrap.Modal(elEditar);
+    if (elEditar)   modalEditar   = new bootstrap.Modal(elEditar);
 
     carregarProjetos();
 
-    document.getElementById('formEditarProjeto')?.addEventListener('submit', salvarAlteracoesProjeto);
-    document.getElementById('btnAdicionarParteDinamica')?.addEventListener('click', () => adicionarParteProjeto());
+    document.getElementById('formEditarProjeto')
+        ?.addEventListener('submit', salvarAlteracoesProjeto);
 });
 
+/* ── CARREGAR PROJETOS ── */
 async function carregarProjetos() {
     const container = document.getElementById('cardsProjetos');
     if (!container) return;
@@ -139,10 +142,6 @@ async function carregarProjetos() {
         }
 
         todosProjetos = retorno.projetos;
-        
-        // ── DEBUG LOG SOLICITADO ──
-        console.log("Projetos vindos do PHP:", todosProjetos);
-
         renderizarCards(todosProjetos);
 
     } catch (err) {
@@ -181,7 +180,7 @@ function filtrarProjetos(status) {
     renderizarCards(filtrados);
 }
 
-/* ── DETALHES ── */
+/* ── VER DETALHES ── */
 async function verDetalhes(pedidoId) {
     const containerModal = document.getElementById('conteudoModalProjeto');
     if (!containerModal) return;
@@ -191,7 +190,7 @@ async function verDetalhes(pedidoId) {
             <div class="spinner-border text-primary"></div>
             <p class="mt-3">Carregando detalhes...</p>
         </div>`;
-    
+
     if (modalDetalhes) modalDetalhes.show();
 
     try {
@@ -202,9 +201,9 @@ async function verDetalhes(pedidoId) {
 
         const p       = retorno.projeto;
         const cfg     = getStatus(p.status_solicitacao || p.status);
-        const urlCapa = montarUrlCapa(p.arquivo_caminho || p.imagem_capa);
+        const urlCapa = montarUrlCapa(p.imagem_capa);
 
-        /* ── PARTES ── */
+        /* PARTES */
         const partesHTML = (p.partes && p.partes.length > 0)
             ? p.partes.map(pt => `
                 <div class="detalhe-parte">
@@ -216,13 +215,13 @@ async function verDetalhes(pedidoId) {
                         ${pt.descricao ? `<p>${pt.descricao}</p>` : ''}
                         <div class="dp-tags">
                             <span><i class="bi bi-palette"></i> ${pt.cor}</span>
-                            <span><i class="bi bi-stack"></i> Qtd: ${pt.quantidade || pt.infill || 1}</span>
+                            <span><i class="bi bi-stack"></i> Qtd: ${pt.quantidade || 1}</span>
                         </div>
                     </div>
                 </div>`).join('')
             : '<p class="text-muted small">Nenhuma parte personalizada cadastrada.</p>';
 
-        /* ── HISTÓRICO REAL ── */
+        /* HISTÓRICO */
         const historicoHTML = (p.historico_real && p.historico_real.length > 0)
             ? `<div class="timeline-real">
                 ${p.historico_real.map((h, i) => {
@@ -241,16 +240,16 @@ async function verDetalhes(pedidoId) {
                </div>`
             : '<p class="text-muted small">Nenhum histórico registrado ainda.</p>';
 
-        /* ── TIMELINE VISUAL DE ETAPAS ── */
+        /* TIMELINE */
         const etapas = [
-            { chave: 'AGUARDANDO_CONFIRMACAO', label: 'Pedido enviado'     },
-            { chave: 'ACEITO',                 label: 'Pedido aceito'      },
-            { chave: 'EM_PRODUCAO',            label: 'Em produção'        },
-            { chave: 'CONCLUIDO',              label: 'Concluído'          },
+            { chave: 'AGUARDANDO_CONFIRMACAO', label: 'Pedido enviado' },
+            { chave: 'ACEITO',                 label: 'Pedido aceito'  },
+            { chave: 'EM_PRODUCAO',            label: 'Em produção'    },
+            { chave: 'CONCLUIDO',              label: 'Concluído'      },
         ];
         const currentStatus = p.status_solicitacao || p.status;
         const idxAtual  = etapas.findIndex(e => e.chave === currentStatus);
-        const progresso = currentStatus === 'NEGADO' || currentStatus === 'CANCELADO'
+        const progresso = (currentStatus === 'NEGADO' || currentStatus === 'CANCELADO')
             ? 0
             : Math.max(0, Math.round(((idxAtual + 1) / etapas.length) * 100));
 
@@ -274,7 +273,6 @@ async function verDetalhes(pedidoId) {
                        </div>`).join('')}
                </div>`;
 
-        /* ── RENDER FINAL ── */
         containerModal.innerHTML = `
             <style>
                 .detalhe-parte{border:1px solid #e5d9f2;border-radius:10px;overflow:hidden;margin-bottom:10px}
@@ -309,17 +307,15 @@ async function verDetalhes(pedidoId) {
                 .ig-valor{font-size:.88rem;font-weight:600;color:#412746}
                 @media(max-width:576px){.info-grid{grid-template-columns:1fr}.etapas-visuais{flex-wrap:wrap}}
             </style>
-
             <div class="row g-4">
                 <div class="col-md-5">
                     <div class="secao-detalhe">
                         <div style="height:200px;background:#f3e8ff;border-radius:12px;overflow:hidden;display:flex;align-items:center;justify-content:center;">
                             ${urlCapa
-                                ? `<img src="${urlCapa}" style="width:100%;height:100%;object-fit:cover;" onerror="this.parentElement.innerHTML='<i class=\\'bi bi-box\\' style=\'font-size:3rem;color:#a66dd4;opacity:.4\'></i>'">`
+                                ? `<img src="${urlCapa}" style="width:100%;height:100%;object-fit:cover;">`
                                 : `<i class="bi bi-box" style="font-size:3rem;color:#a66dd4;opacity:.4"></i>`}
                         </div>
                     </div>
-
                     <div class="secao-detalhe">
                         <div class="info-grid">
                             <div class="info-grid-item"><span class="ig-label">Formato</span><span class="ig-valor">${p.formato || '—'}</span></div>
@@ -328,29 +324,27 @@ async function verDetalhes(pedidoId) {
                             ${p.peso_estimado_gramas ? `<div class="info-grid-item"><span class="ig-label">Peso est.</span><span class="ig-valor">${parseFloat(p.peso_estimado_gramas).toFixed(1)} g</span></div>` : ''}
                         </div>
                     </div>
-
-                    ${p.arquivo_caminho ? `
-                    <a href="${BASE_URL}${p.arquivo_caminho}" download class="btn btn-outline-secondary btn-sm w-100">
-                        <i class="bi bi-download me-1"></i>Baixar Arquivo 3D
+                    ${p.arquivo_3d ? `
+                    <a href="${montarUrlCapa(p.arquivo_3d)}"
+                    download
+                    class="btn btn-outline-secondary btn-sm w-100">
+                        <i class="bi bi-download me-1"></i>
+                        Baixar Arquivo 3D
                     </a>` : ''}
                 </div>
-
                 <div class="col-md-7">
                     <div class="secao-detalhe">
                         <h6><i class="bi bi-file-text me-1"></i>Descrição</h6>
                         <p style="font-size:.88rem;color:#6b7280;line-height:1.6">${p.descricao || 'Sem descrição.'}</p>
                     </div>
-
                     <div class="secao-detalhe">
                         <h6><i class="bi bi-activity me-1"></i>Acompanhamento</h6>
                         ${timelineHTML}
                     </div>
-
                     <div class="secao-detalhe">
                         <h6><i class="bi bi-clock-history me-1"></i>Histórico de Atualizações</h6>
                         ${historicoHTML}
                     </div>
-
                     <div class="secao-detalhe">
                         <h6><i class="bi bi-layers me-1"></i>Partes Personalizadas</h6>
                         ${partesHTML}
@@ -363,8 +357,8 @@ async function verDetalhes(pedidoId) {
     }
 }
 
-/* ── EDITAR ── */
-function abrirEditar(pedidoId) {
+/* ── ABRIR EDITAR ── */
+async function abrirEditar(pedidoId) {
     const p = todosProjetos.find(x => x.id == Number(pedidoId));
     if (!p) return;
 
@@ -374,34 +368,77 @@ function abrirEditar(pedidoId) {
         return;
     }
 
-    document.getElementById('editar_id').value        = p.id;
-    document.getElementById('editar_nome').value      = p.nome_projeto;
-    document.getElementById('editar_descricao').value = p.descricao || '';
-    document.getElementById('editar_formato').value   = p.formato || 'STL';
+    // Preenche campos básicos
+    document.getElementById('editar_id').value         = p.id;
+    document.getElementById('editar_nome').value       = p.nome_projeto;
+    document.getElementById('editar_descricao').value  = p.descricao || '';
+    document.getElementById('editar_formato').value    = p.formato || 'STL';
     document.getElementById('editar_quantidade').value = p.quantidade || 1;
     document.getElementById('editarMensagem').innerHTML = '';
     document.getElementById('containerPartesProjeto').innerHTML = '';
-
-    // Remove classes antigas de validação ao abrir o modal para um novo projeto
     document.getElementById('formEditarProjeto')?.classList.remove('was-validated');
+
+    // CORREÇÃO 2: busca materiais do fabricante antes de abrir o modal
+    materiaisMakerAtual = [];
+    if (p.maker_id) {
+        try {
+            const resMat = await fetch(
+                `../app/controllers/fabricante/php/detalhes_portfolio_get.php?id=${p.maker_id}`
+            );
+            const dataMat = await resMat.json();
+            if (dataMat.sucesso && dataMat.materiais) {
+                materiaisMakerAtual = dataMat.materiais; // [{tipo_material, preco_por_grama}]
+            }
+        } catch (err) {
+            console.warn('Não foi possível carregar materiais do maker:', err.message);
+        }
+    }
 
     if (modalEditar) modalEditar.show();
 
-    fetch(`../app/controllers/usuario/php/obter_detalhes_projeto.php?id=${pedidoId}`)
-        .then(r => r.json())
-        .then(d => {
-            if (d.projeto?.partes) {
-                d.projeto.partes.forEach(pt => adicionarParteProjeto(
-                    pt.nome_parte || pt.nome, pt.cor, pt.material, pt.quantidade || pt.infill || 1
-                ));
-            }
-        });
+    // Carrega partes existentes com os materiais corretos
+    try {
+        const det = await fetch(`../app/controllers/usuario/php/obter_detalhes_projeto.php?id=${pedidoId}`);
+        const d   = await det.json();
+        if (d.projeto?.partes) {
+            d.projeto.partes.forEach(pt =>
+                adicionarParteProjeto(pt.nome_parte || pt.nome, pt.cor, pt.material, pt.quantidade || 1)
+            );
+        }
+    } catch (err) {
+        console.warn('Erro ao carregar partes:', err.message);
+    }
 }
 
-function adicionarParteProjeto(nome = '', cor = '', material = 'PLA', qtd = 1) {
+/* ── ADICIONAR PARTE — usa materiais do maker ── */
+function adicionarParteProjeto(nome = '', cor = '', materialSelecionado = '', qtd = 1) {
     const container = document.getElementById('containerPartesProjeto');
     if (!container) return;
-    
+
+    // Monta as options do select com os materiais do maker
+    // Se não tiver materiais carregados, mostra campo de texto livre
+    let selectMaterialHTML;
+    if (materiaisMakerAtual.length > 0) {
+        const options = materiaisMakerAtual.map(m => {
+            const sel = m.tipo_material === materialSelecionado ? 'selected' : '';
+            const preco = m.preco_por_grama
+                ? ` — R$ ${parseFloat(m.preco_por_grama).toFixed(2)}/g`
+                : '';
+            return `<option value="${m.tipo_material}" ${sel}>${m.tipo_material}${preco}</option>`;
+        }).join('');
+        selectMaterialHTML = `
+            <select class="form-select form-select-sm" name="partes_materiais[]" required>
+                <option value="">Selecione</option>
+                ${options}
+            </select>`;
+    } else {
+        // Fallback se não conseguiu buscar os materiais
+        selectMaterialHTML = `
+            <input type="text" class="form-control form-control-sm"
+                   name="partes_materiais[]" value="${materialSelecionado}"
+                   placeholder="Ex: PLA" required>`;
+    }
+
     const div = document.createElement('div');
     div.className = 'parte-card-dinamico';
     div.innerHTML = `
@@ -413,24 +450,23 @@ function adicionarParteProjeto(nome = '', cor = '', material = 'PLA', qtd = 1) {
         </div>
         <div class="pcd-body row g-2">
             <div class="col-md-4">
-                <label class="form-label">Nome</label>
-                <input type="text" class="form-control form-control-sm" name="partes_nomes[]" value="${nome}" placeholder="Ex: Cabeça" required>
+                <label class="form-label">Nome <span style="color:#dc2626">*</span></label>
+                <input type="text" class="form-control form-control-sm" name="partes_nomes[]"
+                       value="${nome}" placeholder="Ex: Cabeça" required>
             </div>
             <div class="col-md-3">
-                <label class="form-label">Material</label>
-                <select class="form-select form-select-sm" name="partes_materiais[]">
-                    ${['PLA','ABS','PETG','Nylon','Flexível'].map(m =>
-                        `<option value="${m}" ${m===material?'selected':''}>${m}</option>`
-                    ).join('')}
-                </select>
+                <label class="form-label">Material <span style="color:#dc2626">*</span></label>
+                ${selectMaterialHTML}
             </div>
             <div class="col-md-3">
-                <label class="form-label">Cor</label>
-                <input type="text" class="form-control form-control-sm" name="partes_cores[]" value="${cor}" placeholder="Ex: Preto" required>
+                <label class="form-label">Cor <span style="color:#dc2626">*</span></label>
+                <input type="text" class="form-control form-control-sm" name="partes_cores[]"
+                       value="${cor}" placeholder="Ex: Preto" required>
             </div>
             <div class="col-md-2">
                 <label class="form-label">Qtd</label>
-                <input type="number" class="form-control form-control-sm" name="partes_quantidades[]" value="${qtd}" min="1">
+                <input type="number" class="form-control form-control-sm" name="partes_quantidades[]"
+                       value="${qtd}" min="1">
             </div>
         </div>`;
 
@@ -444,40 +480,34 @@ function adicionarParteProjeto(nome = '', cor = '', material = 'PLA', qtd = 1) {
 }
 
 function reindexarPartes() {
-    const titulos = document.querySelectorAll('#containerPartesProjeto .titulo-parte');
-    titulos.forEach((span, index) => {
-        span.textContent = `Parte ${index + 1}`;
+    document.querySelectorAll('#containerPartesProjeto .titulo-parte').forEach((span, i) => {
+        span.textContent = `Parte ${i + 1}`;
     });
 }
 
-/* ── SALVAR ALTERAÇÕES (ATUALIZADO HU28) ── */
+/* ── SALVAR ALTERAÇÕES ── */
 async function salvarAlteracoesProjeto(e) {
     e.preventDefault();
-    
-    const form = this; // O próprio formulário que disparou o evento
+
+    const form = document.getElementById('formEditarProjeto');
     const msgContainer = document.getElementById('editarMensagem');
     if (!form || !msgContainer) return;
 
-    // Adiciona a classe visual do Bootstrap para destacar os campos corretos/incorretos
     form.classList.add('was-validated');
-
-    // Validação nativa do HTML5 acionada pelo Bootstrap (Critério de Aceite 3)
     if (!form.checkValidity()) {
         msgContainer.innerHTML = `
             <div class="alert alert-warning mt-3 d-flex align-items-center">
                 <i class="bi bi-exclamation-triangle-fill me-2"></i>
-                <div>Por favor, preencha todos os campos obrigatórios destacados.</div>
+                <div>Preencha todos os campos obrigatórios destacados.</div>
             </div>`;
         return;
     }
 
-    // Feedback visual de carregamento no botão Submit (UX)
-    const btnSalvar = form.querySelector('button[type="submit"]');
-    const textoOriginal = btnSalvar.innerHTML;
+    const btnSalvar   = form.querySelector('button[type="submit"]');
+    const textoOrig   = btnSalvar.innerHTML;
     btnSalvar.disabled = true;
-    btnSalvar.innerHTML = `<span class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span> Salvando...`;
+    btnSalvar.innerHTML = `<span class="spinner-border spinner-border-sm me-1"></span> Salvando...`;
 
-    // FormData garante o tráfego correto de arquivos binários (arquivos 3D) e dados textuais (Critério de Aceite 1)
     const fd = new FormData(form);
 
     try {
@@ -490,15 +520,12 @@ async function salvarAlteracoesProjeto(e) {
                     <i class="bi bi-check-circle-fill me-2"></i>
                     <div>${retorno.mensagem}</div>
                 </div>`;
-            
             setTimeout(() => {
                 if (modalEditar) modalEditar.hide();
-                form.classList.remove('was-validated'); // Limpa o estado visual para a próxima abertura
-                carregarProjetos(); // Recarrega a listagem de cards atualizada do servidor
+                form.classList.remove('was-validated');
+                carregarProjetos();
             }, 1500);
-
         } else {
-            // Exibe mensagem caso o PHP rejeite (Ex: Tentativa de editar projeto em produção - Critério 2)
             msgContainer.innerHTML = `
                 <div class="alert alert-danger mt-3 d-flex align-items-center">
                     <i class="bi bi-exclamation-octagon-fill me-2"></i>
@@ -509,12 +536,11 @@ async function salvarAlteracoesProjeto(e) {
         msgContainer.innerHTML = `
             <div class="alert alert-danger mt-3 d-flex align-items-center">
                 <i class="bi bi-wifi-off me-2"></i>
-                <div>Erro de conexão com o servidor. Tente novamente.</div>
+                <div>Erro de conexão com o servidor.</div>
             </div>`;
     } finally {
-        // Devolve o estado e o texto original ao botão de submit
-        btnSalvar.disabled = false;
-        btnSalvar.innerHTML = textoOriginal;
+        btnSalvar.disabled  = false;
+        btnSalvar.innerHTML = textoOrig;
     }
 }
 
@@ -536,6 +562,5 @@ async function excluirProjeto(pedidoId) {
     }
 }
 
-/* ── AÇÕES ── */
-function abrirChat(pedidoId)    { window.location.href = `index.php?rota=chat&pedido_id=${pedidoId}`; }
-function abrirFeedback(pedidoId){ window.location.href = `index.php?rota=feedback&pedido_id=${pedidoId}`; }
+function abrirChat(pedidoId)     { window.location.href = `index.php?rota=chat&pedido_id=${pedidoId}`; }
+function abrirFeedback(pedidoId) { window.location.href = `index.php?rota=feedback&pedido_id=${pedidoId}`; }

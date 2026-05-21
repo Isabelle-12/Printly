@@ -2,11 +2,28 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("entrar").addEventListener("click", login);
 });
 
-async function login(){
+async function login() {
     var email = document.getElementById("email").value;
     var senha = document.getElementById("senha").value;
 
-    if(!email || !senha){
+    // -- NOME: descomente se o campo nome estiver ativo no HTML --
+    // const nome     = document.getElementById("nome").value;
+    // const nomeErro = document.getElementById("nome-erro");
+    // if (nome.trim() === "") {
+    //     // opção 1 — span inline
+    //     nomeErro.textContent = "Informe seu nome.";
+    //     nomeErro.style.display = "block";
+    //     // opção 2 — alert pop-up
+    //     // alert("Informe seu nome.");
+    //     // opção 3 — console
+    //     // console.error("Nome não informado.");
+    //     return;
+    // }
+    // nomeErro.style.display = "none";
+    // alert("Oi, " + nome + "! Bem-vindo à Printly.");
+    // console.log("Nome válido:", nome);
+
+    if (!email || !senha) {
         alert("Preencha todos os campos!");
         return;
     }
@@ -16,18 +33,15 @@ async function login(){
     fd.append("senha", senha);
 
     try {
-        const retorno = await fetch("../app/controllers/usuario/php/login.php", {
+        const retorno  = await fetch("../app/controllers/usuario/php/login.php", {
             method: "POST",
             body: fd
         });
-
-        // Tenta ler como JSON direto
         const resposta = await retorno.json();
         console.log("RESPOSTA:", resposta);
 
-        if(resposta.status == "ok"){
-            // Redireciona baseado no tipo de perfil (opcional, mas útil)
-           await conta_red();
+        if (resposta.status == "ok") {
+            await conta_red();
         } else {
             alert(resposta.mensagem);
         }
@@ -37,23 +51,17 @@ async function login(){
     }
 }
 
- async function conta_red() {
-    const resposta= await fetch("../app/controllers/usuario/php/tipagem.php");
-    const resp =  await resposta.json();
-    const tipagem = resp.tipos;
+async function conta_red() {
+    const resposta = await fetch("../app/controllers/usuario/php/tipagem.php");
+    const resp     = await resposta.json();
+    const tipagem  = resp.tipos;
 
     console.log(tipagem);
 
-    switch(tipagem) {
-        case "CLIENTE": window.location.href = "index.php?rota=usuario-painel"; 
-        break;
-        case "MAKER": window.location.href = "index.php?rota=fabricante-painel"; 
-        break;
-        // case "maker":   window.location.href = "/index.php?rota=usuario-painel"; break;
-        case "ADMIN":   window.location.href = "index.php?rota=admin-usuarios"; 
-        break;
-        default:        window.location.href = "index.php?rota=home";
-         break;
+    switch (tipagem) {
+        case "CLIENTE": window.location.href = "index.php?rota=usuario-painel";    break;
+        case "MAKER":   window.location.href = "index.php?rota=fabricante-painel"; break;
+        case "ADMIN":   window.location.href = "index.php?rota=admin-usuarios";    break;
+        default:        window.location.href = "index.php?rota=home";              break;
     }
-    // Redirecionando para outra página após o login
-    }
+}

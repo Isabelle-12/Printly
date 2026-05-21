@@ -193,6 +193,29 @@
         .printly-footer .footer-divider { border-color: rgba(255,255,255,0.1); margin: 2rem 0 1.25rem; }
         .printly-footer .footer-bottom { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.5rem; color: rgba(255,255,255,0.35); font-size: 0.78rem; }
         .printly-footer .footer-badge { background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.12); border-radius: 20px; padding: 0.2rem 0.75rem; font-size: 0.75rem; color: rgba(255,255,255,0.5); display: inline-flex; align-items: center; gap: 5px; }
+
+        /* ===== PBI 20 - MEUS FEEDBACKS ===== */
+        .feedback-card {
+            background: var(--printly-light);
+            border: 1px solid var(--printly-border);
+            border-radius: 10px;
+            padding: 12px 14px;
+            margin-bottom: 10px;
+        }
+        .feedback-card-topo { display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; }
+        .feedback-card-topo strong { color: var(--printly-primary); font-size: 0.9rem; }
+        .feedback-data { font-size: 0.75rem; color: var(--printly-muted); }
+        .feedback-estrelas { color: #f59e0b; font-size: 0.95rem; margin-bottom: 6px; }
+        .feedback-comentario { font-size: 0.85rem; margin: 0; color: var(--printly-text); }
+        .feedback-resposta {
+            background: #fff;
+            border-left: 3px solid var(--printly-primary-dark);
+            padding: 8px 12px;
+            margin-top: 8px;
+            border-radius: 6px;
+        }
+        .feedback-resposta strong { font-size: 0.78rem; color: var(--printly-primary-dark); }
+        .feedback-resposta p { font-size: 0.82rem; margin: 4px 0 0; }
     </style>
 </head>
 
@@ -312,6 +335,19 @@
             </div>
         </div>
 
+        <!-- PBI 20 - Card Meus Feedbacks -->
+        <div class="card" id="card-meus-feedbacks">
+            <div class="card-header">
+                <div class="card-icon"><i class="bi bi-star"></i></div>
+                <h5>Meus Feedbacks</h5>
+            </div>
+            <div class="card-body">
+                <div id="lista-meus-feedbacks">
+                    <p class="text-muted mb-0">Carregando feedbacks...</p>
+                </div>
+            </div>
+        </div>
+
         <!-- Card Quero ser Maker — exibido/ocultado pelo status_maker.js -->
         <div class="card" id="card-virar-maker" style="display:none;">
             <div class="card-header">
@@ -371,5 +407,6 @@
     <script src="../app/controllers/usuario/js/perfil_usuario.js"></script>
     <script src="../app/controllers/usuario/js/status_maker.js"></script>
     <script src="../app/controllers/usuario/js/sino_notif.js"></script>
+    <script src="../app/controllers/usuario/js/meus_feedbacks.js"></script> <!-- PBI 20 -->
 </body>
 </html>

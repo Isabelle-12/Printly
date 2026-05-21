@@ -615,6 +615,116 @@
             align-items: center;
             gap: 5px;
         }
+
+        /* ===== PBI 15 - AVALIAÇÕES RECEBIDAS ===== */
+        #resumo-avaliacoes {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-left: auto;
+            font-size: 0.95rem;
+        }
+        .aval-resumo-estrelas { color: #f59e0b; font-size: 1rem; }
+        .aval-recebida {
+            background: #fff8ff;
+            border: 1px solid var(--printly-border);
+            border-radius: 10px;
+            padding: 14px 16px;
+            margin-bottom: 12px;
+        }
+        .aval-recebida-topo {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 6px;
+        }
+        .aval-recebida-topo strong { color: var(--printly-primary); font-size: 0.92rem; }
+        .aval-projeto { color: var(--printly-muted); font-size: 0.82rem; }
+        .aval-data { font-size: 0.75rem; color: var(--printly-muted); }
+        .aval-recebida-estrelas { color: #f59e0b; font-size: 1rem; margin-bottom: 6px; }
+        .aval-recebida-comentario { font-size: 0.88rem; color: var(--printly-text); margin: 0 0 10px; }
+        .aval-resposta-box {
+            background: #fff;
+            border-left: 3px solid var(--printly-primary-dark);
+            padding: 10px 14px;
+            border-radius: 6px;
+            margin-top: 8px;
+        }
+        .aval-resposta-titulo {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 4px;
+        }
+        .aval-resposta-titulo strong { font-size: 0.8rem; color: var(--printly-primary-dark); }
+        .aval-resposta-box p { font-size: 0.85rem; margin: 0; color: var(--printly-text); }
+        .btn-editar-resposta {
+            background: transparent;
+            border: none;
+            color: var(--printly-primary);
+            font-size: 0.75rem;
+            cursor: pointer;
+            padding: 2px 8px;
+            border-radius: 6px;
+        }
+        .btn-editar-resposta:hover { background: var(--printly-light); }
+        .btn-responder {
+            background: var(--printly-primary);
+            color: #fff;
+            border: none;
+            border-radius: 20px;
+            padding: 5px 14px;
+            font-size: 0.78rem;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        .btn-responder:hover { background: var(--printly-primary-dark); }
+        .form-resposta-wrap {
+            margin-top: 10px;
+            background: #fff;
+            border: 1px solid var(--printly-border);
+            border-radius: 8px;
+            padding: 12px;
+        }
+        .form-resposta-wrap textarea {
+            width: 100%;
+            border: 1px solid var(--printly-border);
+            border-radius: 6px;
+            padding: 8px 10px;
+            font-size: 0.85rem;
+            font-family: inherit;
+            resize: vertical;
+            min-height: 70px;
+        }
+        .form-resposta-wrap textarea:focus { outline: none; border-color: var(--printly-primary-dark); }
+        .form-resposta-acoes {
+            display: flex;
+            justify-content: flex-end;
+            gap: 8px;
+            margin-top: 8px;
+        }
+        .btn-cancelar-resposta {
+            background: transparent;
+            border: 1px solid var(--printly-border);
+            color: var(--printly-muted);
+            border-radius: 20px;
+            padding: 5px 14px;
+            font-size: 0.78rem;
+            cursor: pointer;
+        }
+        .btn-salvar-resposta {
+            background: var(--printly-primary);
+            color: #fff;
+            border: none;
+            border-radius: 20px;
+            padding: 5px 14px;
+            font-size: 0.78rem;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        .btn-salvar-resposta:hover { background: var(--printly-primary-dark); }
+        .msg-resposta { margin-top: 6px; font-size: 0.78rem; }
+        .msg-erro { color: #dc2626; }
     </style>
 </head>
 
@@ -889,6 +999,26 @@
                 </div>
             </div>
 
+            <!-- PBI 15 - Card Avaliações Recebidas -->
+            <div class="col-12">
+                <div class="card" id="cardAvaliacoesRecebidas">
+                    <div class="card-header">
+                        <div class="card-icon">
+                            <i class="bi bi-star"></i>
+                        </div>
+                        <h5>Avaliações Recebidas</h5>
+                        <div id="resumo-avaliacoes">
+                            <span class="text-muted">Carregando...</span>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div id="lista-avaliacoes-recebidas">
+                            <p class="text-muted mb-0">Carregando avaliações...</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <!-- crud impressora -->
             <div class="modal fade" id="modalImpressora" tabindex="-1">
                 <div class="modal-dialog modal-dialog-centered">
@@ -1011,6 +1141,7 @@
 
     <script src="../app/controllers/usuario/js/status_maker.js"></script>
     <script src="../app/controllers/usuario/js/sino_notif.js"></script>
+    <script src="../app/controllers/fabricante/js/avaliacoes_maker.js"></script> <!-- PBI 15 -->
 
 </body>
 

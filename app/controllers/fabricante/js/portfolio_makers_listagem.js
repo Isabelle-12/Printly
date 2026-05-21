@@ -1,16 +1,12 @@
 // Base aponta para a raiz do projeto (um nível acima de public/)
 const BASE_URL = '/Printly/';
 
-// Fotos do portfólio e perfil: banco salva "assets/uploads/..."
-// A pasta assets/ está na raiz do projeto: Printly/assets/
 function montarUrl(caminho) {
     if (!caminho) return null;
     if (caminho.startsWith('http') || caminho.startsWith('/Printly')) return caminho;
     return BASE_URL + caminho;
 }
 
-// Foto de perfil: banco salva "assets/uploads/perfis/perfil_6_xxx.png"
-// mesma lógica de montarUrl
 function montarUrlPerfil(caminho) {
     if (!caminho) return null;
     if (caminho.startsWith('http') || caminho.startsWith('/Printly')) return caminho;
@@ -21,6 +17,9 @@ document.addEventListener('DOMContentLoaded', () => {
     carregarPortfolios();
     const inputBusca = document.getElementById('input-busca');
     if (inputBusca) inputBusca.addEventListener('input', () => filtrarCards(inputBusca.value));
+
+    // PBI 25 - inicializa filtro de localização se os campos existirem
+    inicializarFiltroLocalizacao();
 });
 
 let todosOsMakers = [];
@@ -98,6 +97,11 @@ function criarCardHTML(maker) {
                onerror="this.replaceWith((() => { const d = document.createElement('div'); d.className='maker-avatar avatar-inicial'; d.textContent='${inicial}'; return d; })()">`
         : avatarFallback(inicial);
 
+    // PBI 25 - exibe distância se disponível
+    const distanciaHTML = (maker.distancia_km !== null && maker.distancia_km !== undefined)
+        ? `<span class="badge-distancia"><i class="bi bi-geo-fill"></i> ${Number(maker.distancia_km).toFixed(1)} km</span>`
+        : '';
+
     return `
         <div class="maker-card" data-id="${maker.maker_id}">
             <div class="card-header">
@@ -110,6 +114,7 @@ function criarCardHTML(maker) {
                             <circle cx="12" cy="9" r="2.5"/>
                         </svg>
                         ${maker.cidade || '—'}, ${maker.estado || ''}
+                        ${distanciaHTML}
                     </span>
                     <div class="maker-avaliacao">
                         <span class="estrelas">${gerarEstrelas(maker.media_nota)}</span>
@@ -157,6 +162,7 @@ async function abrirPortfolio(makerId) {
         try { data = JSON.parse(text); } catch { console.error(text); throw new Error('Resposta inválida do servidor'); }
         if (!data.sucesso) throw new Error(data.mensagem);
         renderizarModalPortfolio(data);
+        carregarAvaliacoesNoModal(makerId); // PBI 20
     } catch (err) {
         conteudo.innerHTML = `<div class="empty-state"><span class="empty-icon">⚠️</span><p>${err.message}</p></div>`;
     }
@@ -325,4 +331,285 @@ function renderizarModalPortfolio(data) {
                 </a>
             </div>
         </div>`;
+}
+
+/* ───── PBI 20 - AVALIAÇÕES ───── */
+
+async function carregarAvaliacoesNoModal(makerId) {
+    const conteudo = document.getElementById('conteudoPortfolio');
+    if (!conteudo) return;
+
+    let wrapper = document.getElementById('secao-avaliacoes-wrapper');
+    if (wrapper) wrapper.remove();
+
+    wrapper = document.createElement('div');
+    wrapper.id = 'secao-avaliacoes-wrapper';
+    wrapper.style.padding = '0 24px 24px';
+    wrapper.dataset.makerId = makerId;
+    conteudo.appendChild(wrapper);
+
+    try {
+        const res  = await fetch(`../app/controllers/usuario/php/listar_avaliacoes_maker.php?maker_id=${makerId}`);
+        const data = await res.json();
+        const avaliacoes = (data.status === 'ok') ? data.data.avaliacoes : [];
+        renderSecaoAvaliacoes(wrapper, makerId, avaliacoes);
+    } catch (err) {
+        renderSecaoAvaliacoes(wrapper, makerId, []);
+    }
+}
+
+function renderSecaoAvaliacoes(wrapper, makerId, avaliacoes) {
+    const listaHTML = avaliacoes.length > 0
+        ? avaliacoes.map(a => `
+            <div class="aval-card">
+                <div class="aval-topo">
+                    <strong>${escapeAval(a.cliente_nome)}</strong>
+                    <span class="aval-data">${formatarDataAval(a.data_avaliacao)}</span>
+                </div>
+                <div class="aval-estrelas">${gerarEstrelas(a.nota)}</div>
+                ${a.comentario ? `<p class="aval-comentario">${escapeAval(a.comentario)}</p>` : ''}
+                ${a.resposta_maker ? `
+                    <div class="aval-resposta">
+                        <strong><i class="bi bi-reply"></i> Resposta do fabricante:</strong>
+                        <p>${escapeAval(a.resposta_maker)}</p>
+                    </div>` : ''}
+            </div>`).join('')
+        : `<p class="sem-material">Este fabricante ainda não recebeu avaliações.</p>`;
+
+    wrapper.innerHTML = `
+        <style>
+            .aval-card{background:var(--rosa-claro);border:1px solid var(--cinza-borda);border-radius:10px;padding:12px 14px;margin-bottom:10px}
+            .aval-topo{display:flex;justify-content:space-between;align-items:center;margin-bottom:4px}
+            .aval-topo strong{color:var(--roxo-escuro);font-size:.9rem}
+            .aval-data{font-size:.75rem;color:var(--cinza-texto)}
+            .aval-estrelas{font-size:.95rem;color:#f59e0b;margin-bottom:6px}
+            .aval-comentario{font-size:.85rem;color:var(--roxo-escuro);margin:0}
+            .aval-resposta{background:#fff;border-left:3px solid var(--roxo-medio);padding:8px 12px;margin-top:8px;border-radius:6px}
+            .aval-resposta strong{font-size:.78rem;color:var(--roxo-medio)}
+            .aval-resposta p{font-size:.82rem;color:var(--roxo-escuro);margin:4px 0 0}
+            .form-feedback{background:#fff;border:1px solid var(--cinza-borda);border-radius:10px;padding:16px;margin-top:12px}
+            .form-feedback label{font-size:.8rem;font-weight:600;color:var(--roxo-medio);text-transform:uppercase;letter-spacing:.05em;display:block;margin-bottom:6px}
+            .form-feedback textarea{width:100%;border:1px solid var(--cinza-borda);border-radius:8px;padding:8px 10px;font-size:.88rem;resize:vertical;min-height:70px;font-family:inherit}
+            .form-feedback textarea:focus{outline:none;border-color:var(--roxo-medio)}
+            .rating-input{display:flex;gap:4px;font-size:1.4rem;cursor:pointer;color:#d1d5db;margin-bottom:12px}
+            .rating-input i.ativa{color:#f59e0b}
+            .form-feedback-msg{font-size:.82rem;margin-top:8px;padding:6px 10px;border-radius:6px}
+            .form-feedback-msg.ok{background:#dcfce7;color:#16a34a}
+            .form-feedback-msg.erro{background:#fee2e2;color:#dc2626}
+            .btn-enviar-feedback{background:var(--roxo-medio);color:#fff;border:none;border-radius:30px;padding:8px 20px;font-size:.85rem;font-weight:600;cursor:pointer;margin-top:10px}
+            .btn-enviar-feedback:hover{background:var(--roxo-escuro)}
+            .btn-enviar-feedback:disabled{opacity:.6;cursor:not-allowed}
+        </style>
+
+        <div class="modal-secao">
+            <h4><i class="bi bi-star"></i> Avaliações (${avaliacoes.length})</h4>
+            <div id="lista-avaliacoes">${listaHTML}</div>
+        </div>
+
+        <div class="modal-secao">
+            <h4><i class="bi bi-pencil-square"></i> Deixar feedback</h4>
+            <form class="form-feedback" id="form-feedback" data-maker-id="${makerId}">
+                <label>Sua nota</label>
+                <div class="rating-input" id="rating-input">
+                    <i class="bi bi-star" data-nota="1"></i>
+                    <i class="bi bi-star" data-nota="2"></i>
+                    <i class="bi bi-star" data-nota="3"></i>
+                    <i class="bi bi-star" data-nota="4"></i>
+                    <i class="bi bi-star" data-nota="5"></i>
+                </div>
+                <input type="hidden" id="nota-selecionada" value="0">
+
+                <label>Comentário</label>
+                <textarea id="comentario-feedback" placeholder="Conte como foi sua experiência..."></textarea>
+
+                <button type="submit" class="btn-enviar-feedback">
+                    <i class="bi bi-send"></i> Enviar feedback
+                </button>
+                <div id="form-feedback-msg"></div>
+            </form>
+        </div>
+    `;
+
+    ativarRating();
+    document.getElementById('form-feedback').addEventListener('submit', enviarFeedback);
+}
+
+function ativarRating() {
+    const estrelas = document.querySelectorAll('#rating-input i');
+    estrelas.forEach(estrela => {
+        estrela.addEventListener('click', () => {
+            const nota = parseInt(estrela.dataset.nota);
+            document.getElementById('nota-selecionada').value = nota;
+            estrelas.forEach(e => {
+                const en = parseInt(e.dataset.nota);
+                e.classList.toggle('ativa', en <= nota);
+                e.classList.toggle('bi-star-fill', en <= nota);
+                e.classList.toggle('bi-star', en > nota);
+            });
+        });
+    });
+}
+
+async function enviarFeedback(e) {
+    e.preventDefault();
+    const form = e.target;
+    const makerId = form.dataset.makerId;
+    const nota = parseInt(document.getElementById('nota-selecionada').value);
+    const comentario = document.getElementById('comentario-feedback').value.trim();
+    const msgBox = document.getElementById('form-feedback-msg');
+    const btn = form.querySelector('.btn-enviar-feedback');
+
+    msgBox.innerHTML = '';
+
+    if (nota < 1 || nota > 5) {
+        msgBox.innerHTML = `<div class="form-feedback-msg erro">Selecione uma nota de 1 a 5 estrelas.</div>`;
+        return;
+    }
+
+    btn.disabled = true;
+
+    try {
+        const formData = new FormData();
+        formData.append('maker_id', makerId);
+        formData.append('nota', nota);
+        formData.append('comentario', comentario);
+
+        const res = await fetch('../app/controllers/usuario/php/criar_avaliacao.php', {
+            method: 'POST',
+            body: formData
+        });
+        const data = await res.json();
+
+        if (data.status === 'ok') {
+            msgBox.innerHTML = `<div class="form-feedback-msg ok">${data.mensagem}</div>`;
+            carregarAvaliacoesNoModal(makerId);
+        } else {
+            msgBox.innerHTML = `<div class="form-feedback-msg erro">${data.mensagem}</div>`;
+            btn.disabled = false;
+        }
+    } catch (err) {
+        msgBox.innerHTML = `<div class="form-feedback-msg erro">Erro ao enviar. Tente novamente.</div>`;
+        btn.disabled = false;
+    }
+}
+
+function escapeAval(str) {
+    if (!str) return '';
+    return String(str).replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));
+}
+
+function formatarDataAval(str) {
+    const d = new Date(str);
+    return d.toLocaleDateString('pt-BR');
+}
+
+/* ───── PBI 25 - FILTRO POR LOCALIZAÇÃO ───── */
+
+function inicializarFiltroLocalizacao() {
+    const form = document.getElementById('form-filtro-local');
+    const btnLocal = document.getElementById('btn-usar-local');
+    const btnLimpar = document.getElementById('btn-limpar-filtro');
+    if (!form) return;
+
+    form.addEventListener('submit', e => {
+        e.preventDefault();
+        const cep    = document.getElementById('filtro-cep').value.trim();
+        const cidade = document.getElementById('filtro-cidade').value.trim();
+        const estado = document.getElementById('filtro-estado').value.trim();
+        const raio   = document.getElementById('filtro-raio').value.trim();
+
+        if (!cep && !cidade && !estado) {
+            mostrarMensagemFiltro('Informe ao menos CEP, cidade ou estado.', 'erro');
+            return;
+        }
+
+        const params = new URLSearchParams();
+        if (cep)    params.append('cep', cep);
+        if (cidade) params.append('cidade', cidade);
+        if (estado) params.append('estado', estado);
+        if (raio)   params.append('raio', raio);
+        buscarComLocalizacao(params);
+    });
+
+    if (btnLocal) {
+        btnLocal.addEventListener('click', usarMinhaLocalizacao);
+    }
+
+    if (btnLimpar) {
+        btnLimpar.addEventListener('click', () => {
+            document.getElementById('filtro-cep').value = '';
+            document.getElementById('filtro-cidade').value = '';
+            document.getElementById('filtro-estado').value = '';
+            document.getElementById('filtro-raio').value = '50';
+            mostrarMensagemFiltro('', '');
+            carregarPortfolios();
+        });
+    }
+}
+
+function usarMinhaLocalizacao() {
+    if (!navigator.geolocation) {
+        mostrarMensagemFiltro('Seu navegador não suporta geolocalização.', 'erro');
+        return;
+    }
+
+    mostrarMensagemFiltro('Obtendo sua localização...', 'info');
+
+    navigator.geolocation.getCurrentPosition(
+        (pos) => {
+            const params = new URLSearchParams();
+            params.append('lat', pos.coords.latitude);
+            params.append('lng', pos.coords.longitude);
+            const raio = document.getElementById('filtro-raio').value.trim();
+            if (raio) params.append('raio', raio);
+            buscarComLocalizacao(params);
+        },
+        (err) => {
+            mostrarMensagemFiltro('Não foi possível acessar sua localização. Permita o acesso ou use CEP/cidade.', 'erro');
+        },
+        { timeout: 10000 }
+    );
+}
+
+async function buscarComLocalizacao(params) {
+    const grid = document.getElementById('grid-makers');
+    grid.innerHTML = `<div class="loading-state"><div class="spinner-custom"></div><p>Buscando fabricantes na região...</p></div>`;
+
+    try {
+        const res = await fetch(`../app/controllers/fabricante/php/buscar_makers_localizacao.php?${params.toString()}`);
+        const data = await res.json();
+
+        if (data.status !== 'ok') {
+            mostrarMensagemFiltro(data.mensagem, 'erro');
+            grid.innerHTML = '';
+            return;
+        }
+
+        if (data.data.vazio) {
+            mostrarMensagemFiltro(data.mensagem, 'info');
+            grid.innerHTML = `<div class="empty-state"><span class="empty-icon">📍</span><p>${data.mensagem}</p></div>`;
+            todosOsMakers = [];
+            return;
+        }
+
+        mostrarMensagemFiltro(data.mensagem, 'ok');
+        todosOsMakers = data.data.makers;
+        renderizarCards(todosOsMakers);
+    } catch (err) {
+        mostrarMensagemFiltro('Erro ao buscar. Tente novamente.', 'erro');
+        grid.innerHTML = '';
+    }
+}
+
+function mostrarMensagemFiltro(texto, tipo) {
+    const box = document.getElementById('mensagem-filtro');
+    if (!box) return;
+    if (!texto) {
+        box.style.display = 'none';
+        box.innerHTML = '';
+        return;
+    }
+    box.style.display = 'block';
+    box.className = 'mensagem-filtro mensagem-' + tipo;
+    box.textContent = texto;
 }

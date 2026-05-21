@@ -9,6 +9,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700&family=DM+Sans:wght@400;500&display=swap"
         rel="stylesheet">
+    <link rel="stylesheet" href="css/chat.css"> <!-- PBI 19 -->
 
     <style>
         :root {
@@ -25,9 +26,7 @@
             --printly-radius: 12px;
         }
 
-        * {
-            box-sizing: border-box;
-        }
+        * { box-sizing: border-box; }
 
         body {
             background-color: var(--printly-bg);
@@ -37,65 +36,23 @@
             display: flex;
             flex-direction: column;
         }
-        body > .container {
-            flex: 1;
-        }
+        body > .container { flex: 1; }
 
-        /* ── Navbar ─────────────────────────────────────── */
         .navbar {
             background: linear-gradient(135deg, var(--printly-primary) 0%, var(--printly-primary-dark) 100%) !important;
             padding: 0.75rem 0;
             box-shadow: 0 2px 16px rgba(224, 70, 229, 0.25);
             border-bottom: none;
         }
+        .navbar-brand { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 1.4rem; letter-spacing: -0.5px; color: #fff !important; display: flex; align-items: center; gap: 8px; }
+        .navbar .nav-link { color: rgba(255, 255, 255, 0.82) !important; font-size: 0.9rem; font-weight: 500; padding: 0.45rem 0.9rem !important; border-radius: 8px; transition: background 0.18s, color 0.18s; }
+        .navbar .nav-link:hover, .navbar .nav-link.active { background: rgba(255, 255, 255, 0.18); color: #fff !important; }
 
-        .navbar-brand {
-            font-family: 'Syne', sans-serif;
-            font-weight: 700;
-            font-size: 1.4rem;
-            letter-spacing: -0.5px;
-            color: #fff !important;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
+        #sair { background: rgba(255, 255, 255, 0.12); color: rgba(255, 255, 255, 0.82); border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 8px; padding: 0.35rem 0.75rem; font-size: 0.9rem; transition: background 0.18s; }
+        #sair:hover { background: rgba(255, 255, 255, 0.22); color: #fff; }
 
-        .navbar .nav-link {
-            color: rgba(255, 255, 255, 0.82) !important;
-            font-size: 0.9rem;
-            font-weight: 500;
-            padding: 0.45rem 0.9rem !important;
-            border-radius: 8px;
-            transition: background 0.18s, color 0.18s;
-        }
+        .container { max-width: 1200px; }
 
-        .navbar .nav-link:hover,
-        .navbar .nav-link.active {
-            background: rgba(255, 255, 255, 0.18);
-            color: #fff !important;
-        }
-
-        #sair {
-            background: rgba(255, 255, 255, 0.12);
-            color: rgba(255, 255, 255, 0.82);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: 8px;
-            padding: 0.35rem 0.75rem;
-            font-size: 0.9rem;
-            transition: background 0.18s;
-        }
-
-        #sair:hover {
-            background: rgba(255, 255, 255, 0.22);
-            color: #fff;
-        }
-
-        /* ── Container ──────────────────────────────────── */
-        .container {
-            max-width: 1200px;
-        }
-
-        /* ── Banner de anúncios ──────────────────────────── */
         #banner-anuncios .alert {
             border: none;
             border-left: 4px solid #f5900b;
@@ -105,12 +62,8 @@
             color: #f5900b;
             padding: 1rem 1.25rem;
         }
+        #banner-anuncios .btn-close { opacity: 0.5; }
 
-        #banner-anuncios .btn-close {
-            opacity: 0.5;
-        }
-
-        /* ── Cards ──────────────────────────────────────── */
         .card {
             border: 1px solid var(--printly-border);
             border-radius: var(--printly-radius);
@@ -120,10 +73,7 @@
             overflow: hidden;
             transition: box-shadow 0.2s;
         }
-
-        .card:hover {
-            box-shadow: 0 4px 24px rgba(203, 70, 229, 0.13);
-        }
+        .card:hover { box-shadow: 0 4px 24px rgba(203, 70, 229, 0.13); }
 
         .card-header {
             background: var(--printly-light);
@@ -133,272 +83,51 @@
             align-items: center;
             gap: 10px;
         }
+        .card-header h5 { margin: 0; font-size: 0.975rem; font-weight: 600; color: var(--printly-primary); letter-spacing: -0.2px; }
+        .card-header .card-icon { width: 30px; height: 30px; border-radius: 8px; background: var(--printly-primary); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+        .card-header .card-icon i { color: #fff; font-size: 0.85rem; }
+        .card-body { padding: 1.25rem; }
+        .text-muted { color: var(--printly-muted) !important; font-size: 0.9rem; }
 
-        .card-header h5 {
-            margin: 0;
-            font-size: 0.975rem;
-            font-weight: 600;
-            color: var(--printly-primary);
-            letter-spacing: -0.2px;
-        }
+        .page-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.5rem; padding-bottom: 1rem; border-bottom: 1px solid var(--printly-border); }
+        .page-header h4 { font-weight: 700; font-size: 1.2rem; color: var(--printly-text); margin: 0; }
+        .page-header p { font-size: 0.85rem; color: var(--printly-muted); margin: 2px 0 0; }
 
-        .card-header .card-icon {
-            width: 30px;
-            height: 30px;
-            border-radius: 8px;
-            background: var(--printly-primary);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-shrink: 0;
-        }
-
-        .card-header .card-icon i {
-            color: #fff;
-            font-size: 0.85rem;
-        }
-
-        .card-body {
-            padding: 1.25rem;
-        }
-
-        .text-muted {
-            color: var(--printly-muted) !important;
-            font-size: 0.9rem;
-        }
-
-        /* ── Page header ────────────────────────────────── */
-        .page-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 1.5rem;
-            padding-bottom: 1rem;
-            border-bottom: 1px solid var(--printly-border);
-        }
-
-        .page-header h4 {
-            font-weight: 700;
-            font-size: 1.2rem;
-            color: var(--printly-text);
-            margin: 0;
-        }
-
-        .page-header p {
-            font-size: 0.85rem;
-            color: var(--printly-muted);
-            margin: 2px 0 0;
-        }
-
-        /* ===== SINO DE NOTIFICACOES ===== */
-        .sino-wrapper {
-            position: relative;
-            display: inline-flex;
-            align-items: center;
-        }
-        #btn-sino {
-            background: rgba(255,255,255,0.12);
-            color: rgba(255,255,255,0.82);
-            border: 1px solid rgba(255,255,255,0.2);
-            border-radius: 8px;
-            padding: 0.35rem 0.75rem;
-            font-size: 0.9rem;
-            cursor: pointer;
-            transition: background 0.18s, color 0.18s;
-            position: relative;
-            display: flex;
-            align-items: center;
-        }
-        #btn-sino:hover, #btn-sino.sino-ativo {
-            background: rgba(255,255,255,0.22);
-            color: #fff;
-        }
-        #sino-badge {
-            display: none;
-            position: absolute;
-            top: -6px;
-            right: -6px;
-            background: #e03c6e;
-            color: #fff;
-            font-size: 0.65rem;
-            font-weight: 700;
-            border-radius: 50%;
-            width: 18px;
-            height: 18px;
-            align-items: center;
-            justify-content: center;
-            border: 2px solid var(--printly-primary, #412746);
-            z-index: 10;
-        }
-        #sino-dropdown {
-            display: none;
-            position: absolute;
-            top: calc(100% + 10px);
-            right: 0;
-            width: 320px;
-            background: #fff;
-            border: 1px solid rgba(194,185,194,0.55);
-            border-radius: 12px;
-            box-shadow: 0 8px 32px rgba(65,39,70,0.15);
-            z-index: 1050;
-            overflow: hidden;
-        }
+        .sino-wrapper { position: relative; display: inline-flex; align-items: center; }
+        #btn-sino { background: rgba(255,255,255,0.12); color: rgba(255,255,255,0.82); border: 1px solid rgba(255,255,255,0.2); border-radius: 8px; padding: 0.35rem 0.75rem; font-size: 0.9rem; cursor: pointer; transition: background 0.18s, color 0.18s; position: relative; display: flex; align-items: center; }
+        #btn-sino:hover, #btn-sino.sino-ativo { background: rgba(255,255,255,0.22); color: #fff; }
+        #sino-badge { display: none; position: absolute; top: -6px; right: -6px; background: #e03c6e; color: #fff; font-size: 0.65rem; font-weight: 700; border-radius: 50%; width: 18px; height: 18px; align-items: center; justify-content: center; border: 2px solid var(--printly-primary, #412746); z-index: 10; }
+        #sino-dropdown { display: none; position: absolute; top: calc(100% + 10px); right: 0; width: 320px; background: #fff; border: 1px solid rgba(194,185,194,0.55); border-radius: 12px; box-shadow: 0 8px 32px rgba(65,39,70,0.15); z-index: 1050; overflow: hidden; }
         #sino-dropdown.sino-aberto { display: block; }
-        .sino-header {
-            padding: 0.75rem 1rem;
-            font-family: 'Syne', sans-serif;
-            font-weight: 700;
-            font-size: 0.9rem;
-            color: #412746;
-            border-bottom: 1px solid rgba(194,185,194,0.4);
-            background: #f0cef5;
-        }
-        #sino-lista {
-            list-style: none;
-            margin: 0;
-            padding: 0;
-            max-height: 340px;
-            overflow-y: auto;
-        }
-        .sino-item {
-            padding: 0.75rem 1rem;
-            border-bottom: 1px solid rgba(194,185,194,0.3);
-            cursor: default;
-        }
+        .sino-header { padding: 0.75rem 1rem; font-family: 'Syne', sans-serif; font-weight: 700; font-size: 0.9rem; color: #412746; border-bottom: 1px solid rgba(194,185,194,0.4); background: #f0cef5; }
+        #sino-lista { list-style: none; margin: 0; padding: 0; max-height: 340px; overflow-y: auto; }
+        .sino-item { padding: 0.75rem 1rem; border-bottom: 1px solid rgba(194,185,194,0.3); cursor: default; }
         .sino-item:last-child { border-bottom: none; }
         .sino-nao-lida { background: #fdf4ff; }
-        .sino-item-titulo {
-            font-weight: 600;
-            font-size: 0.85rem;
-            color: #412746;
-            margin-bottom: 2px;
-        }
-        .sino-item-msg {
-            font-size: 0.8rem;
-            color: #5a3a5a;
-            margin-bottom: 3px;
-        }
-        .sino-item-data {
-            font-size: 0.72rem;
-            color: #9e939e;
-        }
-        .sino-vazio {
-            padding: 1.25rem 1rem;
-            text-align: center;
-            color: #9e939e;
-            font-size: 0.85rem;
-            list-style: none;
-        }
+        .sino-item-titulo { font-weight: 600; font-size: 0.85rem; color: #412746; margin-bottom: 2px; }
+        .sino-item-msg { font-size: 0.8rem; color: #5a3a5a; margin-bottom: 3px; }
+        .sino-item-data { font-size: 0.72rem; color: #9e939e; }
+        .sino-vazio { padding: 1.25rem 1rem; text-align: center; color: #9e939e; font-size: 0.85rem; list-style: none; }
 
-        /* ===== SUB-NAVBAR ===== */
-        .sub-navbar {
-            background: rgba(65,39,70,0.92);
-            border-bottom: 1px solid rgba(255,255,255,0.08);
-            padding: 0.25rem 0;
-        }
-        .sub-navbar .container {
-            display: flex;
-            align-items: center;
-        }
-        #wrap-btn-maker {
-            margin-left: auto;
-            display: flex;
-            align-items: center;
-        }
-        #btn-solicitar-maker:hover {
-            background: rgba(255,255,255,0.25) !important;
-        }
-        .sub-navbar .nav-link {
-            color: rgba(255,255,255,0.75) !important;
-            font-size: 0.82rem;
-            font-weight: 500;
-            padding: 0.3rem 0.85rem !important;
-            border-radius: 6px;
-            transition: background 0.15s, color 0.15s;
-        }
-        .sub-navbar .nav-link:hover,
-        .sub-navbar .nav-link.active {
-            background: rgba(255,255,255,0.14);
-            color: #fff !important;
-        }
+        .sub-navbar { background: rgba(65,39,70,0.92); border-bottom: 1px solid rgba(255,255,255,0.08); padding: 0.25rem 0; }
+        .sub-navbar .container { display: flex; align-items: center; }
+        #wrap-btn-maker { margin-left: auto; display: flex; align-items: center; }
+        #btn-solicitar-maker:hover { background: rgba(255,255,255,0.25) !important; }
+        .sub-navbar .nav-link { color: rgba(255,255,255,0.75) !important; font-size: 0.82rem; font-weight: 500; padding: 0.3rem 0.85rem !important; border-radius: 6px; transition: background 0.15s, color 0.15s; }
+        .sub-navbar .nav-link:hover, .sub-navbar .nav-link.active { background: rgba(255,255,255,0.14); color: #fff !important; }
 
-        /* ===== FOOTER ===== */
-        .printly-footer {
-            background: linear-gradient(135deg, var(--printly-primary, #412746) 0%, #2d1a32 100%);
-            color: rgba(255,255,255,0.7);
-            padding: 3rem 0 1.5rem;
-            margin-top: 4rem;
-            font-size: 0.85rem;
-        }
-        .printly-footer .footer-brand {
-            font-family: 'Syne', sans-serif;
-            font-weight: 700;
-            font-size: 1.5rem;
-            color: #fff;
-            letter-spacing: -0.5px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            margin-bottom: 0.5rem;
-        }
-        .printly-footer .footer-brand i {
-            font-size: 1.3rem;
-            color: #e8a0f0;
-        }
-        .printly-footer .footer-tagline {
-            color: rgba(255,255,255,0.5);
-            font-size: 0.82rem;
-            margin-bottom: 1.25rem;
-        }
-        .printly-footer .footer-title {
-            color: #fff;
-            font-weight: 600;
-            font-size: 0.82rem;
-            text-transform: uppercase;
-            letter-spacing: 0.08em;
-            margin-bottom: 0.9rem;
-        }
-        .printly-footer .footer-links {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-        }
-        .printly-footer .footer-links li {
-            margin-bottom: 0.45rem;
-        }
-        .printly-footer .footer-links a {
-            color: rgba(255,255,255,0.6);
-            text-decoration: none;
-            transition: color 0.15s;
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-        }
+        .printly-footer { background: linear-gradient(135deg, var(--printly-primary, #412746) 0%, #2d1a32 100%); color: rgba(255,255,255,0.7); padding: 3rem 0 1.5rem; margin-top: 4rem; font-size: 0.85rem; }
+        .printly-footer .footer-brand { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 1.5rem; color: #fff; letter-spacing: -0.5px; display: flex; align-items: center; gap: 8px; margin-bottom: 0.5rem; }
+        .printly-footer .footer-brand i { font-size: 1.3rem; color: #e8a0f0; }
+        .printly-footer .footer-tagline { color: rgba(255,255,255,0.5); font-size: 0.82rem; margin-bottom: 1.25rem; }
+        .printly-footer .footer-title { color: #fff; font-weight: 600; font-size: 0.82rem; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 0.9rem; }
+        .printly-footer .footer-links { list-style: none; padding: 0; margin: 0; }
+        .printly-footer .footer-links li { margin-bottom: 0.45rem; }
+        .printly-footer .footer-links a { color: rgba(255,255,255,0.6); text-decoration: none; transition: color 0.15s; display: inline-flex; align-items: center; gap: 6px; }
         .printly-footer .footer-links a:hover { color: #e8a0f0; }
-        .printly-footer .footer-divider {
-            border-color: rgba(255,255,255,0.1);
-            margin: 2rem 0 1.25rem;
-        }
-        .printly-footer .footer-bottom {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            flex-wrap: wrap;
-            gap: 0.5rem;
-            color: rgba(255,255,255,0.35);
-            font-size: 0.78rem;
-        }
-        .printly-footer .footer-badge {
-            background: rgba(255,255,255,0.08);
-            border: 1px solid rgba(255,255,255,0.12);
-            border-radius: 20px;
-            padding: 0.2rem 0.75rem;
-            font-size: 0.75rem;
-            color: rgba(255,255,255,0.5);
-            display: inline-flex;
-            align-items: center;
-            gap: 5px;
-        }
+        .printly-footer .footer-divider { border-color: rgba(255,255,255,0.1); margin: 2rem 0 1.25rem; }
+        .printly-footer .footer-bottom { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.5rem; color: rgba(255,255,255,0.35); font-size: 0.78rem; }
+        .printly-footer .footer-badge { background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.12); border-radius: 20px; padding: 0.2rem 0.75rem; font-size: 0.75rem; color: rgba(255,255,255,0.5); display: inline-flex; align-items: center; gap: 5px; }
     </style>
 </head>
 
@@ -462,13 +191,24 @@
 
         <div class="card">
             <div class="card-header">
-                <div class="card-icon">
-                    <i class="bi bi-box-seam"></i>
-                </div>
-                <h5>Meus Pedidos</h5>
+                <div class="card-icon"><i class="bi bi-hourglass-split"></i></div>
+                <h5>Pedidos Pendentes</h5>
             </div>
             <div class="card-body">
                 <div id="lista-pedidos-pendentes">
+                    <p class="text-muted">Carregando pedidos...</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- PBI 19 - container que faltava, exibe pedidos aceitos com botão de chat -->
+        <div class="card">
+            <div class="card-header">
+                <div class="card-icon"><i class="bi bi-box-seam"></i></div>
+                <h5>Pedidos em Andamento</h5>
+            </div>
+            <div class="card-body">
+                <div id="lista-pedidos-aceitos">
                     <p class="text-muted">Carregando pedidos...</p>
                 </div>
             </div>
@@ -482,8 +222,7 @@
             <div class="modal-content">
                 <div class="modal-header bg-dark text-white">
                     <h5 class="modal-title">Analisar Pedido #<span id="modal-pedido-id"></span></h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
-                        aria-label="Close"></button>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <h6 class="fw-bold border-bottom pb-2">Detalhes do Projeto</h6>
@@ -494,38 +233,35 @@
                     <div class="row g-3 mt-2 p-3 border rounded bg-light text-dark">
                         <div class="col-md-6">
                             <label for="modal-input-valor" class="form-label fw-bold">Preço Final Cobrado (R$):</label>
-                            <input type="number" step="0.01" min="0.00" class="form-control" id="modal-input-valor"
-                                placeholder="0.00">
-                            <small class="text-muted">Sugestão do sistema: <span
-                                    id="modal-valor-sugerido"></span></small>
+                            <input type="number" step="0.01" min="0.00" class="form-control" id="modal-input-valor" placeholder="0.00">
+                            <small class="text-muted">Sugestão do sistema: <span id="modal-valor-sugerido"></span></small>
                         </div>
                         <div class="col-md-6">
-                            <label for="modal-input-prazo" class="form-label fw-bold">Prazo de Produção (em
-                                dias):</label>
-                            <input type="number" min="1" class="form-control" id="modal-input-prazo"
-                                placeholder="Ex: 5">
+                            <label for="modal-input-prazo" class="form-label fw-bold">Prazo de Produção (em dias):</label>
+                            <input type="number" min="1" class="form-control" id="modal-input-prazo" placeholder="Ex: 5">
                             <small class="text-muted">Defina o tempo estimado de entrega.</small>
                         </div>
                     </div>
 
-                    <div class="alert alert-secondary mt-3">
-                        <a id="modal-link-arquivo" href="#" class="btn btn-secondary w-100 mt-2" download
-                            target="_blank">
-                            <i class="bi bi-box-arrow-down"></i> Baixar Arquivo para Análise
+                  <div class="alert alert-secondary mt-3">
+                        <a id="modal-link-arquivo" href="#" class="btn btn-secondary w-100 mt-2" download target="_blank">
+                        <i class="bi bi-box-arrow-down"></i> Baixar Arquivo para Análise
                         </a>
-                    </div>
+                        <!-- PBI 7 - abrir visualizador 3D para validação técnica -->
+                        <a id="modal-link-visualizador" href="#" class="btn btn-outline-primary w-100 mt-2" target="_blank">
+                        <i class="bi bi-shield-check"></i> Abrir Visualizador 3D para Validação
+                        </a>
+                  </div>
 
                     <div id="area-recusa" class="mt-4 p-3 border rounded bg-light" style="display: none;">
                         <label for="motivo-recusa" class="form-label fw-bold text-danger">Motivo da Recusa:</label>
-                        <textarea class="form-control" id="motivo-recusa" rows="3"
-                            placeholder="Explique ao cliente por que não será possível produzir..."></textarea>
+                        <textarea class="form-control" id="motivo-recusa" rows="3" placeholder="Explique ao cliente por que não será possível produzir..."></textarea>
                         <button class="btn btn-danger mt-2 w-100" onclick="confirmarRecusa()">Confirmar Recusa</button>
                     </div>
                 </div>
 
                 <div class="modal-footer" id="botoes-acao-modal">
-                    <button type="button" class="btn btn-outline-danger" onclick="mostrarAreaRecusa()">Negar
-                        Pedido</button>
+                    <button type="button" class="btn btn-outline-danger" onclick="mostrarAreaRecusa()">Negar Pedido</button>
                     <button type="button" class="btn btn-success" onclick="confirmarAceite()">Aceitar Pedido</button>
                 </div>
             </div>
@@ -537,9 +273,7 @@
         <div class="container">
             <div class="row g-4">
                 <div class="col-lg-4 col-md-6">
-                    <div class="footer-brand">
-                        <i class="bi bi-printer-fill"></i>Printly
-                    </div>
+                    <div class="footer-brand"><i class="bi bi-printer-fill"></i>Printly</div>
                     <p class="footer-tagline">Conectando makers e clientes para transformar ideias em realidade através da impressão 3D.</p>
                     <span class="footer-badge"><i class="bi bi-shield-check"></i>Plataforma segura</span>
                 </div>
@@ -576,6 +310,19 @@
             </div>
         </div>
     </footer>
+
+    <script>
+        // PBI 19 - listener delegado: captura clique em qualquer .btn-chat-pedido
+        document.addEventListener('click', function(e) {
+            const btn = e.target.closest('.btn-chat-pedido');
+            if (!btn) return;
+            const pedidoId = btn.dataset.pedidoId;
+            if (pedidoId && typeof abrirChat === 'function') {
+                abrirChat(pedidoId);
+            }
+        });
+    </script>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="../app/controllers/admin/js/notificacoes.js"></script>
     <script src="../app/controllers/usuario/js/verif.js"></script>
@@ -583,6 +330,7 @@
 
     <script src="../app/controllers/usuario/js/status_maker.js"></script>
     <script src="../app/controllers/usuario/js/sino_notif.js"></script>
+    <script src="../app/controllers/usuario/js/chat.js"></script> <!-- PBI 19 -->
 </body>
 
 </html>

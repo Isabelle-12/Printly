@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -9,31 +8,30 @@
     <link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
     <style>
         body { background-color: #f8f9fa; font-family: 'DM Sans', sans-serif; }
-
+ 
         .navbar-brand {
             font-family: 'Syne', sans-serif;
             font-weight: 700;
             letter-spacing: -0.5px;
         }
-        
+ 
         .bg-secondary {
             opacity: 5;
             background-color: #412746 !important;
         }
-        
-
+ 
         .card {
             border: 1px solid #dee2e6;
             border-radius: 10px;
             box-shadow: 0 2px 12px rgba(0,0,0,0.07);
         }
-
+ 
         .card-header {
             background: #fff;
             border-bottom: 1px solid #dee2e6;
             padding: 1rem 1.25rem;
         }
-
+ 
         .card-header h5 {
             font-family: 'Syne', sans-serif;
             font-weight: 600;
@@ -41,7 +39,7 @@
             color: #212529;
             margin: 0;
         }
-
+ 
         .section-label {
             font-size: 0.7rem;
             font-weight: 600;
@@ -52,7 +50,7 @@
             margin-bottom: 1rem;
             border-bottom: 1px solid #dee2e6;
         }
-
+ 
         .form-label {
             font-size: 0.75rem;
             font-weight: 500;
@@ -61,9 +59,9 @@
             letter-spacing: 0.04em;
             margin-bottom: 0.3rem;
         }
-
+ 
         .required-mark { color: #dc3545; margin-left: 2px; }
-
+ 
         .form-control {
             border: 1px solid #dee2e6;
             border-radius: 6px;
@@ -71,12 +69,12 @@
             font-size: 0.9rem;
             font-family: 'DM Sans', sans-serif;
         }
-
+ 
         .form-control:focus {
             border-color: #6c757d;
             box-shadow: 0 0 0 3px rgba(108,117,125,0.12);
         }
-
+ 
         .form-actions {
             display: flex;
             justify-content: flex-end;
@@ -84,7 +82,7 @@
             gap: 0.75rem;
             margin-top: 0.5rem;
         }
-
+ 
         .btn-secondary-custom {
             background: transparent;
             color: #6c757d;
@@ -97,9 +95,9 @@
             text-decoration: none;
             transition: background 0.15s;
         }
-
+ 
         .btn-secondary-custom:hover { background: #e9ecef; color: #212529; }
-
+ 
         .btn-primary-custom {
             background: #212529;
             color: #fff;
@@ -112,26 +110,35 @@
             cursor: pointer;
             transition: background 0.15s;
         }
-
+ 
         .btn-primary-custom:hover { background: #343a40; }
     </style>
 </head>
 <body>
-
+ 
 <nav class="navbar navbar-expand-lg navbar-dark bg-secondary">
     <div class="container">
         <a class="navbar-brand" href="index.php?rota=home">Printly</a>
     </div>
 </nav>
-
+ 
 <div class="container mt-5" style="max-width: 480px;">
     <div class="card">
         <div class="card-header">
             <h5>Acesse sua conta</h5>
         </div>
         <div class="card-body p-4">
-
+ 
             <div class="row g-3 mb-3">
+ 
+                <!-- NOME: campo de texto que exibe saudação com o nome digitado
+                <div class="col-12">
+                    <label for="nome" class="form-label">Nome <span class="required-mark">*</span></label>
+                    <input type="text" class="form-control" id="nome" name="nome" placeholder="Seu nome">
+                    <span id="nome-erro" class="text-danger" style="font-size:0.82rem; display:none;"></span>
+                </div>
+                -->
+ 
                 <div class="col-12">
                     <label for="email" class="form-label">E-mail <span class="required-mark">*</span></label>
                     <input type="email" class="form-control" id="email" name="email" placeholder="exemplo@email.com">
@@ -141,23 +148,24 @@
                     <input type="password" class="form-control" id="senha" name="senha" placeholder="••••••••">
                 </div>
             </div>
-
+ 
             <div class="text-end mb-2" style="margin-top: -4px;">
-                <a href="index.php?rota=esqueci-senha"
-                   style="font-size: 0.8rem; color: #6c757d; text-decoration: none;">
+                <a href="index.php?rota=esqueci-senha" style="font-size: 0.8rem; color: #6c757d; text-decoration: none;">
                     Esqueci minha senha
                 </a>
             </div>
-            
+ 
             <div class="form-actions">
                 <a href="index.php?rota=home" class="btn-secondary-custom">Voltar</a>
                 <a class="btn-primary-custom" id="entrar">Entrar</a>
             </div>
-
+ 
         </div>
     </div>
 </div>
+ 
 <script src="../app/controllers/usuario/js/login.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
+ 

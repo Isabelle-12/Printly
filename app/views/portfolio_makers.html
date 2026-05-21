@@ -24,7 +24,6 @@
             --printly-shadow: 0 2px 12px rgba(229, 70, 181, 0.08);
             --printly-radius: 12px;
 
-            /* aliases para os cards de maker */
             --roxo-escuro: #2d1b4e;
             --roxo-medio: #6b3fa0;
             --roxo-claro: #a66dd4;
@@ -44,7 +43,6 @@
             min-height: 100vh;
         }
 
-        /* ── NAVBAR — idêntica ao usuario_painel ── */
         .navbar {
             background: linear-gradient(135deg, var(--printly-primary) 0%, var(--printly-primary-dark) 100%) !important;
             padding: 0.75rem 0;
@@ -89,7 +87,6 @@
             color: #fff;
         }
 
-        /* ── HERO ── */
         .hero {
             background: linear-gradient(135deg, var(--roxo-escuro) 0%, var(--roxo-medio) 100%);
             padding: 3rem 2rem 2.5rem;
@@ -116,7 +113,6 @@
         }
         #input-busca:focus { box-shadow: 0 0 0 3px rgba(166, 109, 212, 0.4); }
 
-        /* ── GRID ── */
         .main-container { max-width: 1200px; margin: 0 auto; padding: 2rem 1.5rem; }
         #grid-makers {
             display: grid;
@@ -124,7 +120,6 @@
             gap: 1.5rem;
         }
 
-        /* ── MAKER CARD ── */
         .maker-card {
             background: #fff;
             border-radius: 16px;
@@ -159,6 +154,7 @@
         .maker-local {
             display: flex; align-items: center; gap: 4px;
             font-size: 0.8rem; color: var(--cinza-texto); margin: 2px 0 4px;
+            flex-wrap: wrap;
         }
         .maker-avaliacao { display: flex; align-items: center; gap: 6px; }
         .estrelas { font-size: 0.85rem; line-height: 1; }
@@ -176,7 +172,6 @@
         .badge-disponivel.disponivel   { background: #dcfce7; color: #16a34a; }
         .badge-disponivel.indisponivel { background: #fee2e2; color: #dc2626; }
 
-        /* ── GALERIA ── */
         .card-galeria {
             display: grid; gap: 2px; margin: 0.5rem 0;
             height: 180px; overflow: hidden;
@@ -203,7 +198,6 @@
             color: var(--roxo-claro); font-size: 0.8rem;
         }
 
-        /* ── CARD FOOTER ── */
         .card-footer {
             padding: 0.75rem 1rem 1rem;
             display: flex; flex-direction: column; gap: 10px;
@@ -226,7 +220,6 @@
         }
         .btn-ver-perfil:hover { background: var(--roxo-escuro); transform: scale(1.01); }
 
-        /* ── LOADING / EMPTY ── */
         .loading-state, .empty-state {
             grid-column: 1 / -1;
             display: flex; flex-direction: column;
@@ -243,7 +236,6 @@
             animation: spin 0.8s linear infinite;
         }
         @keyframes spin { to { transform: rotate(360deg); } }
-        /* ───────── MODAL ───────── */
 
         .modal-portfolio{
             position: fixed;
@@ -273,14 +265,8 @@
         }
 
         @keyframes modalEntrada{
-            from{
-                opacity: 0;
-                transform: translateY(20px) scale(.98);
-            }
-            to{
-                opacity: 1;
-                transform: translateY(0) scale(1);
-            }
+            from{ opacity: 0; transform: translateY(20px) scale(.98); }
+            to{ opacity: 1; transform: translateY(0) scale(1); }
         }
 
         .modal-header-custom{
@@ -289,11 +275,7 @@
             justify-content: space-between;
             padding: 18px 24px;
             border-bottom: 1px solid #eee;
-            background: linear-gradient(
-                135deg,
-                var(--roxo-escuro),
-                var(--roxo-medio)
-            );
+            background: linear-gradient( 135deg, var(--roxo-escuro), var(--roxo-medio) );
             color: white;
         }
 
@@ -321,9 +303,7 @@
             transform: rotate(90deg);
         }
 
-        #conteudoPortfolio{
-            padding: 24px;
-        }
+        #conteudoPortfolio{ padding: 24px; }
 
         .loading-modal{
             min-height: 300px;
@@ -334,214 +314,128 @@
             gap: 12px;
         }
 
-        /* ===== SINO DE NOTIFICACOES ===== */
-        .sino-wrapper {
-            position: relative;
-            display: inline-flex;
-            align-items: center;
-        }
-        #btn-sino {
-            background: rgba(255,255,255,0.12);
-            color: rgba(255,255,255,0.82);
-            border: 1px solid rgba(255,255,255,0.2);
-            border-radius: 8px;
-            padding: 0.35rem 0.75rem;
-            font-size: 0.9rem;
-            cursor: pointer;
-            transition: background 0.18s, color 0.18s;
-            position: relative;
-            display: flex;
-            align-items: center;
-        }
-        #btn-sino:hover, #btn-sino.sino-ativo {
-            background: rgba(255,255,255,0.22);
-            color: #fff;
-        }
-        #sino-badge {
-            display: none;
-            position: absolute;
-            top: -6px;
-            right: -6px;
-            background: #e03c6e;
-            color: #fff;
-            font-size: 0.65rem;
-            font-weight: 700;
-            border-radius: 50%;
-            width: 18px;
-            height: 18px;
-            align-items: center;
-            justify-content: center;
-            border: 2px solid var(--printly-primary, #412746);
-            z-index: 10;
-        }
-        #sino-dropdown {
-            display: none;
-            position: absolute;
-            top: calc(100% + 10px);
-            right: 0;
-            width: 320px;
-            background: #fff;
-            border: 1px solid rgba(194,185,194,0.55);
-            border-radius: 12px;
-            box-shadow: 0 8px 32px rgba(65,39,70,0.15);
-            z-index: 1050;
-            overflow: hidden;
-        }
+        .sino-wrapper { position: relative; display: inline-flex; align-items: center; }
+        #btn-sino { background: rgba(255,255,255,0.12); color: rgba(255,255,255,0.82); border: 1px solid rgba(255,255,255,0.2); border-radius: 8px; padding: 0.35rem 0.75rem; font-size: 0.9rem; cursor: pointer; transition: background 0.18s, color 0.18s; position: relative; display: flex; align-items: center; }
+        #btn-sino:hover, #btn-sino.sino-ativo { background: rgba(255,255,255,0.22); color: #fff; }
+        #sino-badge { display: none; position: absolute; top: -6px; right: -6px; background: #e03c6e; color: #fff; font-size: 0.65rem; font-weight: 700; border-radius: 50%; width: 18px; height: 18px; align-items: center; justify-content: center; border: 2px solid var(--printly-primary, #412746); z-index: 10; }
+        #sino-dropdown { display: none; position: absolute; top: calc(100% + 10px); right: 0; width: 320px; background: #fff; border: 1px solid rgba(194,185,194,0.55); border-radius: 12px; box-shadow: 0 8px 32px rgba(65,39,70,0.15); z-index: 1050; overflow: hidden; }
         #sino-dropdown.sino-aberto { display: block; }
-        .sino-header {
-            padding: 0.75rem 1rem;
-            font-family: 'Syne', sans-serif;
-            font-weight: 700;
-            font-size: 0.9rem;
-            color: #412746;
-            border-bottom: 1px solid rgba(194,185,194,0.4);
-            background: #f0cef5;
-        }
-        #sino-lista {
-            list-style: none;
-            margin: 0;
-            padding: 0;
-            max-height: 340px;
-            overflow-y: auto;
-        }
-        .sino-item {
-            padding: 0.75rem 1rem;
-            border-bottom: 1px solid rgba(194,185,194,0.3);
-            cursor: default;
-        }
+        .sino-header { padding: 0.75rem 1rem; font-family: 'Syne', sans-serif; font-weight: 700; font-size: 0.9rem; color: #412746; border-bottom: 1px solid rgba(194,185,194,0.4); background: #f0cef5; }
+        #sino-lista { list-style: none; margin: 0; padding: 0; max-height: 340px; overflow-y: auto; }
+        .sino-item { padding: 0.75rem 1rem; border-bottom: 1px solid rgba(194,185,194,0.3); cursor: default; }
         .sino-item:last-child { border-bottom: none; }
         .sino-nao-lida { background: #fdf4ff; }
-        .sino-item-titulo {
-            font-weight: 600;
-            font-size: 0.85rem;
-            color: #412746;
-            margin-bottom: 2px;
-        }
-        .sino-item-msg {
-            font-size: 0.8rem;
-            color: #5a3a5a;
-            margin-bottom: 3px;
-        }
-        .sino-item-data {
-            font-size: 0.72rem;
-            color: #9e939e;
-        }
-        .sino-vazio {
-            padding: 1.25rem 1rem;
-            text-align: center;
-            color: #9e939e;
-            font-size: 0.85rem;
-            list-style: none;
-        }
+        .sino-item-titulo { font-weight: 600; font-size: 0.85rem; color: #412746; margin-bottom: 2px; }
+        .sino-item-msg { font-size: 0.8rem; color: #5a3a5a; margin-bottom: 3px; }
+        .sino-item-data { font-size: 0.72rem; color: #9e939e; }
+        .sino-vazio { padding: 1.25rem 1rem; text-align: center; color: #9e939e; font-size: 0.85rem; list-style: none; }
 
-        /* ===== SUB-NAVBAR ===== */
-        .sub-navbar {
-            background: rgba(65,39,70,0.92);
-            border-bottom: 1px solid rgba(255,255,255,0.08);
-            padding: 0.25rem 0;
-        }
-        .sub-navbar .container {
-            display: flex;
-            align-items: center;
-        }
-        #wrap-btn-maker {
-            margin-left: auto;
-            display: flex;
-            align-items: center;
-        }
-        #btn-solicitar-maker:hover {
-            background: rgba(255,255,255,0.25) !important;
-        }
-        .sub-navbar .nav-link {
-            color: rgba(255,255,255,0.75) !important;
-            font-size: 0.82rem;
-            font-weight: 500;
-            padding: 0.3rem 0.85rem !important;
-            border-radius: 6px;
-            transition: background 0.15s, color 0.15s;
-        }
-        .sub-navbar .nav-link:hover,
-        .sub-navbar .nav-link.active {
-            background: rgba(255,255,255,0.14);
-            color: #fff !important;
-        }
+        .sub-navbar { background: rgba(65,39,70,0.92); border-bottom: 1px solid rgba(255,255,255,0.08); padding: 0.25rem 0; }
+        .sub-navbar .container { display: flex; align-items: center; }
+        #wrap-btn-maker { margin-left: auto; display: flex; align-items: center; }
+        #btn-solicitar-maker:hover { background: rgba(255,255,255,0.25) !important; }
+        .sub-navbar .nav-link { color: rgba(255,255,255,0.75) !important; font-size: 0.82rem; font-weight: 500; padding: 0.3rem 0.85rem !important; border-radius: 6px; transition: background 0.15s, color 0.15s; }
+        .sub-navbar .nav-link:hover, .sub-navbar .nav-link.active { background: rgba(255,255,255,0.14); color: #fff !important; }
 
-        /* ===== FOOTER ===== */
-        .printly-footer {
-            background: linear-gradient(135deg, var(--printly-primary, #412746) 0%, #2d1a32 100%);
-            color: rgba(255,255,255,0.7);
-            padding: 3rem 0 1.5rem;
-            margin-top: 4rem;
-            font-size: 0.85rem;
+        .printly-footer { background: linear-gradient(135deg, var(--printly-primary, #412746) 0%, #2d1a32 100%); color: rgba(255,255,255,0.7); padding: 3rem 0 1.5rem; margin-top: 4rem; font-size: 0.85rem; }
+        .printly-footer .footer-brand { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 1.5rem; color: #fff; letter-spacing: -0.5px; display: flex; align-items: center; gap: 8px; margin-bottom: 0.5rem; }
+        .printly-footer .footer-brand i { font-size: 1.3rem; color: #e8a0f0; }
+        .printly-footer .footer-tagline { color: rgba(255,255,255,0.5); font-size: 0.82rem; margin-bottom: 1.25rem; }
+        .printly-footer .footer-title { color: #fff; font-weight: 600; font-size: 0.82rem; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 0.9rem; }
+        .printly-footer .footer-links { list-style: none; padding: 0; margin: 0; }
+        .printly-footer .footer-links li { margin-bottom: 0.45rem; }
+        .printly-footer .footer-links a { color: rgba(255,255,255,0.6); text-decoration: none; transition: color 0.15s; display: inline-flex; align-items: center; gap: 6px; }
+        .printly-footer .footer-links a:hover { color: #e8a0f0; }
+        .printly-footer .footer-divider { border-color: rgba(255,255,255,0.1); margin: 2rem 0 1.25rem; }
+        .printly-footer .footer-bottom { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.5rem; color: rgba(255,255,255,0.35); font-size: 0.78rem; }
+        .printly-footer .footer-badge { background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.12); border-radius: 20px; padding: 0.2rem 0.75rem; font-size: 0.75rem; color: rgba(255,255,255,0.5); display: inline-flex; align-items: center; gap: 5px; }
+
+        /* ===== PBI 25 - FILTRO DE LOCALIZAÇÃO ===== */
+        .filtro-local-wrapper {
+            max-width: 760px;
+            margin: 1.25rem auto 0;
+            background: rgba(255,255,255,0.08);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255,255,255,0.15);
+            border-radius: 16px;
+            padding: 1rem 1.25rem;
         }
-        .printly-footer .footer-brand {
-            font-family: 'Syne', sans-serif;
-            font-weight: 700;
-            font-size: 1.5rem;
-            color: #fff;
-            letter-spacing: -0.5px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            margin-bottom: 0.5rem;
-        }
-        .printly-footer .footer-brand i {
-            font-size: 1.3rem;
-            color: #e8a0f0;
-        }
-        .printly-footer .footer-tagline {
-            color: rgba(255,255,255,0.5);
-            font-size: 0.82rem;
-            margin-bottom: 1.25rem;
-        }
-        .printly-footer .footer-title {
-            color: #fff;
+        .filtro-local-titulo {
+            color: var(--rosa);
+            font-size: 0.78rem;
             font-weight: 600;
-            font-size: 0.82rem;
+            letter-spacing: 0.05em;
             text-transform: uppercase;
-            letter-spacing: 0.08em;
-            margin-bottom: 0.9rem;
-        }
-        .printly-footer .footer-links {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-        }
-        .printly-footer .footer-links li {
-            margin-bottom: 0.45rem;
-        }
-        .printly-footer .footer-links a {
-            color: rgba(255,255,255,0.6);
-            text-decoration: none;
-            transition: color 0.15s;
-            display: inline-flex;
+            margin-bottom: 0.5rem;
+            display: flex;
             align-items: center;
             gap: 6px;
         }
-        .printly-footer .footer-links a:hover { color: #e8a0f0; }
-        .printly-footer .footer-divider {
-            border-color: rgba(255,255,255,0.1);
-            margin: 2rem 0 1.25rem;
-        }
-        .printly-footer .footer-bottom {
-            display: flex;
+        #form-filtro-local {
+            display: grid;
+            grid-template-columns: 1fr 1.5fr 0.8fr 0.8fr;
+            gap: 8px;
             align-items: center;
-            justify-content: space-between;
-            flex-wrap: wrap;
-            gap: 0.5rem;
-            color: rgba(255,255,255,0.35);
-            font-size: 0.78rem;
         }
-        .printly-footer .footer-badge {
-            background: rgba(255,255,255,0.08);
-            border: 1px solid rgba(255,255,255,0.12);
+        #form-filtro-local input {
+            border: none;
             border-radius: 20px;
-            padding: 0.2rem 0.75rem;
-            font-size: 0.75rem;
-            color: rgba(255,255,255,0.5);
+            padding: 8px 14px;
+            font-size: 0.85rem;
+            outline: none;
+            color: var(--roxo-escuro);
+            background: #fff;
+            min-width: 0;
+        }
+        #form-filtro-local input:focus { box-shadow: 0 0 0 2px rgba(166,109,212,0.5); }
+        .filtro-acoes {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 10px;
+            flex-wrap: wrap;
+        }
+        .btn-filtro {
+            border: none;
+            border-radius: 20px;
+            padding: 7px 18px;
+            font-size: 0.82rem;
+            font-weight: 600;
+            cursor: pointer;
             display: inline-flex;
             align-items: center;
-            gap: 5px;
+            gap: 6px;
+            transition: opacity 0.15s;
+        }
+        .btn-filtro-buscar  { background: var(--rosa); color: var(--roxo-escuro); }
+        .btn-filtro-local   { background: rgba(255,255,255,0.2); color: #fff; border: 1px solid rgba(255,255,255,0.25); }
+        .btn-filtro-limpar  { background: transparent; color: rgba(255,255,255,0.6); }
+        .btn-filtro:hover   { opacity: 0.9; }
+        .mensagem-filtro {
+            display: none;
+            margin-top: 10px;
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-size: 0.8rem;
+            text-align: center;
+        }
+        .mensagem-ok    { background: rgba(220,252,231,0.9); color: #15803d; }
+        .mensagem-erro  { background: rgba(254,226,226,0.9); color: #b91c1c; }
+        .mensagem-info  { background: rgba(255,255,255,0.2); color: #fff; }
+        .badge-distancia {
+            background: var(--rosa-claro);
+            color: var(--roxo-medio);
+            font-size: 0.7rem;
+            font-weight: 600;
+            padding: 2px 8px;
+            border-radius: 12px;
+            margin-left: 4px;
+            display: inline-flex;
+            align-items: center;
+            gap: 3px;
+        }
+        @media(max-width:640px){
+            #form-filtro-local { grid-template-columns: 1fr 1fr; }
         }
     </style>
 </head>
@@ -597,6 +491,31 @@
             </svg>
             <input type="text" id="input-busca" placeholder="Buscar por nome, cidade ou material...">
         </div>
+
+        <!-- PBI 25 - Filtro de localização -->
+        <div class="filtro-local-wrapper">
+            <div class="filtro-local-titulo">
+                <i class="bi bi-geo-alt-fill"></i> Filtrar por localização
+            </div>
+            <form id="form-filtro-local">
+                <input type="text" id="filtro-cep" placeholder="CEP" maxlength="9">
+                <input type="text" id="filtro-cidade" placeholder="Cidade">
+                <input type="text" id="filtro-estado" placeholder="UF" maxlength="2">
+                <input type="number" id="filtro-raio" placeholder="Raio (km)" value="50" min="1" max="1000">
+            </form>
+            <div class="filtro-acoes">
+                <button type="submit" form="form-filtro-local" class="btn-filtro btn-filtro-buscar">
+                    <i class="bi bi-search"></i> Buscar
+                </button>
+                <button type="button" class="btn-filtro btn-filtro-local" id="btn-usar-local">
+                    <i class="bi bi-geo-alt"></i> Usar minha localização
+                </button>
+                <button type="button" class="btn-filtro btn-filtro-limpar" id="btn-limpar-filtro">
+                    Limpar
+                </button>
+            </div>
+            <div class="mensagem-filtro" id="mensagem-filtro"></div>
+        </div>
     </div>
 
     <div class="main-container">
@@ -606,41 +525,24 @@
 
     <!-- MODAL PORTFÓLIO -->
     <div id="modalPortfolio" class="modal-portfolio hidden">
-
         <div class="modal-portfolio-content">
-
-            <!-- HEADER -->
             <div class="modal-header-custom">
-
                 <h2>
                     <i class="bi bi-images"></i>
                     Portfólio do Fabricante
                 </h2>
-
                 <button id="fecharModal" class="btn-fechar-modal">
                     <i class="bi bi-x-lg"></i>
                 </button>
-
             </div>
-
-            <!-- CONTEÚDO DINÂMICO -->
             <div id="conteudoPortfolio">
-
                 <div class="loading-modal">
                     <div class="spinner-custom"></div>
                     <p>Carregando portfólio...</p>
                 </div>
-
             </div>
-            
-            
-
         </div>
-        
-
     </div>
-
-
 
     <footer class="printly-footer">
         <div class="container">

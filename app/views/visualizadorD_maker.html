@@ -26,9 +26,7 @@
             --printly-radius: 12px;
         }
 
-        * {
-            box-sizing: border-box;
-        }
+        * { box-sizing: border-box; }
 
         body {
             background-color: var(--printly-bg);
@@ -37,76 +35,24 @@
             min-height: 100vh;
         }
 
-        /* ── Navbar ── */
         .navbar {
             background: linear-gradient(135deg, var(--printly-primary) 0%, var(--printly-primary-dark) 100%) !important;
             padding: 0.75rem 0;
             box-shadow: 0 2px 16px rgba(224, 70, 229, 0.25);
         }
+        .navbar-brand { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 1.4rem; color: #fff !important; }
+        .navbar .nav-link { color: rgba(255, 255, 255, 0.82) !important; font-size: 0.9rem; font-weight: 500; padding: 0.45rem 0.9rem !important; border-radius: 8px; transition: background 0.18s, color 0.18s; }
+        .navbar .nav-link:hover, .navbar .nav-link.active { background: rgba(255, 255, 255, 0.18); color: #fff !important; }
 
-        .navbar-brand {
-            font-family: 'Syne', sans-serif;
-            font-weight: 700;
-            font-size: 1.4rem;
-            color: #fff !important;
-        }
+        #sair { background: rgba(255, 255, 255, 0.12); color: rgba(255, 255, 255, 0.82); border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 8px; padding: 0.35rem 0.75rem; font-size: 0.9rem; }
+        #sair:hover { background: rgba(255, 255, 255, 0.22); color: #fff; }
 
-        .navbar .nav-link {
-            color: rgba(255, 255, 255, 0.82) !important;
-            font-size: 0.9rem;
-            font-weight: 500;
-            padding: 0.45rem 0.9rem !important;
-            border-radius: 8px;
-            transition: background 0.18s, color 0.18s;
-        }
+        .container { max-width: 1200px; }
 
-        .navbar .nav-link:hover,
-        .navbar .nav-link.active {
-            background: rgba(255, 255, 255, 0.18);
-            color: #fff !important;
-        }
+        .page-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.5rem; padding-bottom: 1rem; border-bottom: 1px solid var(--printly-border); }
+        .page-header h4 { font-weight: 700; font-size: 1.2rem; margin: 0; }
+        .page-header p { font-size: 0.85rem; color: var(--printly-muted); margin: 2px 0 0; }
 
-        #sair {
-            background: rgba(255, 255, 255, 0.12);
-            color: rgba(255, 255, 255, 0.82);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: 8px;
-            padding: 0.35rem 0.75rem;
-            font-size: 0.9rem;
-        }
-
-        #sair:hover {
-            background: rgba(255, 255, 255, 0.22);
-            color: #fff;
-        }
-
-        .container {
-            max-width: 1200px;
-        }
-
-        /* ── Page header ── */
-        .page-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 1.5rem;
-            padding-bottom: 1rem;
-            border-bottom: 1px solid var(--printly-border);
-        }
-
-        .page-header h4 {
-            font-weight: 700;
-            font-size: 1.2rem;
-            margin: 0;
-        }
-
-        .page-header p {
-            font-size: 0.85rem;
-            color: var(--printly-muted);
-            margin: 2px 0 0;
-        }
-
-        /* ── Cards ── */
         .card {
             border: 1px solid var(--printly-border);
             border-radius: var(--printly-radius);
@@ -115,530 +61,101 @@
             margin-bottom: 1.25rem;
             overflow: hidden;
         }
+        .card-header { background: var(--printly-light); border-bottom: 1px solid var(--printly-border); padding: 0.85rem 1.25rem; display: flex; align-items: center; gap: 10px; }
+        .card-header h5 { margin: 0; font-size: 0.975rem; font-weight: 600; color: var(--printly-primary); }
+        .card-icon { width: 30px; height: 30px; border-radius: 8px; background: var(--printly-primary); display: flex; align-items: center; justify-content: center; }
+        .card-icon i { color: #fff; font-size: 0.85rem; }
+        .card-body { padding: 1.25rem; }
 
-        .card-header {
-            background: var(--printly-light);
-            border-bottom: 1px solid var(--printly-border);
-            padding: 0.85rem 1.25rem;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
+        .upload-zone { border: 2px dashed var(--printly-border); border-radius: var(--printly-radius); background: var(--printly-bg); padding: 2.5rem 1.5rem; text-align: center; cursor: pointer; transition: border-color 0.2s, background 0.2s; position: relative; }
+        .upload-zone:hover, .upload-zone.dragover { border-color: var(--printly-primary-dark); background: #f7e8fc; }
+        .upload-zone .upload-icon { width: 56px; height: 56px; border-radius: 50%; background: var(--printly-light); display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem; }
+        .upload-zone .upload-icon i { font-size: 1.6rem; color: var(--printly-primary); }
+        .upload-zone h6 { font-weight: 600; color: var(--printly-primary); margin-bottom: 0.35rem; }
+        .upload-zone p { font-size: 0.82rem; color: var(--printly-muted); margin: 0; }
 
-        .card-header h5 {
-            margin: 0;
-            font-size: 0.975rem;
-            font-weight: 600;
-            color: var(--printly-primary);
-        }
+        #inputArquivo3D { display: none; }
 
-        .card-icon {
-            width: 30px;
-            height: 30px;
-            border-radius: 8px;
-            background: var(--printly-primary);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
+        .btn-upload-manual { display: inline-flex; align-items: center; gap: 6px; margin-top: 1rem; background: var(--printly-primary); color: #fff; border: none; border-radius: 8px; padding: 0.5rem 1rem; font-size: 0.85rem; font-weight: 500; cursor: pointer; transition: background 0.18s; }
+        .btn-upload-manual:hover { background: var(--printly-primary-dark); }
 
-        .card-icon i {
-            color: #fff;
-            font-size: 0.85rem;
-        }
+        .formato-badges { display: flex; gap: 8px; justify-content: center; margin-top: 0.75rem; flex-wrap: wrap; }
+        .formato-badge { background: #ede0f0; color: var(--printly-primary); border-radius: 20px; padding: 3px 10px; font-size: 0.75rem; font-weight: 600; letter-spacing: 0.5px; }
 
-        .card-body {
-            padding: 1.25rem;
-        }
+        #alertaErroArquivo { display: none; border-radius: var(--printly-radius); font-size: 0.87rem; margin-top: 0.75rem; }
 
-        /* ── Upload zone ── */
-        .upload-zone {
-            border: 2px dashed var(--printly-border);
-            border-radius: var(--printly-radius);
-            background: var(--printly-bg);
-            padding: 2.5rem 1.5rem;
-            text-align: center;
-            cursor: pointer;
-            transition: border-color 0.2s, background 0.2s;
-            position: relative;
-        }
+        #loadingVisualizador { display: none; position: absolute; inset: 0; background: rgba(255, 255, 255, 0.82); border-radius: var(--printly-radius); z-index: 10; flex-direction: column; align-items: center; justify-content: center; gap: 12px; }
+        #loadingVisualizador.ativo { display: flex; }
+        #loadingVisualizador .spinner-border { color: var(--printly-primary); width: 2.5rem; height: 2.5rem; }
+        #loadingVisualizador p { color: var(--printly-primary); font-size: 0.9rem; font-weight: 500; margin: 0; }
 
-        .upload-zone:hover,
-        .upload-zone.dragover {
-            border-color: var(--printly-primary-dark);
-            background: #f7e8fc;
-        }
+        #erroVisualizador { display: none; position: absolute; inset: 0; background: var(--printly-bg); border-radius: var(--printly-radius); z-index: 9; flex-direction: column; align-items: center; justify-content: center; gap: 10px; }
+        #erroVisualizador.ativo { display: flex; }
+        #erroVisualizador i { font-size: 2.5rem; color: #c0392b; }
+        #erroVisualizador p { color: #c0392b; font-size: 0.9rem; font-weight: 500; margin: 0; }
 
-        .upload-zone .upload-icon {
-            width: 56px;
-            height: 56px;
-            border-radius: 50%;
-            background: var(--printly-light);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 1rem;
-        }
+        .viewer-wrapper { position: relative; width: 100%; height: 420px; border-radius: var(--printly-radius); overflow: hidden; background: #1e1226; }
+        #canvasVisualizador3D { width: 100%; height: 100%; display: block; }
 
-        .upload-zone .upload-icon i {
-            font-size: 1.6rem;
-            color: var(--printly-primary);
-        }
+        #placeholderVisualizador { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; color: rgba(255, 255, 255, 0.35); }
+        #placeholderVisualizador i { font-size: 3.5rem; opacity: 0.5; }
+        #placeholderVisualizador p { font-size: 0.88rem; margin: 0; }
 
-        .upload-zone h6 {
-            font-weight: 600;
-            color: var(--printly-primary);
-            margin-bottom: 0.35rem;
-        }
+        .viewer-controls { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 0.75rem; }
+        .btn-viewer { display: inline-flex; align-items: center; gap: 5px; background: var(--printly-light); color: var(--printly-primary); border: 1px solid var(--printly-border); border-radius: 8px; padding: 0.4rem 0.85rem; font-size: 0.82rem; font-weight: 500; cursor: pointer; transition: background 0.18s, color 0.18s; }
+        .btn-viewer:hover { background: var(--printly-primary); color: #fff; border-color: var(--printly-primary); }
 
-        .upload-zone p {
-            font-size: 0.82rem;
-            color: var(--printly-muted);
-            margin: 0;
-        }
+        .info-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 0.85rem; }
+        .info-item { background: var(--printly-bg); border: 1px solid var(--printly-border); border-radius: 10px; padding: 0.85rem 1rem; }
+        .info-label { font-size: 0.75rem; color: var(--printly-muted); margin-bottom: 3px; text-transform: uppercase; letter-spacing: 0.4px; }
+        .info-value { font-size: 0.95rem; font-weight: 600; color: var(--printly-primary); }
+        .info-value.placeholder-info { color: var(--printly-border); font-weight: 400; font-size: 0.85rem; }
 
-        /* hidden real input */
-        #inputArquivo3D {
-            display: none;
-        }
-
-        .btn-upload-manual {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            margin-top: 1rem;
-            background: var(--printly-primary);
-            color: #fff;
-            border: none;
-            border-radius: 8px;
-            padding: 0.5rem 1rem;
-            font-size: 0.85rem;
-            font-weight: 500;
-            cursor: pointer;
-            transition: background 0.18s;
-        }
-
-        .btn-upload-manual:hover {
-            background: var(--printly-primary-dark);
-        }
-
-        /* ── Badges de formato ── */
-        .formato-badges {
-            display: flex;
-            gap: 8px;
-            justify-content: center;
-            margin-top: 0.75rem;
-            flex-wrap: wrap;
-        }
-
-        .formato-badge {
-            background: #ede0f0;
-            color: var(--printly-primary);
-            border-radius: 20px;
-            padding: 3px 10px;
-            font-size: 0.75rem;
-            font-weight: 600;
-            letter-spacing: 0.5px;
-        }
-
-        /* ── Alerta de erro ── */
-        #alertaErroArquivo {
-            display: none;
-            border-radius: var(--printly-radius);
-            font-size: 0.87rem;
-            margin-top: 0.75rem;
-        }
-
-        /* ── Loading overlay no visualizador ── */
-        #loadingVisualizador {
-            display: none;
-            position: absolute;
-            inset: 0;
-            background: rgba(255, 255, 255, 0.82);
-            border-radius: var(--printly-radius);
-            z-index: 10;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            gap: 12px;
-        }
-
-        #loadingVisualizador.ativo {
-            display: flex;
-        }
-
-        #loadingVisualizador .spinner-border {
-            color: var(--printly-primary);
-            width: 2.5rem;
-            height: 2.5rem;
-        }
-
-        #loadingVisualizador p {
-            color: var(--printly-primary);
-            font-size: 0.9rem;
-            font-weight: 500;
-            margin: 0;
-        }
-
-        /* ── Erro visualizador ── */
-        #erroVisualizador {
-            display: none;
-            position: absolute;
-            inset: 0;
-            background: var(--printly-bg);
-            border-radius: var(--printly-radius);
-            z-index: 9;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-        }
-
-        #erroVisualizador.ativo {
-            display: flex;
-        }
-
-        #erroVisualizador i {
-            font-size: 2.5rem;
-            color: #c0392b;
-        }
-
-        #erroVisualizador p {
-            color: #c0392b;
-            font-size: 0.9rem;
-            font-weight: 500;
-            margin: 0;
-        }
-
-        /* ── Canvas wrapper ── */
-        .viewer-wrapper {
-            position: relative;
-            width: 100%;
-            height: 420px;
-            border-radius: var(--printly-radius);
-            overflow: hidden;
-            background: #1e1226;
-        }
-
-        #canvasVisualizador3D {
-            width: 100%;
-            height: 100%;
-            display: block;
-        }
-
-        /* placeholder vazio */
-        #placeholderVisualizador {
-            position: absolute;
-            inset: 0;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            gap: 12px;
-            color: rgba(255, 255, 255, 0.35);
-        }
-
-        #placeholderVisualizador i {
-            font-size: 3.5rem;
-            opacity: 0.5;
-        }
-
-        #placeholderVisualizador p {
-            font-size: 0.88rem;
-            margin: 0;
-        }
-
-        /* ── Controles do visualizador ── */
-        .viewer-controls {
-            display: flex;
-            gap: 8px;
-            flex-wrap: wrap;
-            margin-top: 0.75rem;
-        }
-
-        .btn-viewer {
-            display: inline-flex;
-            align-items: center;
-            gap: 5px;
-            background: var(--printly-light);
-            color: var(--printly-primary);
-            border: 1px solid var(--printly-border);
-            border-radius: 8px;
-            padding: 0.4rem 0.85rem;
-            font-size: 0.82rem;
-            font-weight: 500;
-            cursor: pointer;
-            transition: background 0.18s, color 0.18s;
-        }
-
-        .btn-viewer:hover {
-            background: var(--printly-primary);
-            color: #fff;
-            border-color: var(--printly-primary);
-        }
-
-        /* ── Informações do modelo ── */
-        .info-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-            gap: 0.85rem;
-        }
-
-        .info-item {
-            background: var(--printly-bg);
-            border: 1px solid var(--printly-border);
-            border-radius: 10px;
-            padding: 0.85rem 1rem;
-        }
-
-        .info-label {
-            font-size: 0.75rem;
-            color: var(--printly-muted);
-            margin-bottom: 3px;
-            text-transform: uppercase;
-            letter-spacing: 0.4px;
-        }
-
-        .info-value {
-            font-size: 0.95rem;
-            font-weight: 600;
-            color: var(--printly-primary);
-        }
-
-        .info-value.placeholder-info {
-            color: var(--printly-border);
-            font-weight: 400;
-            font-size: 0.85rem;
-        }
-
-        /* ── Responsivo ── */
         @media (max-width: 576px) {
-            .page-header {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 12px;
-            }
-
-            .viewer-wrapper {
-                height: 280px;
-            }
+            .page-header { flex-direction: column; align-items: flex-start; gap: 12px; }
+            .viewer-wrapper { height: 280px; }
         }
 
-        /* ===== SINO DE NOTIFICACOES ===== */
-        .sino-wrapper {
-            position: relative;
-            display: inline-flex;
-            align-items: center;
-        }
-        #btn-sino {
-            background: rgba(255,255,255,0.12);
-            color: rgba(255,255,255,0.82);
-            border: 1px solid rgba(255,255,255,0.2);
-            border-radius: 8px;
-            padding: 0.35rem 0.75rem;
-            font-size: 0.9rem;
-            cursor: pointer;
-            transition: background 0.18s, color 0.18s;
-            position: relative;
-            display: flex;
-            align-items: center;
-        }
-        #btn-sino:hover, #btn-sino.sino-ativo {
-            background: rgba(255,255,255,0.22);
-            color: #fff;
-        }
-        #sino-badge {
-            display: none;
-            position: absolute;
-            top: -6px;
-            right: -6px;
-            background: #e03c6e;
-            color: #fff;
-            font-size: 0.65rem;
-            font-weight: 700;
-            border-radius: 50%;
-            width: 18px;
-            height: 18px;
-            align-items: center;
-            justify-content: center;
-            border: 2px solid var(--printly-primary, #412746);
-            z-index: 10;
-        }
-        #sino-dropdown {
-            display: none;
-            position: absolute;
-            top: calc(100% + 10px);
-            right: 0;
-            width: 320px;
-            background: #fff;
-            border: 1px solid rgba(194,185,194,0.55);
-            border-radius: 12px;
-            box-shadow: 0 8px 32px rgba(65,39,70,0.15);
-            z-index: 1050;
-            overflow: hidden;
-        }
+        .sino-wrapper { position: relative; display: inline-flex; align-items: center; }
+        #btn-sino { background: rgba(255,255,255,0.12); color: rgba(255,255,255,0.82); border: 1px solid rgba(255,255,255,0.2); border-radius: 8px; padding: 0.35rem 0.75rem; font-size: 0.9rem; cursor: pointer; transition: background 0.18s, color 0.18s; position: relative; display: flex; align-items: center; }
+        #btn-sino:hover, #btn-sino.sino-ativo { background: rgba(255,255,255,0.22); color: #fff; }
+        #sino-badge { display: none; position: absolute; top: -6px; right: -6px; background: #e03c6e; color: #fff; font-size: 0.65rem; font-weight: 700; border-radius: 50%; width: 18px; height: 18px; align-items: center; justify-content: center; border: 2px solid var(--printly-primary, #412746); z-index: 10; }
+        #sino-dropdown { display: none; position: absolute; top: calc(100% + 10px); right: 0; width: 320px; background: #fff; border: 1px solid rgba(194,185,194,0.55); border-radius: 12px; box-shadow: 0 8px 32px rgba(65,39,70,0.15); z-index: 1050; overflow: hidden; }
         #sino-dropdown.sino-aberto { display: block; }
-        .sino-header {
-            padding: 0.75rem 1rem;
-            font-family: 'Syne', sans-serif;
-            font-weight: 700;
-            font-size: 0.9rem;
-            color: #412746;
-            border-bottom: 1px solid rgba(194,185,194,0.4);
-            background: #f0cef5;
-        }
-        #sino-lista {
-            list-style: none;
-            margin: 0;
-            padding: 0;
-            max-height: 340px;
-            overflow-y: auto;
-        }
-        .sino-item {
-            padding: 0.75rem 1rem;
-            border-bottom: 1px solid rgba(194,185,194,0.3);
-            cursor: default;
-        }
+        .sino-header { padding: 0.75rem 1rem; font-family: 'Syne', sans-serif; font-weight: 700; font-size: 0.9rem; color: #412746; border-bottom: 1px solid rgba(194,185,194,0.4); background: #f0cef5; }
+        #sino-lista { list-style: none; margin: 0; padding: 0; max-height: 340px; overflow-y: auto; }
+        .sino-item { padding: 0.75rem 1rem; border-bottom: 1px solid rgba(194,185,194,0.3); cursor: default; }
         .sino-item:last-child { border-bottom: none; }
         .sino-nao-lida { background: #fdf4ff; }
-        .sino-item-titulo {
-            font-weight: 600;
-            font-size: 0.85rem;
-            color: #412746;
-            margin-bottom: 2px;
-        }
-        .sino-item-msg {
-            font-size: 0.8rem;
-            color: #5a3a5a;
-            margin-bottom: 3px;
-        }
-        .sino-item-data {
-            font-size: 0.72rem;
-            color: #9e939e;
-        }
-        .sino-vazio {
-            padding: 1.25rem 1rem;
-            text-align: center;
-            color: #9e939e;
-            font-size: 0.85rem;
-            list-style: none;
-        }
+        .sino-item-titulo { font-weight: 600; font-size: 0.85rem; color: #412746; margin-bottom: 2px; }
+        .sino-item-msg { font-size: 0.8rem; color: #5a3a5a; margin-bottom: 3px; }
+        .sino-item-data { font-size: 0.72rem; color: #9e939e; }
+        .sino-vazio { padding: 1.25rem 1rem; text-align: center; color: #9e939e; font-size: 0.85rem; list-style: none; }
 
-        /* ===== SUB-NAVBAR ===== */
-        .sub-navbar {
-            background: rgba(65,39,70,0.92);
-            border-bottom: 1px solid rgba(255,255,255,0.08);
-            padding: 0.25rem 0;
-        }
-        .sub-navbar .container {
-            display: flex;
-            align-items: center;
-        }
-        #wrap-btn-maker {
-            margin-left: auto;
-            display: flex;
-            align-items: center;
-        }
-        #btn-solicitar-maker:hover {
-            background: rgba(255,255,255,0.25) !important;
-        }
-        .sub-navbar .nav-link {
-            color: rgba(255,255,255,0.75) !important;
-            font-size: 0.82rem;
-            font-weight: 500;
-            padding: 0.3rem 0.85rem !important;
-            border-radius: 6px;
-            transition: background 0.15s, color 0.15s;
-        }
-        .sub-navbar .nav-link:hover,
-        .sub-navbar .nav-link.active {
-            background: rgba(255,255,255,0.14);
-            color: #fff !important;
-        }
+        .sub-navbar { background: rgba(65,39,70,0.92); border-bottom: 1px solid rgba(255,255,255,0.08); padding: 0.25rem 0; }
+        .sub-navbar .container { display: flex; align-items: center; }
+        #wrap-btn-maker { margin-left: auto; display: flex; align-items: center; }
+        #btn-solicitar-maker:hover { background: rgba(255,255,255,0.25) !important; }
+        .sub-navbar .nav-link { color: rgba(255,255,255,0.75) !important; font-size: 0.82rem; font-weight: 500; padding: 0.3rem 0.85rem !important; border-radius: 6px; transition: background 0.15s, color 0.15s; }
+        .sub-navbar .nav-link:hover, .sub-navbar .nav-link.active { background: rgba(255,255,255,0.14); color: #fff !important; }
 
-        /* ===== FOOTER ===== */
-        .printly-footer {
-            background: linear-gradient(135deg, var(--printly-primary, #412746) 0%, #2d1a32 100%);
-            color: rgba(255,255,255,0.7);
-            padding: 3rem 0 1.5rem;
-            margin-top: 4rem;
-            font-size: 0.85rem;
-        }
-        .printly-footer .footer-brand {
-            font-family: 'Syne', sans-serif;
-            font-weight: 700;
-            font-size: 1.5rem;
-            color: #fff;
-            letter-spacing: -0.5px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            margin-bottom: 0.5rem;
-        }
-        .printly-footer .footer-brand i {
-            font-size: 1.3rem;
-            color: #e8a0f0;
-        }
-        .printly-footer .footer-tagline {
-            color: rgba(255,255,255,0.5);
-            font-size: 0.82rem;
-            margin-bottom: 1.25rem;
-        }
-        .printly-footer .footer-title {
-            color: #fff;
-            font-weight: 600;
-            font-size: 0.82rem;
-            text-transform: uppercase;
-            letter-spacing: 0.08em;
-            margin-bottom: 0.9rem;
-        }
-        .printly-footer .footer-links {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-        }
-        .printly-footer .footer-links li {
-            margin-bottom: 0.45rem;
-        }
-        .printly-footer .footer-links a {
-            color: rgba(255,255,255,0.6);
-            text-decoration: none;
-            transition: color 0.15s;
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-        }
+        .printly-footer { background: linear-gradient(135deg, var(--printly-primary, #412746) 0%, #2d1a32 100%); color: rgba(255,255,255,0.7); padding: 3rem 0 1.5rem; margin-top: 4rem; font-size: 0.85rem; }
+        .printly-footer .footer-brand { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 1.5rem; color: #fff; letter-spacing: -0.5px; display: flex; align-items: center; gap: 8px; margin-bottom: 0.5rem; }
+        .printly-footer .footer-brand i { font-size: 1.3rem; color: #e8a0f0; }
+        .printly-footer .footer-tagline { color: rgba(255,255,255,0.5); font-size: 0.82rem; margin-bottom: 1.25rem; }
+        .printly-footer .footer-title { color: #fff; font-weight: 600; font-size: 0.82rem; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 0.9rem; }
+        .printly-footer .footer-links { list-style: none; padding: 0; margin: 0; }
+        .printly-footer .footer-links li { margin-bottom: 0.45rem; }
+        .printly-footer .footer-links a { color: rgba(255,255,255,0.6); text-decoration: none; transition: color 0.15s; display: inline-flex; align-items: center; gap: 6px; }
         .printly-footer .footer-links a:hover { color: #e8a0f0; }
-        .printly-footer .footer-divider {
-            border-color: rgba(255,255,255,0.1);
-            margin: 2rem 0 1.25rem;
-        }
-        .printly-footer .footer-bottom {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            flex-wrap: wrap;
-            gap: 0.5rem;
-            color: rgba(255,255,255,0.35);
-            font-size: 0.78rem;
-        }
-        .printly-footer .footer-badge {
-            background: rgba(255,255,255,0.08);
-            border: 1px solid rgba(255,255,255,0.12);
-            border-radius: 20px;
-            padding: 0.2rem 0.75rem;
-            font-size: 0.75rem;
-            color: rgba(255,255,255,0.5);
-            display: inline-flex;
-            align-items: center;
-            gap: 5px;
-        }
+        .printly-footer .footer-divider { border-color: rgba(255,255,255,0.1); margin: 2rem 0 1.25rem; }
+        .printly-footer .footer-bottom { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.5rem; color: rgba(255,255,255,0.35); font-size: 0.78rem; }
+        .printly-footer .footer-badge { background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.12); border-radius: 20px; padding: 0.2rem 0.75rem; font-size: 0.75rem; color: rgba(255,255,255,0.5); display: inline-flex; align-items: center; gap: 5px; }
     </style>
 </head>
 
 <body data-acesso="CLIENTE,MAKER,ADMIN">
 
-    <!-- Navbar -->
         <nav class="navbar navbar-expand-lg navbar-dark">
         <div class="container">
             <a class="navbar-brand" href="index.php?rota=fabricante-painel">Printly</a>
@@ -680,94 +197,68 @@
 
     <div class="container mt-4">
 
-        <!-- Cabeçalho da página -->
         <div class="page-header">
             <div>
                 <h4><i class="bi bi-box me-2" style="color:var(--printly-primary-dark)"></i>Visualizador 3D</h4>
-                <p>Faça upload de um arquivo <strong>.STL</strong> ou <strong>.OBJ</strong> para visualizar o modelo em
-                    3D</p>
+                <p>Faça upload de um arquivo <strong>.STL</strong> ou <strong>.OBJ</strong> para visualizar o modelo em 3D</p>
             </div>
         </div>
 
-        <!-- Upload de arquivo -->
+        <!-- PBI 7 - Card de validação técnica (só renderiza se URL tiver ?pedido_id) -->
+        <div id="cardValidacaoContainer"></div>
+
         <div class="card">
             <div class="card-header">
                 <div class="card-icon"><i class="bi bi-cloud-arrow-up"></i></div>
                 <h5>Upload do Arquivo</h5>
             </div>
             <div class="card-body">
-
-                <!-- Zona drag & drop -->
                 <div class="upload-zone" id="uploadZone">
-                    <div class="upload-icon">
-                        <i class="bi bi-file-earmark-arrow-up"></i>
-                    </div>
+                    <div class="upload-icon"><i class="bi bi-file-earmark-arrow-up"></i></div>
                     <h6>Arraste e solte seu arquivo aqui</h6>
                     <p>ou clique no botão abaixo para selecionar manualmente</p>
-
                     <div class="formato-badges">
                         <span class="formato-badge">.STL</span>
                         <span class="formato-badge">.OBJ</span>
                     </div>
-
                     <button class="btn-upload-manual" type="button" id="btnSelecionarArquivo">
                         <i class="bi bi-folder2-open"></i> Selecionar Arquivo
                     </button>
-
                     <p style="margin-top:0.6rem; font-size:0.78rem; color:var(--printly-muted);">
                         Tamanho máximo: <strong>80 MB</strong>
                     </p>
                 </div>
-
-                <!-- Input oculto -->
                 <input type="file" id="inputArquivo3D" accept=".stl,.obj">
-
-                <!-- Alerta de erro -->
                 <div class="alert alert-danger" id="alertaErroArquivo" role="alert">
                     <i class="bi bi-exclamation-triangle-fill me-2"></i>
                     <span id="msgErroArquivo">Arquivo inválido.</span>
                 </div>
-
             </div>
         </div>
 
-        <!-- Visualizador 3D -->
         <div class="card">
             <div class="card-header">
                 <div class="card-icon"><i class="bi bi-display"></i></div>
                 <h5>Visualização 3D</h5>
             </div>
             <div class="card-body">
-
-                <!-- Canvas + overlays -->
                 <div class="viewer-wrapper" id="viewerWrapper">
-
-                    <!-- Canvas Three.js -->
                     <canvas id="canvasVisualizador3D"></canvas>
-
-                    <!-- Placeholder (nenhum arquivo carregado) -->
                     <div id="placeholderVisualizador">
                         <i class="bi bi-box-seam"></i>
                         <p>Nenhum modelo carregado</p>
                     </div>
-
-                    <!-- Loading -->
                     <div id="loadingVisualizador">
                         <div class="spinner-border" role="status">
                             <span class="visually-hidden">Carregando...</span>
                         </div>
                         <p>Carregando modelo 3D...</p>
                     </div>
-
-                    <!-- Erro de renderização -->
                     <div id="erroVisualizador">
                         <i class="bi bi-exclamation-octagon"></i>
                         <p id="msgErroVisualizador">Não foi possível renderizar o modelo.</p>
                     </div>
-
                 </div>
-
-                <!-- Controles -->
                 <div class="viewer-controls" id="viewerControls">
                     <button class="btn-viewer" type="button" id="btnResetarCamera">
                         <i class="bi bi-arrow-counterclockwise"></i> Resetar câmera
@@ -779,11 +270,9 @@
                         <i class="bi bi-pentagon"></i> Wireframe
                     </button>
                 </div>
-
             </div>
         </div>
 
-        <!-- Informações do modelo -->
         <div class="card">
             <div class="card-header">
                 <div class="card-icon"><i class="bi bi-info-circle"></i></div>
@@ -791,42 +280,30 @@
             </div>
             <div class="card-body">
                 <div class="info-grid">
-
                     <div class="info-item">
                         <div class="info-label"><i class="bi bi-file-earmark me-1"></i>Nome do arquivo</div>
-                        <div class="info-value" id="infoNomeArquivo">
-                            <span class="placeholder-info">—</span>
-                        </div>
+                        <div class="info-value" id="infoNomeArquivo"><span class="placeholder-info">—</span></div>
                     </div>
-
                     <div class="info-item">
                         <div class="info-label"><i class="bi bi-hdd me-1"></i>Tamanho</div>
-                        <div class="info-value" id="infoTamanhoArquivo">
-                            <span class="placeholder-info">—</span>
-                        </div>
+                        <div class="info-value" id="infoTamanhoArquivo"><span class="placeholder-info">—</span></div>
                     </div>
-
                     <div class="info-item">
                         <div class="info-label"><i class="bi bi-tag me-1"></i>Formato</div>
-                        <div class="info-value" id="infoFormato">
-                            <span class="placeholder-info">—</span>
-                        </div>
+                        <div class="info-value" id="infoFormato"><span class="placeholder-info">—</span></div>
                     </div>
-
                 </div>
             </div>
         </div>
 
-    </div><!-- /container -->
+    </div>
 
 
     <footer class="printly-footer">
         <div class="container">
             <div class="row g-4">
                 <div class="col-lg-4 col-md-6">
-                    <div class="footer-brand">
-                        <i class="bi bi-printer-fill"></i>Printly
-                    </div>
+                    <div class="footer-brand"><i class="bi bi-printer-fill"></i>Printly</div>
                     <p class="footer-tagline">Conectando makers e clientes para transformar ideias em realidade através da impressão 3D.</p>
                     <span class="footer-badge"><i class="bi bi-shield-check"></i>Plataforma segura</span>
                 </div>
@@ -863,11 +340,17 @@
             </div>
         </div>
     </footer>
+
+    <!-- PBI 7 - precisa importar como módulo para registrar processarArquivo no window -->
+    <script type="module">
+        import './../app/controllers/usuario/js/visualizador3D.js';
+    </script>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="../app/controllers/usuario/js/verif.js"></script>
-    <script type="module" src="../app/controllers/usuario/js/visualizador3D.js"></script>
     <script src="../app/controllers/usuario/js/status_maker.js"></script>
     <script src="../app/controllers/usuario/js/sino_notif.js"></script>
+    <script src="../app/controllers/fabricante/js/validacao_arquivo.js"></script> <!-- PBI 7 -->
 </body>
 
 </html>

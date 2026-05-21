@@ -7,16 +7,17 @@ $retorno = ['status' => 'nok', 'mensagem' => 'Erro interno', 'data' => []];
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     
-    $nome      = $_POST['nome'] ?? '';
-    $email     = $_POST['email'] ?? '';
-    $senha     = $_POST['senha'] ?? ''; // Texto puro conforme solicitado
-    $telefone  = $_POST['telefone'] ?? '';
-    $documento = $_POST['documento'] ?? '';
-    $cep       = $_POST['cep'] ?? '';
-    $cidade    = $_POST['cidade'] ?? '';
-    $estado    = $_POST['estado'] ?? '';
-    $endereco  = $_POST['endereco'] ?? '';
-    $perfil    = $_POST['perfil'] ?? 'CLIENTE';
+    $nome          = $_POST['nome'] ?? '';
+    $email         = $_POST['email'] ?? '';
+    $senha         = $_POST['senha'] ?? ''; // Texto puro conforme solicitado
+    $telefone      = $_POST['telefone'] ?? '';
+    $documento     = $_POST['documento'] ?? '';
+    $cep           = $_POST['cep'] ?? '';
+    $cidade        = $_POST['cidade'] ?? '';
+    $estado        = $_POST['estado'] ?? '';
+    $endereco      = $_POST['endereco'] ?? '';
+    $nome_cachorro = $_POST['nome_cachorro'] ?? '';
+    $perfil        = $_POST['perfil'] ?? 'CLIENTE';
 
     // 1. Validar se usuário já existe
     $sql_check = "SELECT id FROM usuarios WHERE email = ?";
@@ -30,13 +31,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
 
     // 2. Inserir todos os campos
-    $sql = "INSERT INTO usuarios 
-            (nome, email, senha, tipo_perfil, documento, telefone, cep, cidade, estado, endereco, status) 
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'ATIVO')";
-    
+    $sql = "INSERT INTO usuarios
+            (nome, email, senha, tipo_perfil, documento, telefone, cep, cidade, estado, endereco, nome_cachorro, status)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'ATIVO')";
+
     $stmt = $conexao->prepare($sql);
-    $stmt->bind_param("ssssssssss", 
-        $nome, $email, $senha, $perfil, $documento, $telefone, $cep, $cidade, $estado, $endereco
+    $stmt->bind_param("sssssssssss",
+        $nome, $email, $senha, $perfil, $documento, $telefone, $cep, $cidade, $estado, $endereco, $nome_cachorro
     );
 
     if ($stmt->execute()) {

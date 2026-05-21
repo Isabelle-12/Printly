@@ -454,3 +454,6 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
 });
+
+// PBI 7 expõe processarArquivo globalmente para o módulo de validação
+window.processarArquivo = processarArquivo;

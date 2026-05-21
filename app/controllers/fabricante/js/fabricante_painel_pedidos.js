@@ -97,6 +97,12 @@ async function verDetalhes(id_pedido) {
         if (elInputValor) elInputValor.value = parseFloat(pedido.valor_total).toFixed(2);
         if (elInputPrazo) elInputPrazo.value = "5";
 
+        // PBI 7 - botão "Abrir Visualizador" para validação técnica
+        const linkVisualizador = document.getElementById('modal-link-visualizador');
+        if (linkVisualizador) {
+            linkVisualizador.href = `index.php?rota=visualizador3F&pedido_id=${pedido.id}`;
+        }
+
         const areaRecusa = document.getElementById('area-recusa');
         const botoesAcao = document.getElementById('botoes-acao-modal');
         const motivoRecusa = document.getElementById('motivo-recusa');
@@ -114,7 +120,6 @@ async function verDetalhes(id_pedido) {
     }
 }
 
-// 3. MOSTRA A CAIXA DE TEXTO PARA NEGAR
 function mostrarAreaRecusa() {
     document.getElementById('botoes-acao-modal').style.display = 'none';
     document.getElementById('area-recusa').style.display = 'block';
@@ -230,6 +235,10 @@ async function carregarPedidosAceitos() {
                 corBadge = "bg-warning text-dark";
                 corBorda = "border-warning";
                 statusTexto = "Aceito";
+            } else if (pedido.status === 'ARQUIVO_VALIDADO') {
+                corBadge = "bg-success";
+                corBorda = "border-success";
+                statusTexto = "Arquivo Validado";
             }
 
             let prazoTexto = "Não definido";
@@ -237,6 +246,21 @@ async function carregarPedidosAceitos() {
                 const data = new Date(pedido.prazo_pedido);
                 prazoTexto = data.toLocaleDateString('pt-BR') + ' ' + data.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
             }
+
+            const podeChat = ['ACEITO', 'EM_PRODUCAO', 'ARQUIVO_VALIDADO', 'ENTREGUE'].includes(pedido.status);
+            const botaoChat = podeChat
+                ? `<button class="btn btn-sm btn-outline-dark mt-2 me-2 btn-chat-pedido" data-pedido-id="${pedido.id}">
+                       <i class="bi bi-chat-dots"></i> Mensagens
+                   </button>`
+                : '';
+
+            // PBI 7 - botão Validar Arquivo nos cards de pedidos aceitos
+            const podeValidar = ['ACEITO', 'EM_PRODUCAO'].includes(pedido.status);
+            const botaoValidar = podeValidar
+                ? `<a href="index.php?rota=visualizador3F&pedido_id=${pedido.id}" class="btn btn-sm btn-outline-primary mt-2">
+                       <i class="bi bi-shield-check"></i> Validar Arquivo
+                   </a>`
+                : '';
 
             const cardHTML = `
                 <div class="card mb-3 border-start ${corBorda} border-4 shadow-sm">
@@ -248,6 +272,8 @@ async function carregarPedidosAceitos() {
                         <p class="card-text mb-1 text-muted"><i class="bi bi-person"></i> <strong>Cliente:</strong> ${pedido.cliente_nome}</p>
                         <p class="card-text mb-1 text-muted"><i class="bi bi-currency-dollar"></i> <strong>Valor Fechado:</strong> ${valorFormatado}</p>
                         <p class="card-text mb-0 text-muted"><i class="bi bi-calendar-event"></i> <strong>Prazo Final:</strong> ${prazoTexto}</p>
+                        ${botaoChat}
+                        ${botaoValidar}
                     </div>
                 </div>
             `;

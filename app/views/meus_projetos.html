@@ -7,6 +7,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/chat.css"> <!-- PBI 19 -->
     <style>
     *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
     :root{
@@ -24,81 +25,32 @@
     }
     body{background:var(--pb);font-family:'DM Sans','Segoe UI',system-ui,sans-serif;color:var(--pt);min-height:100vh}
 
-    /* =========================
-        CONTAINER
-        ========================= */
+    .container { max-width: 1200px; }
 
-        .container {
-            max-width: 1200px;
-        }
+    .navbar {
+        background: linear-gradient( 135deg, var(--printly-primary) 0%, var(--printly-primary-dark) 100% ) !important;
+        padding: 0.75rem 0;
+        box-shadow: 0 2px 16px rgba(229, 70, 216, 0.25);
+    }
+    .navbar-brand { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 1.4rem; color: #fff !important; }
+    .navbar .nav-link { color: rgba(255,255,255,0.82) !important; font-size: 0.9rem; font-weight: 500; padding: 0.45rem 0.9rem !important; border-radius: 8px; transition: 0.2s; }
+    .navbar .nav-link:hover, .navbar .nav-link.active { background: rgba(255,255,255,0.18); color: #fff !important; }
+    #sair { background: rgba(255,255,255,0.12); color: rgba(255,255,255,0.82); border: 1px solid rgba(255,255,255,0.2); border-radius: 8px; }
+    #sair:hover { background: rgba(255,255,255,0.22); color: #fff; }
 
-    /* =========================
-        NAVBAR
-        ========================= */
-
-        .navbar {
-            background: linear-gradient(
-                135deg,
-                var(--printly-primary) 0%,
-                var(--printly-primary-dark) 100%
-            ) !important;
-            padding: 0.75rem 0;
-            box-shadow: 0 2px 16px rgba(229, 70, 216, 0.25);
-        }
-
-        .navbar-brand {
-            font-family: 'Syne', sans-serif;
-            font-weight: 700;
-            font-size: 1.4rem;
-            color: #fff !important;
-        }
-
-        .navbar .nav-link {
-            color: rgba(255,255,255,0.82) !important;
-            font-size: 0.9rem;
-            font-weight: 500;
-            padding: 0.45rem 0.9rem !important;
-            border-radius: 8px;
-            transition: 0.2s;
-        }
-
-        .navbar .nav-link:hover,
-        .navbar .nav-link.active {
-            background: rgba(255,255,255,0.18);
-            color: #fff !important;
-        }
-
-        /* botão sair */
-        #sair {
-            background: rgba(255,255,255,0.12);
-            color: rgba(255,255,255,0.82);
-            border: 1px solid rgba(255,255,255,0.2);
-            border-radius: 8px;
-        }
-
-        #sair:hover {
-            background: rgba(255,255,255,0.22);
-            color: #fff;
-        }
-
-
-    /* HEADER */
     .page-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem;padding-bottom:1rem;border-bottom:1px solid var(--pbd);flex-wrap:wrap;gap:12px}
     .page-header h4{font-family:'Syne',sans-serif;font-weight:700;font-size:1.3rem;color:var(--pt);margin:0}
     .page-header p{font-size:.85rem;color:var(--pm);margin:2px 0 0}
     .btn-novo{background:linear-gradient(135deg,var(--rm),var(--pp));color:#fff;border:none;border-radius:10px;padding:9px 18px;font-size:.88rem;font-weight:600;text-decoration:none;display:flex;align-items:center;gap:6px;transition:.18s}
     .btn-novo:hover{opacity:.9;color:#fff;transform:translateY(-1px)}
 
-    /* FILTROS */
     .filtros{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:1.5rem}
     .btn-filtro{background:var(--ps);border:1.5px solid var(--pbd);color:var(--pp);padding:6px 16px;border-radius:20px;cursor:pointer;font-weight:600;font-size:.82rem;transition:.18s;white-space:nowrap}
     .btn-filtro:hover{border-color:var(--rm);color:var(--rm)}
     .btn-filtro.ativo{background:var(--pp);color:#fff;border-color:var(--pp)}
 
-    /* GRID */
     .cards-container{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:1.25rem;align-items:start}
 
-    /* CARD */
     .projeto-card{background:var(--ps);border:1px solid var(--pbd);border-radius:var(--pr);box-shadow:var(--psh);overflow:hidden;transition:box-shadow .2s,transform .2s;display:flex;flex-direction:column}
     .projeto-card:hover{box-shadow:0 6px 24px rgba(229,70,176,.15);transform:translateY(-3px)}
     .card-capa{position:relative;height:175px;overflow:hidden;background:var(--pl);display:flex;align-items:center;justify-content:center}
@@ -125,7 +77,6 @@
     .btn-excluir{background:#fff0f0;color:#dc2626}.btn-excluir:hover{background:#fee2e2;color:#991b1b}
     .btn-feedback{background:#fefce8;color:#ca8a04}.btn-feedback:hover{background:#fef9c3}
 
-    /* ESTADOS */
     .estado-loading,.estado-vazio{grid-column:1/-1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;padding:4rem 0;color:var(--pm);font-size:.95rem;text-align:center}
     .estado-vazio i{font-size:3rem;opacity:.4;color:var(--rc)}
     .spinner-custom{width:36px;height:36px;border:3px solid var(--cb);border-top-color:var(--rm);border-radius:50%;animation:spin .8s linear infinite}
@@ -133,29 +84,20 @@
     .btn-novo-projeto{background:linear-gradient(135deg,var(--rm),var(--pp));color:#fff;border:none;border-radius:10px;padding:10px 20px;font-size:.88rem;font-weight:600;text-decoration:none;display:inline-flex;align-items:center;gap:6px;transition:.18s}
     .btn-novo-projeto:hover{opacity:.9;color:#fff}
 
-    /* MODAL */
     .modal-content{border-radius:18px;border:none;overflow:hidden}
     .modal-header{background:var(--pl);border-bottom:1px solid var(--pbd)}
     .modal-title{font-weight:700;color:var(--pp);font-family:'Syne',sans-serif}
     .modal-body{overflow-y:auto;max-height:72vh;padding-bottom:1rem}
     .modal-footer{background:#fff;border-top:1px solid var(--pbd)}
 
-    /* PARTES EDITAR */
     .parte-card-dinamico{border:1px solid var(--cb);border-radius:10px;overflow:hidden;margin-bottom:10px}
     .pcd-header{display:flex;justify-content:space-between;align-items:center;padding:8px 14px;background:var(--pl);font-weight:600;font-size:.85rem;color:var(--pp)}
     .pcd-header button{background:none;border:1px solid #fecaca;color:#dc2626;border-radius:6px;padding:2px 8px;cursor:pointer;transition:.15s;font-size:.8rem}
     .pcd-header button:hover{background:#fee2e2}
     .pcd-body{padding:12px 14px}
 
-    /* FEEDBACK DE VALIDAÇÃO CUSTOMIZADO */
-    .was-validated .form-control:invalid, .was-validated .form-select:invalid {
-        border-color: #dc2626 !important;
-    }
-    .invalid-feedback {
-        font-size: 0.78rem;
-        color: #dc2626;
-        margin-top: 4px;
-    }
+    .was-validated .form-control:invalid, .was-validated .form-select:invalid { border-color: #dc2626 !important; }
+    .invalid-feedback { font-size: 0.78rem; color: #dc2626; margin-top: 4px; }
 
     @media(max-width:576px){
         .cards-container{grid-template-columns:1fr}
@@ -164,215 +106,42 @@
         .btn-acao{width:100%}
         .modal-body{max-height:65vh}
     }
-    /* ===== SINO DE NOTIFICACOES ===== */
-        .sino-wrapper {
-            position: relative;
-            display: inline-flex;
-            align-items: center;
-        }
-        #btn-sino {
-            background: rgba(255,255,255,0.12);
-            color: rgba(255,255,255,0.82);
-            border: 1px solid rgba(255,255,255,0.2);
-            border-radius: 8px;
-            padding: 0.35rem 0.75rem;
-            font-size: 0.9rem;
-            cursor: pointer;
-            transition: background 0.18s, color 0.18s;
-            position: relative;
-            display: flex;
-            align-items: center;
-        }
-        #btn-sino:hover, #btn-sino.sino-ativo {
-            background: rgba(255,255,255,0.22);
-            color: #fff;
-        }
-        #sino-badge {
-            display: none;
-            position: absolute;
-            top: -6px;
-            right: -6px;
-            background: #e03c6e;
-            color: #fff;
-            font-size: 0.65rem;
-            font-weight: 700;
-            border-radius: 50%;
-            width: 18px;
-            height: 18px;
-            align-items: center;
-            justify-content: center;
-            border: 2px solid var(--printly-primary, #412746);
-            z-index: 10;
-        }
-        #sino-dropdown {
-            display: none;
-            position: absolute;
-            top: calc(100% + 10px);
-            right: 0;
-            width: 320px;
-            background: #fff;
-            border: 1px solid rgba(194,185,194,0.55);
-            border-radius: 12px;
-            box-shadow: 0 8px 32px rgba(65,39,70,0.15);
-            z-index: 1050;
-            overflow: hidden;
-        }
-        #sino-dropdown.sino-aberto { display: block; }
-        .sino-header {
-            padding: 0.75rem 1rem;
-            font-family: 'Syne', sans-serif;
-            font-weight: 700;
-            font-size: 0.9rem;
-            color: #412746;
-            border-bottom: 1px solid rgba(194,185,194,0.4);
-            background: #f0cef5;
-        }
-        #sino-lista {
-            list-style: none;
-            margin: 0;
-            padding: 0;
-            max-height: 340px;
-            overflow-y: auto;
-        }
-        .sino-item {
-            padding: 0.75rem 1rem;
-            border-bottom: 1px solid rgba(194,185,194,0.3);
-            cursor: default;
-        }
-        .sino-item:last-child { border-bottom: none; }
-        .sino-nao-lida { background: #fdf4ff; }
-        .sino-item-titulo {
-            font-weight: 600;
-            font-size: 0.85rem;
-            color: #412746;
-            margin-bottom: 2px;
-        }
-        .sino-item-msg {
-            font-size: 0.8rem;
-            color: #5a3a5a;
-            margin-bottom: 3px;
-        }
-        .sino-item-data {
-            font-size: 0.72rem;
-            color: #9e939e;
-        }
-        .sino-vazio {
-            padding: 1.25rem 1rem;
-            text-align: center;
-            color: #9e939e;
-            font-size: 0.85rem;
-            list-style: none;
-        }
 
-        /* ===== SUB-NAVBAR ===== */
-        .sub-navbar {
-            background: rgba(65,39,70,0.92);
-            border-bottom: 1px solid rgba(255,255,255,0.08);
-            padding: 0.25rem 0;
-        }
-        .sub-navbar .container {
-            display: flex;
-            align-items: center;
-        }
-        #wrap-btn-maker {
-            margin-left: auto;
-            display: flex;
-            align-items: center;
-        }
-        #btn-solicitar-maker:hover {
-            background: rgba(255,255,255,0.25) !important;
-        }
-        .sub-navbar .nav-link {
-            color: rgba(255,255,255,0.75) !important;
-            font-size: 0.82rem;
-            font-weight: 500;
-            padding: 0.3rem 0.85rem !important;
-            border-radius: 6px;
-            transition: background 0.15s, color 0.15s;
-        }
-        .sub-navbar .nav-link:hover,
-        .sub-navbar .nav-link.active {
-            background: rgba(255,255,255,0.14);
-            color: #fff !important;
-        }
+    .sino-wrapper { position: relative; display: inline-flex; align-items: center; }
+    #btn-sino { background: rgba(255,255,255,0.12); color: rgba(255,255,255,0.82); border: 1px solid rgba(255,255,255,0.2); border-radius: 8px; padding: 0.35rem 0.75rem; font-size: 0.9rem; cursor: pointer; transition: background 0.18s, color 0.18s; position: relative; display: flex; align-items: center; }
+    #btn-sino:hover, #btn-sino.sino-ativo { background: rgba(255,255,255,0.22); color: #fff; }
+    #sino-badge { display: none; position: absolute; top: -6px; right: -6px; background: #e03c6e; color: #fff; font-size: 0.65rem; font-weight: 700; border-radius: 50%; width: 18px; height: 18px; align-items: center; justify-content: center; border: 2px solid var(--printly-primary, #412746); z-index: 10; }
+    #sino-dropdown { display: none; position: absolute; top: calc(100% + 10px); right: 0; width: 320px; background: #fff; border: 1px solid rgba(194,185,194,0.55); border-radius: 12px; box-shadow: 0 8px 32px rgba(65,39,70,0.15); z-index: 1050; overflow: hidden; }
+    #sino-dropdown.sino-aberto { display: block; }
+    .sino-header { padding: 0.75rem 1rem; font-family: 'Syne', sans-serif; font-weight: 700; font-size: 0.9rem; color: #412746; border-bottom: 1px solid rgba(194,185,194,0.4); background: #f0cef5; }
+    #sino-lista { list-style: none; margin: 0; padding: 0; max-height: 340px; overflow-y: auto; }
+    .sino-item { padding: 0.75rem 1rem; border-bottom: 1px solid rgba(194,185,194,0.3); cursor: default; }
+    .sino-item:last-child { border-bottom: none; }
+    .sino-nao-lida { background: #fdf4ff; }
+    .sino-item-titulo { font-weight: 600; font-size: 0.85rem; color: #412746; margin-bottom: 2px; }
+    .sino-item-msg { font-size: 0.8rem; color: #5a3a5a; margin-bottom: 3px; }
+    .sino-item-data { font-size: 0.72rem; color: #9e939e; }
+    .sino-vazio { padding: 1.25rem 1rem; text-align: center; color: #9e939e; font-size: 0.85rem; list-style: none; }
 
-        /* ===== FOOTER ===== */
-        .printly-footer {
-            background: linear-gradient(135deg, var(--printly-primary, #412746) 0%, #2d1a32 100%);
-            color: rgba(255,255,255,0.7);
-            padding: 3rem 0 1.5rem;
-            margin-top: 0;
-            font-size: 0.85rem;
-        }
-        .printly-footer .footer-brand {
-            font-family: 'Syne', sans-serif;
-            font-weight: 700;
-            font-size: 1.5rem;
-            color: #fff;
-            letter-spacing: -0.5px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            margin-bottom: 0.5rem;
-        }
-        .printly-footer .footer-brand i {
-            font-size: 1.3rem;
-            color: #e8a0f0;
-        }
-        .printly-footer .footer-tagline {
-            color: rgba(255,255,255,0.5);
-            font-size: 0.82rem;
-            margin-bottom: 1.25rem;
-        }
-        .printly-footer .footer-title {
-            color: #fff;
-            font-weight: 600;
-            font-size: 0.82rem;
-            text-transform: uppercase;
-            letter-spacing: 0.08em;
-            margin-bottom: 0.9rem;
-        }
-        .printly-footer .footer-links {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-        }
-        .printly-footer .footer-links li {
-            margin-bottom: 0.45rem;
-        }
-        .printly-footer .footer-links a {
-            color: rgba(255,255,255,0.6);
-            text-decoration: none;
-            transition: color 0.15s;
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-        }
-        .printly-footer .footer-links a:hover { color: #e8a0f0; }
-        .printly-footer .footer-divider {
-            border-color: rgba(255,255,255,0.1);
-            margin: 2rem 0 1.25rem;
-        }
-        .printly-footer .footer-bottom {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            flex-wrap: wrap;
-            gap: 0.5rem;
-            color: rgba(255,255,255,0.35);
-            font-size: 0.78rem;
-        }
-        .printly-footer .footer-badge {
-            background: rgba(255,255,255,0.08);
-            border: 1px solid rgba(255,255,255,0.12);
-            border-radius: 20px;
-            padding: 0.2rem 0.75rem;
-            font-size: 0.75rem;
-            color: rgba(255,255,255,0.5);
-            display: inline-flex;
-            align-items: center;
-            gap: 5px;
-        }
+    .sub-navbar { background: rgba(65,39,70,0.92); border-bottom: 1px solid rgba(255,255,255,0.08); padding: 0.25rem 0; }
+    .sub-navbar .container { display: flex; align-items: center; }
+    #wrap-btn-maker { margin-left: auto; display: flex; align-items: center; }
+    #btn-solicitar-maker:hover { background: rgba(255,255,255,0.25) !important; }
+    .sub-navbar .nav-link { color: rgba(255,255,255,0.75) !important; font-size: 0.82rem; font-weight: 500; padding: 0.3rem 0.85rem !important; border-radius: 6px; transition: background 0.15s, color 0.15s; }
+    .sub-navbar .nav-link:hover, .sub-navbar .nav-link.active { background: rgba(255,255,255,0.14); color: #fff !important; }
+
+    .printly-footer { background: linear-gradient(135deg, var(--printly-primary, #412746) 0%, #2d1a32 100%); color: rgba(255,255,255,0.7); padding: 3rem 0 1.5rem; margin-top: 0; font-size: 0.85rem; }
+    .printly-footer .footer-brand { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 1.5rem; color: #fff; letter-spacing: -0.5px; display: flex; align-items: center; gap: 8px; margin-bottom: 0.5rem; }
+    .printly-footer .footer-brand i { font-size: 1.3rem; color: #e8a0f0; }
+    .printly-footer .footer-tagline { color: rgba(255,255,255,0.5); font-size: 0.82rem; margin-bottom: 1.25rem; }
+    .printly-footer .footer-title { color: #fff; font-weight: 600; font-size: 0.82rem; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 0.9rem; }
+    .printly-footer .footer-links { list-style: none; padding: 0; margin: 0; }
+    .printly-footer .footer-links li { margin-bottom: 0.45rem; }
+    .printly-footer .footer-links a { color: rgba(255,255,255,0.6); text-decoration: none; transition: color 0.15s; display: inline-flex; align-items: center; gap: 6px; }
+    .printly-footer .footer-links a:hover { color: #e8a0f0; }
+    .printly-footer .footer-divider { border-color: rgba(255,255,255,0.1); margin: 2rem 0 1.25rem; }
+    .printly-footer .footer-bottom { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.5rem; color: rgba(255,255,255,0.35); font-size: 0.78rem; }
+    .printly-footer .footer-badge { background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.12); border-radius: 20px; padding: 0.2rem 0.75rem; font-size: 0.75rem; color: rgba(255,255,255,0.5); display: inline-flex; align-items: center; gap: 5px; }
     </style>
 </head>
 <body data-acesso="CLIENTE,ADMIN">
@@ -510,13 +279,11 @@
                             <label class="form-label fw-bold">
                                 Substituir Capa do Projeto (opcional)
                             </label>
-
                             <input type="file"
                                 class="form-control"
                                 id="editar_capa"
                                 name="imagem_capa"
                                 accept="image/png, image/jpeg, image/jpg">
-
                             <small class="text-muted d-block mt-1">
                                 Envie uma nova imagem para substituir a capa do projeto.
                             </small>
@@ -599,22 +366,28 @@
 
         document.querySelectorAll('.filtros .btn-filtro').forEach(btn => {
             btn.addEventListener('click', function () {
-                // Remove a classe ativo do botão que estava selecionado
                 const ativoAnterior = document.querySelector('.filtros .btn-filtro.ativo');
                 if (ativoAnterior) {
                     ativoAnterior.classList.remove('ativo');
                 }
-
-                // Adiciona a classe ativo no botão clicado
                 this.classList.add('ativo');
-
                 filtroAtual = this.dataset.status;
-
-                // Executa a função externa se ela existir no escopo global
                 if (typeof filtrarProjetos === 'function') {
                     filtrarProjetos(filtroAtual);
                 }
             });
+        });
+
+        // PBI 19 - listener delegado: captura o clique no botão Chat dos cards
+        document.addEventListener('click', function(e) {
+            const btn = e.target.closest('.btn-chat');
+            if (!btn) return;
+            const card = btn.closest('[data-pedido-id], [data-id]');
+            const pedidoId = btn.dataset.pedidoId
+                          || (card && (card.dataset.pedidoId || card.dataset.id));
+            if (pedidoId && typeof abrirChat === 'function') {
+                abrirChat(pedidoId);
+            }
         });
     </script>
 
@@ -622,5 +395,6 @@
     <script src="../app/controllers/usuario/js/meus_projetos.js"></script>
     <script src="../app/controllers/usuario/js/verif.js"></script>
     <script src="../app/controllers/usuario/js/sino_notif.js"></script>
+    <script src="../app/controllers/usuario/js/chat.js"></script> <!-- PBI 19 -->
 </body>
 </html>
